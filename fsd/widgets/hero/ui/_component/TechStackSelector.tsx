@@ -1,11 +1,10 @@
 "use client";
 
-import Button from "@/src/shared/ui/atoms/button/ui/Button";
-import RadioInput from "@/src/shared/ui/atoms/input/ui/RadioInput";
-
 import { useState } from "react";
 import { TECH_STACK_OPTIONS } from "../../lib/constants";
 import { TechStack } from "../../model/type";
+import RadioInput from "fsd/shared/ui/atoms/input/ui/RadioInput";
+import Button from "fsd/shared/ui/atoms/button/ui/Button";
 
 interface TechStackSelectorProps {
   name?: string;

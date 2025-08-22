@@ -1,4 +1,4 @@
-import MainPage from "@/src/pages/main/ui";
+import MainPage from "@/fsd/pages/main/ui";
 
 export default function Home() {
   return (

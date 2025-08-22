@@ -1,9 +1,9 @@
 "use client";
 
-import Button from "@/src/shared/ui/atoms/button/ui/Button";
-import Dialog from "@/src/shared/ui/atoms/dialog/ui";
 import { useState } from "react";
 import TechStackSelector from "./_component/TechStackSelector";
+import Button from "fsd/shared/ui/atoms/button/ui/Button";
+import Dialog from "fsd/shared/ui/atoms/dialog/ui";
 
 export default function Hero() {
   const [dialogOpen, setDialogOpen] = useState(false);
