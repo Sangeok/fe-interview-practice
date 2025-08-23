@@ -14,7 +14,7 @@ const RadioInput = ({ className, variant = "dark", label, id, ...props }: RadioI
     <div className="flex items-center gap-2">
       <input type="radio" id={inputId} className={RadioInputVariants({ variant, className })} {...props} />
       {label && (
-        <label htmlFor={inputId} className="text-white cursor-pointer">
+        <label htmlFor={inputId} className="text-zinc-300 cursor-pointer">
           {label}
         </label>
       )}

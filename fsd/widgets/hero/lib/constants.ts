@@ -2,8 +2,8 @@ import { TechStackOption } from "../model/type";
 
 export const TECH_STACK_OPTIONS: TechStackOption[] = [
   { id: "React", label: "React", value: "React" },
-  { id: "Next.js", label: "Next.js", value: "Next.js" },
+  { id: "NextJs", label: "NextJs", value: "NextJs" },
   { id: "JavaScript", label: "JavaScript", value: "JavaScript" },
   { id: "TypeScript", label: "TypeScript", value: "TypeScript" },
-  { id: "CS(Computer Science)", label: "CS(Computer Science)", value: "CS(Computer Science)" },
+  { id: "Computer Science", label: "Computer Science", value: "Computer Science" },
 ] as const;
