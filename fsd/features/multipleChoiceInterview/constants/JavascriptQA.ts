@@ -8,20 +8,20 @@ export const MULTIPLE_CHOICE_INTERVIEW_QUESTIONS_JAVASCRIPT: MultipleChoiceQuest
       {
         id: 1,
         label: "모든 Promise가 fulfilled 상태가 되면 결과를 반환하고, 하나라도 rejected되면 즉시 rejected된다",
-        value: "all_fulfilled_or_immediate_reject",
+        answerBoolean: true,
       },
       {
         id: 2,
         label: "Promise들이 순차적으로 실행되며, 이전 Promise가 완료되어야 다음이 실행된다",
-        value: "sequential_execution",
+        answerBoolean: false,
       },
       {
         id: 3,
         label: "하나라도 fulfilled되면 즉시 결과를 반환한다",
-        value: "race_behavior",
+        answerBoolean: false,
       },
     ],
-    answer: "all_fulfilled_or_immediate_reject",
+    answerString: "모든 Promise가 fulfilled 상태가 되면 결과를 반환하고, 하나라도 rejected되면 즉시 rejected된다",
   },
   {
     id: 2,
@@ -30,19 +30,19 @@ export const MULTIPLE_CHOICE_INTERVIEW_QUESTIONS_JAVASCRIPT: MultipleChoiceQuest
       {
         id: 1,
         label: "var는 블록 스코프를 가지며, let과 const는 함수 스코프를 가진다",
-        value: "var_block_let_function",
+        answerBoolean: false,
       },
       {
         id: 2,
         label: "var는 함수 스코프를 가지며, let과 const는 블록 스코프를 가진다",
-        value: "var_function_let_block",
+        answerBoolean: true,
       },
       {
         id: 3,
         label: "var, let, const 모두 블록 스코프를 가진다",
-        value: "all_block_scope",
+        answerBoolean: false,
       },
     ],
-    answer: "var_function_let_block",
+    answerString: "var는 함수 스코프를 가지며, let과 const는 블록 스코프를 가진다",
   },
 ] as const;
