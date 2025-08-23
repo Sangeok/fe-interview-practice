@@ -1,4 +1,4 @@
-export type TechStack = "React" | "Next.js" | "JavaScript" | "TypeScript" | "CS(Computer Science)";
+export type TechStack = "React" | "NextJs" | "JavaScript" | "TypeScript" | "Computer Science";
 
 export interface TechStackOption {
   id: TechStack;
