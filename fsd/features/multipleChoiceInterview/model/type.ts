@@ -1,12 +1,12 @@
 export interface Option {
   id: number;
   label: string;
-  value: string;
+  answerBoolean: boolean;
 }
 
 export interface MultipleChoiceQuestion {
   id: number;
   question: string;
   options: Option[];
-  answer: string;
+  answerString: string;
 }

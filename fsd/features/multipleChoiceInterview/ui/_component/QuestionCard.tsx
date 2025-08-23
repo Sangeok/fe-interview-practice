@@ -3,24 +3,59 @@ import RadioInput from "@/fsd/shared/ui/atoms/input/ui/RadioInput";
 import Button from "@/fsd/shared/ui/atoms/button/ui/Button";
 import { useState } from "react";
 import { Option } from "../../model/type";
+import { MultipleChoiceInterpretType } from "@/fsd/shared/model/type";
 
 interface QuestionCardProps {
   question: string;
   options: readonly Option[];
-  onNext: (selectedAnswer: string) => void;
+  answerString: string;
+  setLoading: (loading: boolean) => void;
+  setInterpret: (interpret: MultipleChoiceInterpretType) => void;
+  setIsAnswerCorrect: (isAnswerCorrect: boolean) => void;
 }
 
-export default function QuestionCard({ question, options, onNext }: QuestionCardProps) {
-  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+export default function QuestionCard({
+  question,
+  options,
+  answerString,
+  setLoading,
+  setInterpret,
+  setIsAnswerCorrect,
+}: QuestionCardProps) {
+  const [selectedOption, setSelectedOption] = useState<Option | null>(null);
 
-  const handleOptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedOption(e.target.value);
+  const handleOptionChange = (option: Option) => {
+    setSelectedOption(option);
   };
 
-  const handleNextClick = () => {
-    if (selectedOption) {
-      onNext(selectedOption);
-      setSelectedOption(null);
+  const handleCheckAnswer = () => {
+    if (selectedOption === null) {
+      alert("Check your answer first");
+      return;
+    }
+
+    if (!selectedOption.answerBoolean) {
+      setIsAnswerCorrect(false);
+      handleGenerateInterpret();
+    } else {
+      setIsAnswerCorrect(true);
+    }
+  };
+
+  const handleGenerateInterpret = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch("/api/generate-interpret", {
+        method: "POST",
+        body: JSON.stringify({ tech: "JavaScript", question, answer: answerString }),
+      });
+
+      const data = await response.json();
+      setInterpret(data);
+    } catch (error) {
+      console.error("error", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -33,15 +68,15 @@ export default function QuestionCard({ question, options, onNext }: QuestionCard
             key={option.id}
             label={option.label}
             name={question}
-            value={option.value}
-            checked={selectedOption === option.value}
-            onChange={handleOptionChange}
+            value={option.label}
+            checked={selectedOption?.label === option.label}
+            onChange={() => handleOptionChange(option)}
           />
         ))}
       </div>
       <div className="flex justify-end">
-        <Button onClick={handleNextClick} disabled={!selectedOption}>
-          다음
+        <Button onClick={handleCheckAnswer} disabled={!selectedOption}>
+          정답 확인
         </Button>
       </div>
     </div>
