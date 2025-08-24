@@ -23,6 +23,7 @@ export default function QuestionCard({
   setIsAnswerCorrect,
 }: QuestionCardProps) {
   const [selectedOption, setSelectedOption] = useState<Option | null>(null);
+  const [checkAnswerButtonDisabled, setCheckAnswerButtonDisabled] = useState(false);
 
   const handleOptionChange = (option: Option) => {
     setSelectedOption(option);
@@ -39,6 +40,7 @@ export default function QuestionCard({
       handleGenerateInterpret();
     } else {
       setIsAnswerCorrect(true);
+      setCheckAnswerButtonDisabled(true);
     }
   };
 
@@ -75,7 +77,7 @@ export default function QuestionCard({
         ))}
       </div>
       <div className="flex justify-end">
-        <Button onClick={handleCheckAnswer} disabled={!selectedOption}>
+        <Button onClick={handleCheckAnswer} disabled={!selectedOption || checkAnswerButtonDisabled}>
           정답 확인
         </Button>
       </div>
