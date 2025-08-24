@@ -4,6 +4,7 @@ import Button from "@/fsd/shared/ui/atoms/button/ui/Button";
 import { useState } from "react";
 import { Option } from "../../model/type";
 import { MultipleChoiceInterpretType } from "@/fsd/shared/model/type";
+import { useSelectTechStore } from "@/fsd/shared/model/useSelectTechStore";
 
 interface QuestionCardProps {
   question: string;
@@ -24,6 +25,7 @@ export default function QuestionCard({
 }: QuestionCardProps) {
   const [selectedOption, setSelectedOption] = useState<Option | null>(null);
   const [checkAnswerButtonDisabled, setCheckAnswerButtonDisabled] = useState(false);
+  const { tech } = useSelectTechStore();
 
   const handleOptionChange = (option: Option) => {
     setSelectedOption(option);
@@ -49,7 +51,7 @@ export default function QuestionCard({
     try {
       const response = await fetch("/api/generate-interpret", {
         method: "POST",
-        body: JSON.stringify({ tech: "JavaScript", question, answer: answerString }),
+        body: JSON.stringify({ tech: tech, question, answer: answerString }),
       });
 
       const data = await response.json();

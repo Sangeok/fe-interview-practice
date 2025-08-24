@@ -21,4 +21,4 @@ export type MultipleChoiceInterpretType = {
   };
 };
 
-export type TechType = "JavaScript" | "NextJs";
+export type TechType = "JavaScript" | "NextJs" | "React" | "";

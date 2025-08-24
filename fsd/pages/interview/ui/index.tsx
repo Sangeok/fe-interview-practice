@@ -1,17 +1,16 @@
+"use client";
+
 import { TechType } from "@/fsd/shared/model/type";
+import { useSelectTechStore } from "@/fsd/shared/model/useSelectTechStore";
 import InterviewOption from "@/fsd/widgets/interviewOption/ui";
 
-interface InterviewPageProps {
-  title: string;
-}
-
-export default function InterviewPage({ title }: InterviewPageProps) {
-  if (!title) return null;
+export default function InterviewPage() {
+  const { tech } = useSelectTechStore();
 
   return (
     <div className="p-8">
-      <h1 className="text-2xl font-bold mb-4">{title} Interview</h1>
-      <InterviewOption tech={title as TechType} />
+      <h1 className="text-2xl font-bold mb-4">{tech} Interview</h1>
+      <InterviewOption tech={tech as TechType} />
     </div>
   );
 }
