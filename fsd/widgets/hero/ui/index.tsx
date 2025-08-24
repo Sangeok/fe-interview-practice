@@ -29,8 +29,8 @@ export default function Hero() {
         </Button>
       </div>
 
-      <Dialog open={dialogOpen} onClose={handleDialogClose} title="Select Title">
-        <TechStackSelector onClose={handleDialogClose} name="title" />
+      <Dialog open={dialogOpen} onClose={handleDialogClose} title="Select Tech Stack">
+        <TechStackSelector onClose={handleDialogClose} />
       </Dialog>
     </>
   );

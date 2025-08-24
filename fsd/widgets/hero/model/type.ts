@@ -1,7 +1,7 @@
-export type TechStack = "React" | "NextJs" | "JavaScript" | "TypeScript" | "Computer Science";
+import { TechType } from "@/fsd/shared/model/type";
 
 export interface TechStackOption {
-  id: TechStack;
+  id: TechType;
   label: string;
-  value: TechStack;
+  value: TechType;
 }
