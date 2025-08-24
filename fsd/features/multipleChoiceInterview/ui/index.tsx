@@ -1,11 +1,12 @@
 "use client";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { MultipleChoiceQuestion } from "../model/type";
 import QuestionCard from "./_component/QuestionCard";
 import EndQuestion from "./_component/EndQuestion";
 import InterpretCard from "./_component/InterpretCard";
 import { MultipleChoiceInterpretType } from "@/fsd/shared/model/type";
 import AnswerCorrectCard from "./_component/AnswerCorrectCard";
+import { arrayShuffle } from "@/fsd/shared/lib/array-shuffle";
 
 interface MultipleChoiceInterviewProps {
   questionAnswer: MultipleChoiceQuestion[];
@@ -17,6 +18,14 @@ export default function MultipleChoiceInterview({ questionAnswer }: MultipleChoi
   const [loading, setLoading] = useState<boolean>(false);
   const [interpret, setInterpret] = useState<MultipleChoiceInterpretType | null>(null);
   const [isAnswerCorrect, setIsAnswerCorrect] = useState<boolean | null>(null);
+
+  // 각 질문의 옵션을 한 번만 섞어서 메모이제이션
+  const shuffledQuestions = useMemo(() => {
+    return questionAnswer.map((qa) => ({
+      ...qa,
+      options: arrayShuffle([...qa.options]),
+    }));
+  }, [questionAnswer]);
 
   const isQuizFinished = currentQuestionIndex >= questionAnswer.length;
 
@@ -35,9 +44,9 @@ export default function MultipleChoiceInterview({ questionAnswer }: MultipleChoi
         <div className="flex flex-col gap-8">
           <QuestionCard
             key={questionAnswer[currentQuestionIndex].id}
-            question={questionAnswer[currentQuestionIndex].question}
-            options={questionAnswer[currentQuestionIndex].options}
-            answerString={questionAnswer[currentQuestionIndex].answerString}
+            question={shuffledQuestions[currentQuestionIndex].question}
+            options={shuffledQuestions[currentQuestionIndex].options}
+            answerString={shuffledQuestions[currentQuestionIndex].answerString}
             setInterpret={setInterpret}
             setLoading={setLoading}
             setIsAnswerCorrect={setIsAnswerCorrect}
