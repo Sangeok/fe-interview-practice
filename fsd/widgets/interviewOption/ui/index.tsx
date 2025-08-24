@@ -4,17 +4,33 @@ import { useState } from "react";
 
 import Dialog from "@/fsd/shared/ui/atoms/dialog/ui";
 import InterviewOptions from "./_component/InterviewOptions";
-import { InterviewOption } from "../model/type";
+import { InterviewOptionsValue } from "../model/type";
 import SubjectiveInterview from "@/fsd/features/subjectiveInterview/ui";
 import MultipleChoiceInterview from "@/fsd/features/multipleChoiceInterview/ui";
 import { MULTIPLE_CHOICE_INTERVIEW_QUESTIONS_JAVASCRIPT } from "@/fsd/features/multipleChoiceInterview/constants";
 import { arrayShuffle } from "@/fsd/shared/lib/array-shuffle";
+import { TechType } from "@/fsd/shared/model/type";
+import { MultipleChoiceQuestion } from "@/fsd/features/multipleChoiceInterview/model/type";
 
-export default function JavascriptInterview() {
-  const [selectedOptions, setSelectedOptions] = useState<InterviewOption | "">("");
+interface InterviewOptionProps {
+  tech: TechType;
+}
+
+export default function InterviewOption({ tech }: InterviewOptionProps) {
+  const [selectedOptions, setSelectedOptions] = useState<InterviewOptionsValue | "">("");
   const [openDialog, setOpenDialog] = useState(true);
 
-  const shuffledQuestions = arrayShuffle(MULTIPLE_CHOICE_INTERVIEW_QUESTIONS_JAVASCRIPT);
+  let question_answer: MultipleChoiceQuestion[] = [];
+
+  switch (tech) {
+    case "JavaScript":
+      question_answer = MULTIPLE_CHOICE_INTERVIEW_QUESTIONS_JAVASCRIPT;
+      break;
+    default:
+      question_answer = [];
+  }
+
+  const shuffledQuestions = arrayShuffle(question_answer);
 
   return (
     <div>

@@ -1,12 +1,11 @@
-import { useState } from "react";
 import { INTERVIEW_OPTIONS } from "../../constants";
 import RadioInput from "@/fsd/shared/ui/atoms/input/ui/RadioInput";
-import { InterviewOption } from "../../model/type";
+import { InterviewOptionsValue } from "../../model/type";
 import Button from "@/fsd/shared/ui/atoms/button/ui/Button";
 
 interface InterviewOptionsProps {
-  selectedOptions: InterviewOption | "";
-  setSelectedOptions: (option: InterviewOption) => void;
+  selectedOptions: InterviewOptionsValue | "";
+  setSelectedOptions: (option: InterviewOptionsValue) => void;
   onClose: () => void;
 }
 
@@ -21,7 +20,7 @@ export default function InterviewOptions({ selectedOptions, setSelectedOptions, 
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedOptions(event.target.value as InterviewOption);
+    setSelectedOptions(event.target.value as InterviewOptionsValue);
   };
 
   return (
