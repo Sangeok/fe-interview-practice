@@ -14,7 +14,7 @@ export default function InterviewPage({ title }: InterviewPageProps) {
       case "NextJs":
         return <div>NextJs Interview Page (구현 예정)</div>;
       case "JavaScript":
-        return <JavascriptInterview />;
+        return <JavascriptInterview tech={title} />;
       default:
         return <div>알 수 없는 인터뷰 유형: {title}</div>;
     }
