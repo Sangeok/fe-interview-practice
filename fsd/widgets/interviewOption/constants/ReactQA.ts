@@ -525,4 +525,368 @@ export const MULTIPLE_CHOICE_INTERVIEW_QUESTIONS_REACT: MultipleChoiceQuestion[]
     answerString:
       "렌더링 작업을 작은 단위로 나누어 브라우저가 다른 작업을 수행할 수 있도록 하여 사용자 경험을 개선합니다.",
   },
+  {
+    id: 29,
+    question: "클로저(Closure)에 대한 설명으로 가장 올바른 것은?",
+    options: [
+      {
+        id: 1,
+        label: "외부 함수가 종료된 후에도 내부 함수가 외부 함수의 변수에 접근할 수 있는 현상이다",
+        answerBoolean: true,
+      },
+      {
+        id: 2,
+        label: "함수 내부에서 선언된 모든 변수가 전역적으로 접근 가능해지는 기능이다",
+        answerBoolean: false,
+      },
+      {
+        id: 3,
+        label: "함수가 실행될 때마다 새로운 스코프를 생성하여 변수를 완전히 격리하는 메커니즘이다",
+        answerBoolean: false,
+      },
+    ],
+    answerString: "외부 함수가 종료된 후에도 내부 함수가 외부 함수의 변수에 접근할 수 있는 현상이다",
+  },
+  {
+    id: 30,
+    question: "JavaScript의 프로토타입 체인(Prototype Chain)에 대한 설명으로 올바른 것은?",
+    options: [
+      {
+        id: 1,
+        label:
+          "객체에서 프로퍼티나 메서드를 찾을 때, 해당 객체에 없으면 프로토타입 체인을 따라 상위 객체에서 찾는 과정이다",
+        answerBoolean: true,
+      },
+      {
+        id: 2,
+        label: "모든 객체가 동일한 프로토타입을 공유하여 메모리를 절약하는 시스템이다",
+        answerBoolean: false,
+      },
+      {
+        id: 3,
+        label: "객체 생성 시에만 실행되는 일회성 상속 메커니즘이다",
+        answerBoolean: false,
+      },
+    ],
+    answerString:
+      "객체에서 프로퍼티나 메서드를 찾을 때, 해당 객체에 없으면 프로토타입 체인을 따라 상위 객체에서 찾는 과정이다",
+  },
+  {
+    id: 31,
+    question: "JavaScript의 this 바인딩에서 '명시적 바인딩'에 해당하는 것은?",
+    options: [
+      {
+        id: 1,
+        label: "call(), apply(), bind() 메서드를 사용하여 this를 직접 지정하는 방식이다",
+        answerBoolean: true,
+      },
+      {
+        id: 2,
+        label: "객체의 메서드로 함수를 호출할 때 자동으로 this가 해당 객체를 가리키는 방식이다",
+        answerBoolean: false,
+      },
+      {
+        id: 3,
+        label: "화살표 함수에서 상위 스코프의 this를 상속받는 방식이다",
+        answerBoolean: false,
+      },
+    ],
+    answerString: "call(), apply(), bind() 메서드를 사용하여 this를 직접 지정하는 방식이다",
+  },
+  {
+    id: 32,
+    question: "call(), apply(), bind() 메서드의 차이점으로 올바른 것은?",
+    options: [
+      {
+        id: 1,
+        label: "call은 인수를 개별적으로 전달하고, apply는 배열로 전달하며, bind는 새로운 함수를 반환한다",
+        answerBoolean: true,
+      },
+      {
+        id: 2,
+        label: "call과 apply는 비동기로 실행되고, bind는 동기적으로 실행된다",
+        answerBoolean: false,
+      },
+      {
+        id: 3,
+        label: "apply는 즉시 실행되고, call과 bind는 나중에 호출할 수 있도록 함수를 저장한다",
+        answerBoolean: false,
+      },
+    ],
+    answerString: "call은 인수를 개별적으로 전달하고, apply는 배열로 전달하며, bind는 새로운 함수를 반환한다",
+  },
+  {
+    id: 33,
+    question: "JavaScript 이벤트 루프에서 Microtask Queue와 Task Queue(Macro Queue)의 실행 우선순위는?",
+    options: [
+      {
+        id: 1,
+        label: "Microtask Queue가 Task Queue보다 높은 우선순위를 가지며, Call Stack이 비면 Microtask를 먼저 실행한다",
+        answerBoolean: true,
+      },
+      {
+        id: 2,
+        label: "Task Queue가 Microtask Queue보다 높은 우선순위를 가지며, 먼저 등록된 순서대로 실행한다",
+        answerBoolean: false,
+      },
+      {
+        id: 3,
+        label: "두 Queue는 동일한 우선순위를 가지며, 무작위로 선택되어 실행된다",
+        answerBoolean: false,
+      },
+    ],
+    answerString:
+      "Microtask Queue가 Task Queue보다 높은 우선순위를 가지며, Call Stack이 비면 Microtask를 먼저 실행한다",
+  },
+  {
+    id: 34,
+    question: "Promise.all()과 Promise.allSettled()의 차이점으로 올바른 것은?",
+    options: [
+      {
+        id: 1,
+        label:
+          "Promise.all()은 하나라도 reject되면 즉시 실패하고, Promise.allSettled()는 모든 Promise가 완료될 때까지 기다린다",
+        answerBoolean: true,
+      },
+      {
+        id: 2,
+        label: "Promise.all()은 순차적으로 실행하고, Promise.allSettled()는 병렬로 실행한다",
+        answerBoolean: false,
+      },
+      {
+        id: 3,
+        label: "Promise.allSettled()는 ES5에서 사용 가능하고, Promise.all()은 ES6부터 사용할 수 있다",
+        answerBoolean: false,
+      },
+    ],
+    answerString:
+      "Promise.all()은 하나라도 reject되면 즉시 실패하고, Promise.allSettled()는 모든 Promise가 완료될 때까지 기다린다",
+  },
+  {
+    id: 35,
+    question: "async/await와 Promise의 주요 차이점으로 가장 올바른 것은?",
+    options: [
+      {
+        id: 1,
+        label:
+          "async/await는 동기적 코드처럼 읽기 쉽고 try/catch로 에러 처리가 가능하지만, 순차 실행으로 인한 성능 이슈가 있을 수 있다",
+        answerBoolean: true,
+      },
+      {
+        id: 2,
+        label: "async/await는 실제로 동기적으로 실행되어 블로킹이 발생하고, Promise는 항상 비동기로 실행된다",
+        answerBoolean: false,
+      },
+      {
+        id: 3,
+        label: "Promise는 병렬 처리가 불가능하고, async/await만이 여러 비동기 작업을 동시에 처리할 수 있다",
+        answerBoolean: false,
+      },
+    ],
+    answerString:
+      "async/await는 동기적 코드처럼 읽기 쉽고 try/catch로 에러 처리가 가능하지만, 순차 실행으로 인한 성능 이슈가 있을 수 있다",
+  },
+  {
+    id: 36,
+    question: "Generator 함수의 특징으로 가장 올바른 것은?",
+    options: [
+      {
+        id: 1,
+        label: "function* 키워드로 선언하며, yield를 통해 실행을 일시 중지하고 재개할 수 있는 함수이다",
+        answerBoolean: true,
+      },
+      {
+        id: 2,
+        label: "비동기 작업만을 위한 특별한 함수로, Promise와 완전히 동일한 기능을 제공한다",
+        answerBoolean: false,
+      },
+      {
+        id: 3,
+        label: "한 번 실행되면 자동으로 완료까지 실행되며, 중간에 멈출 수 없는 함수이다",
+        answerBoolean: false,
+      },
+    ],
+    answerString: "function* 키워드로 선언하며, yield를 통해 실행을 일시 중지하고 재개할 수 있는 함수이다",
+  },
+  {
+    id: 37,
+    question: "얕은 복사(Shallow Copy)와 깊은 복사(Deep Copy)의 차이점으로 올바른 것은?",
+    options: [
+      {
+        id: 1,
+        label: "얕은 복사는 중첩된 객체의 참조를 공유하고, 깊은 복사는 모든 레벨의 객체를 새롭게 생성한다",
+        answerBoolean: true,
+      },
+      {
+        id: 2,
+        label: "얕은 복사가 깊은 복사보다 메모리를 더 많이 사용하고 성능이 더 느리다",
+        answerBoolean: false,
+      },
+      {
+        id: 3,
+        label: "깊은 복사는 1차원 배열과 객체에서만 사용할 수 있고, 얕은 복사는 다차원에서 사용한다",
+        answerBoolean: false,
+      },
+    ],
+    answerString: "얕은 복사는 중첩된 객체의 참조를 공유하고, 깊은 복사는 모든 레벨의 객체를 새롭게 생성한다",
+  },
+  {
+    id: 38,
+    question: "JavaScript의 가비지 컬렉션(Garbage Collection)에 대한 설명으로 올바른 것은?",
+    options: [
+      {
+        id: 1,
+        label:
+          "더 이상 참조되지 않는 객체들을 자동으로 메모리에서 해제하는 메커니즘으로, Mark and Sweep 알고리즘을 주로 사용한다",
+        answerBoolean: true,
+      },
+      {
+        id: 2,
+        label: "개발자가 직접 delete 연산자를 사용해서 수동으로 메모리를 해제해야 하는 시스템이다",
+        answerBoolean: false,
+      },
+      {
+        id: 3,
+        label: "함수가 실행될 때마다 자동으로 실행되어 모든 지역 변수를 즉시 삭제한다",
+        answerBoolean: false,
+      },
+    ],
+    answerString:
+      "더 이상 참조되지 않는 객체들을 자동으로 메모리에서 해제하는 메커니즘으로, Mark and Sweep 알고리즘을 주로 사용한다",
+  },
+  {
+    id: 39,
+    question: "함수형 프로그래밍의 '순수 함수(Pure Function)'에 대한 설명으로 올바른 것은?",
+    options: [
+      {
+        id: 1,
+        label: "같은 입력에 대해 항상 같은 출력을 반환하며, 외부 상태를 변경하지 않는 부작용이 없는 함수이다",
+        answerBoolean: true,
+      },
+      {
+        id: 2,
+        label: "전역 변수나 외부 데이터베이스에 접근할 수 있지만, 함수 내부에서만 데이터를 수정하는 함수이다",
+        answerBoolean: false,
+      },
+      {
+        id: 3,
+        label: "비동기 작업을 처리하지 않고 동기적으로만 실행되는 모든 함수를 의미한다",
+        answerBoolean: false,
+      },
+    ],
+    answerString: "같은 입력에 대해 항상 같은 출력을 반환하며, 외부 상태를 변경하지 않는 부작용이 없는 함수이다",
+  },
+  {
+    id: 40,
+    question: "커링(Currying)에 대한 설명으로 가장 올바른 것은?",
+    options: [
+      {
+        id: 1,
+        label: "여러 개의 인수를 받는 함수를 하나의 인수만 받는 함수들의 체인으로 변환하는 기법이다",
+        answerBoolean: true,
+      },
+      {
+        id: 2,
+        label: "함수의 실행 결과를 캐시하여 동일한 입력에 대해 빠른 응답을 제공하는 최적화 기법이다",
+        answerBoolean: false,
+      },
+      {
+        id: 3,
+        label: "비동기 함수들을 순서대로 연결하여 실행하는 패턴이다",
+        answerBoolean: false,
+      },
+    ],
+    answerString: "여러 개의 인수를 받는 함수를 하나의 인수만 받는 함수들의 체인으로 변환하는 기법이다",
+  },
+  {
+    id: 41,
+    question: "디바운싱(Debouncing)과 스로틀링(Throttling)의 차이점으로 올바른 것은?",
+    options: [
+      {
+        id: 1,
+        label: "디바운싱은 연속 호출 중 마지막만 실행하고, 스로틀링은 일정 시간 간격으로 실행한다",
+        answerBoolean: true,
+      },
+      {
+        id: 2,
+        label: "디바운싱은 첫 번째 호출만 실행하고, 스로틀링은 모든 호출을 지연시켜 실행한다",
+        answerBoolean: false,
+      },
+      {
+        id: 3,
+        label: "스로틀링이 디바운싱보다 메모리를 더 많이 사용하고 성능이 떨어진다",
+        answerBoolean: false,
+      },
+    ],
+    answerString: "디바운싱은 연속 호출 중 마지막만 실행하고, 스로틀링은 일정 시간 간격으로 실행한다",
+  },
+  {
+    id: 42,
+    question: "메모이제이션(Memoization) 기법에 대한 설명으로 가장 올바른 것은?",
+    options: [
+      {
+        id: 1,
+        label: "함수의 실행 결과를 캐시하여 동일한 인수로 다시 호출될 때 캐시된 결과를 반환하는 최적화 기법이다",
+        answerBoolean: true,
+      },
+      {
+        id: 2,
+        label: "함수가 실행될 때마다 이전 실행 결과를 삭제하여 메모리 사용량을 최소화하는 기법이다",
+        answerBoolean: false,
+      },
+      {
+        id: 3,
+        label: "비동기 함수의 실행 순서를 기억하여 올바른 순서로 결과를 반환하는 기법이다",
+        answerBoolean: false,
+      },
+    ],
+    answerString: "함수의 실행 결과를 캐시하여 동일한 인수로 다시 호출될 때 캐시된 결과를 반환하는 최적화 기법이다",
+  },
+  {
+    id: 43,
+    question: "싱글톤 패턴(Singleton Pattern)에 대한 설명으로 올바른 것은?",
+    options: [
+      {
+        id: 1,
+        label: "클래스의 인스턴스가 하나만 생성되도록 보장하고, 전역적으로 접근할 수 있는 접근점을 제공하는 패턴이다",
+        answerBoolean: true,
+      },
+      {
+        id: 2,
+        label: "여러 개의 유사한 객체를 효율적으로 생성하기 위한 팩토리 패턴의 한 종류이다",
+        answerBoolean: false,
+      },
+      {
+        id: 3,
+        label: "객체 간의 느슨한 결합을 위해 중재자 역할을 하는 객체를 만드는 패턴이다",
+        answerBoolean: false,
+      },
+    ],
+    answerString:
+      "클래스의 인스턴스가 하나만 생성되도록 보장하고, 전역적으로 접근할 수 있는 접근점을 제공하는 패턴이다",
+  },
+  {
+    id: 44,
+    question: "JavaScript의 Proxy 객체에 대한 설명으로 가장 올바른 것은?",
+    options: [
+      {
+        id: 1,
+        label:
+          "객체의 기본 동작(속성 접근, 할당, 함수 호출 등)을 가로채서 사용자 정의 동작으로 재정의할 수 있게 해주는 기능이다",
+        answerBoolean: true,
+      },
+      {
+        id: 2,
+        label: "네트워크 요청을 중계하는 프록시 서버의 역할을 JavaScript에서 구현한 내장 객체이다",
+        answerBoolean: false,
+      },
+      {
+        id: 3,
+        label: "여러 객체를 하나의 인터페이스로 통합하여 사용할 수 있게 해주는 어댑터 패턴의 구현체이다",
+        answerBoolean: false,
+      },
+    ],
+    answerString:
+      "객체의 기본 동작(속성 접근, 할당, 함수 호출 등)을 가로채서 사용자 정의 동작으로 재정의할 수 있게 해주는 기능이다",
+  },
 ] as const;
