@@ -12,13 +12,16 @@ import { arrayShuffle } from "@/fsd/shared/lib/array-shuffle";
 import { TechType } from "@/fsd/shared/model/type";
 import { MultipleChoiceQuestion } from "@/fsd/features/multipleChoiceInterview/model/type";
 import { MULTIPLE_CHOICE_INTERVIEW_QUESTIONS_REACT } from "../constants/ReactQA";
+import { MULTIPLE_CHOICE_INTERVIEW_QUESTIONS_TYPESCRIPT } from "../constants/TypescriptQA";
 
 interface InterviewOptionProps {
   tech: TechType;
 }
 
 export default function InterviewOption({ tech }: InterviewOptionProps) {
-  const [selectedOptions, setSelectedOptions] = useState<InterviewOptionsValue | "">("");
+  const [selectedOptions, setSelectedOptions] = useState<
+    InterviewOptionsValue | ""
+  >("");
   const [openDialog, setOpenDialog] = useState(true);
 
   let question_answer: MultipleChoiceQuestion[] = [];
@@ -30,6 +33,9 @@ export default function InterviewOption({ tech }: InterviewOptionProps) {
     case "React":
       question_answer = MULTIPLE_CHOICE_INTERVIEW_QUESTIONS_REACT;
       break;
+    case "TypeScript":
+      question_answer = MULTIPLE_CHOICE_INTERVIEW_QUESTIONS_TYPESCRIPT;
+      break;
     default:
       question_answer = [];
   }
@@ -38,12 +44,18 @@ export default function InterviewOption({ tech }: InterviewOptionProps) {
 
   return (
     <div>
-      {selectedOptions === "Subjective" && !openDialog && <SubjectiveInterview />}
+      {selectedOptions === "Subjective" && !openDialog && (
+        <SubjectiveInterview />
+      )}
       {selectedOptions === "Multiple Choice" && !openDialog && (
         <MultipleChoiceInterview questionAnswer={shuffledQuestions} />
       )}
 
-      <Dialog open={openDialog} onClose={() => setOpenDialog(false)} title="Select Options">
+      <Dialog
+        open={openDialog}
+        onClose={() => setOpenDialog(false)}
+        title="Select Options"
+      >
         <InterviewOptions
           selectedOptions={selectedOptions}
           setSelectedOptions={setSelectedOptions}
