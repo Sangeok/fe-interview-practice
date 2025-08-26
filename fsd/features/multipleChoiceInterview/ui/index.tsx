@@ -12,11 +12,14 @@ interface MultipleChoiceInterviewProps {
   questionAnswer: MultipleChoiceQuestion[];
 }
 
-export default function MultipleChoiceInterview({ questionAnswer }: MultipleChoiceInterviewProps) {
+export default function MultipleChoiceInterview({
+  questionAnswer,
+}: MultipleChoiceInterviewProps) {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [loading, setLoading] = useState<boolean>(false);
-  const [interpret, setInterpret] = useState<MultipleChoiceInterpretType | null>(null);
+  const [interpret, setInterpret] =
+    useState<MultipleChoiceInterpretType | null>(null);
   const [isAnswerCorrect, setIsAnswerCorrect] = useState<boolean | null>(null);
 
   // 각 질문의 옵션을 한 번만 섞어서 메모이제이션
@@ -39,7 +42,12 @@ export default function MultipleChoiceInterview({ questionAnswer }: MultipleChoi
 
   return (
     <div className="w-full max-w-2xl mx-auto p-4">
-      {isQuizFinished && <EndQuestion score={score} questionAnswerLength={questionAnswer.length} />}
+      {isQuizFinished && (
+        <EndQuestion
+          score={score}
+          questionAnswerLength={questionAnswer.length}
+        />
+      )}
       {!isQuizFinished && (
         <div className="flex flex-col gap-8">
           <QuestionCard
@@ -51,10 +59,16 @@ export default function MultipleChoiceInterview({ questionAnswer }: MultipleChoi
             setLoading={setLoading}
             setIsAnswerCorrect={setIsAnswerCorrect}
           />
-          {!isAnswerCorrect && (
-            <InterpretCard loading={loading} interpret={interpret} onNext={() => handleNextQuestion(true)} />
+          {isAnswerCorrect === false && (
+            <InterpretCard
+              loading={loading}
+              interpret={interpret}
+              onNext={() => handleNextQuestion(true)}
+            />
           )}
-          {isAnswerCorrect && <AnswerCorrectCard onNext={() => handleNextQuestion(true)} />}
+          {isAnswerCorrect && (
+            <AnswerCorrectCard onNext={() => handleNextQuestion(true)} />
+          )}
         </div>
       )}
     </div>
