@@ -23,8 +23,8 @@ export default function ChatInput({ onSendMessage, isLoading = false }: ChatInpu
 
   const handleSubmit = () => {
     const message = inputValue.trim();
-    if (message) {
-      //   onSendMessage(message);
+    if (message && onSendMessage) {
+      onSendMessage(message);
       setInputValue("");
     }
   };
