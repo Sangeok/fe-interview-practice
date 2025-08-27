@@ -1,5 +1,5 @@
 export interface Message {
   id: number;
-  role: "user" | "assistant";
+  role: "user" | "assistant" | "Admin";
   content: string;
 }

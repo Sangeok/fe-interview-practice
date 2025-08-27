@@ -4,17 +4,19 @@ import { useState, useEffect, useRef } from "react";
 import { Message } from "../../../../../features/chat/chatMessage/model/type";
 import ChatMessage from "../../../../../features/chat/chatMessage/ui/ChatMessage";
 import ChatInput from "../../../../../features/chat/chatInput/ui/ChatInput";
+import StartConversation from "./_component/StartConversation";
 
 const initialMessages: Message[] = [
   {
     id: 1,
-    role: "assistant",
-    content: "안녕하세요! 주관식 면접 시뮬레이션을 시작합니다. 준비되셨나요?",
+    role: "Admin",
+    content: "안녕하세요! 면접 시뮬레이션을 시작합니다.",
   },
 ];
 
 export default function SubjectiveInterview() {
-  const [messages, setMessages] = useState<Message[]>(initialMessages);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [questionIndex, setQuestionIndex] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -42,9 +44,22 @@ export default function SubjectiveInterview() {
         role: "assistant",
         content: `"${content}"에 대한 답변을 생성 중입니다... (시뮬레이션)`,
       };
+
       setMessages((prev) => [...prev, assistantMessage]);
+      handleContinueMessage();
       setIsLoading(false);
     }, 1500);
+  };
+
+  const handleContinueMessage = () => {
+    setTimeout(() => {
+      const adminMessage: Message = {
+        id: Date.now() + 2,
+        role: "Admin",
+        content: "안녕하세요! 면접 시뮬레이션을 시작합니다.",
+      };
+      setMessages((prev) => [...prev, adminMessage]);
+    }, 5000);
   };
 
   return (
