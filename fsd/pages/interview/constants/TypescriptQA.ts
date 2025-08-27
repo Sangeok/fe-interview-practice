@@ -1,4 +1,4 @@
-import { MultipleChoiceQuestion } from "../../../features/multipleChoiceInterview/model/type";
+import { MultipleChoiceQuestion } from "../../../widgets/interviewOption/ui/multipleChoiceInterview/model/type";
 
 export const MULTIPLE_CHOICE_INTERVIEW_QUESTIONS_TYPESCRIPT: MultipleChoiceQuestion[] =
   [
