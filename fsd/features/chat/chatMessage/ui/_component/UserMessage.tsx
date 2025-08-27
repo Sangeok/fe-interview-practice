@@ -1,3 +1,5 @@
+import { User } from "lucide-react";
+
 function UserAvatar() {
   return (
     <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
