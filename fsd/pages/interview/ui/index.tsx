@@ -1,19 +1,16 @@
 "use client";
 
-import { MultipleChoiceQuestion } from "@/fsd/widgets/interviewOption/ui/multipleChoiceInterview/model/type";
 import { useSelectTechStore } from "@/fsd/shared/model/useSelectTechStore";
 import { InterviewOptionsValue } from "@/fsd/pages/interview/model/type";
 import { useState } from "react";
-import {
-  MULTIPLE_CHOICE_INTERVIEW_QUESTIONS_JAVASCRIPT,
-  MULTIPLE_CHOICE_INTERVIEW_QUESTIONS_REACT,
-  MULTIPLE_CHOICE_INTERVIEW_QUESTIONS_TYPESCRIPT,
-} from "../constants";
 import { arrayShuffle } from "@/fsd/shared/lib/array-shuffle";
 import SubjectiveInterview from "@/fsd/widgets/interviewOption/ui/subjectiveInterview/ui";
 import MultipleChoiceInterview from "@/fsd/widgets/interviewOption/ui/multipleChoiceInterview/ui";
 import Dialog from "@/fsd/shared/ui/atoms/dialog/ui";
 import InterviewOptions from "./_component/InterviewOptions";
+import { getQuestionAnswer } from "../lib/getQuestionAnswer";
+import { SubjectiveQuestion } from "@/fsd/widgets/interviewOption/ui/subjectiveInterview/model/type";
+import { MultipleChoiceQuestion } from "@/fsd/widgets/interviewOption/ui/multipleChoiceInterview/model/type";
 
 export default function InterviewPage() {
   const [selectedOptions, setSelectedOptions] = useState<
@@ -22,33 +19,25 @@ export default function InterviewPage() {
   const [openDialog, setOpenDialog] = useState(true);
   const { tech } = useSelectTechStore();
 
-  let question_answer: MultipleChoiceQuestion[] = [];
-
-  switch (tech) {
-    case "JavaScript":
-      question_answer = MULTIPLE_CHOICE_INTERVIEW_QUESTIONS_JAVASCRIPT;
-      break;
-    case "React":
-      question_answer = MULTIPLE_CHOICE_INTERVIEW_QUESTIONS_REACT;
-      break;
-    case "TypeScript":
-      question_answer = MULTIPLE_CHOICE_INTERVIEW_QUESTIONS_TYPESCRIPT;
-      break;
-    default:
-      question_answer = [];
-  }
-
-  const shuffledQuestions = arrayShuffle(question_answer);
+  const question_answer = getQuestionAnswer(
+    tech,
+    selectedOptions as InterviewOptionsValue
+  );
+  const shuffledQuestions = arrayShuffle(question_answer || []);
 
   return (
     <div className="p-8 h-screen">
       <header className="text-2xl font-bold">{tech} Interview</header>
 
       {selectedOptions === "Subjective" && !openDialog && (
-        <SubjectiveInterview />
+        <SubjectiveInterview
+          questionAnswer={shuffledQuestions as SubjectiveQuestion[]}
+        />
       )}
       {selectedOptions === "Multiple Choice" && !openDialog && (
-        <MultipleChoiceInterview questionAnswer={shuffledQuestions} />
+        <MultipleChoiceInterview
+          questionAnswer={shuffledQuestions as MultipleChoiceQuestion[]}
+        />
       )}
 
       <Dialog

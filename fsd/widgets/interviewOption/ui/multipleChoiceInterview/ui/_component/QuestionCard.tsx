@@ -2,8 +2,8 @@
 import RadioInput from "@/fsd/shared/ui/atoms/input/ui/RadioInput";
 import Button from "@/fsd/shared/ui/atoms/button/ui/Button";
 import { useState } from "react";
-import { Option } from "../../model/type";
 import { MultipleChoiceInterpretType } from "@/fsd/shared/model/type";
+import { Option } from "../../model/type";
 import { useSelectTechStore } from "@/fsd/shared/model/useSelectTechStore";
 
 interface QuestionCardProps {
@@ -24,7 +24,8 @@ export default function QuestionCard({
   setIsAnswerCorrect,
 }: QuestionCardProps) {
   const [selectedOption, setSelectedOption] = useState<Option | null>(null);
-  const [checkAnswerButtonDisabled, setCheckAnswerButtonDisabled] = useState(false);
+  const [checkAnswerButtonDisabled, setCheckAnswerButtonDisabled] =
+    useState(false);
   const { tech } = useSelectTechStore();
 
   const handleOptionChange = (option: Option) => {
@@ -79,7 +80,10 @@ export default function QuestionCard({
         ))}
       </div>
       <div className="flex justify-end">
-        <Button onClick={handleCheckAnswer} disabled={!selectedOption || checkAnswerButtonDisabled}>
+        <Button
+          onClick={handleCheckAnswer}
+          disabled={!selectedOption || checkAnswerButtonDisabled}
+        >
           정답 확인
         </Button>
       </div>
