@@ -1,4 +1,6 @@
-export const JAVASCRIPT_SUBJECTIVE_QUESTIONS = [
+import { SubjectiveQuestion } from "@/fsd/widgets/interviewOption/ui/subjectiveInterview/model/type";
+
+export const JAVASCRIPT_SUBJECTIVE_QUESTIONS: SubjectiveQuestion[] = [
   {
     id: 1,
     question: "Promise.all()에 대해 설명하라.",

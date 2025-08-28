@@ -8,7 +8,11 @@ interface InterpretCardProps {
   onNext: () => void;
 }
 
-export default function InterpretCard({ loading, interpret, onNext }: InterpretCardProps) {
+export default function InterpretCard({
+  loading,
+  interpret,
+  onNext,
+}: InterpretCardProps) {
   const [expandedTheory, setExpandedTheory] = useState(false);
   const [expandedAnalogy, setExpandedAnalogy] = useState(false);
 
@@ -63,7 +67,9 @@ export default function InterpretCard({ loading, interpret, onNext }: InterpretC
         <div className="flex items-center justify-center py-8">
           <div className="flex items-center space-x-3 text-blue-400">
             <div className="w-6 h-6 border-2 border-blue-400 border-t-transparent rounded-full animate-spin"></div>
-            <span className="text-lg font-medium">AI가 문제를 해설하는 중입니다...</span>
+            <span className="text-lg font-medium">
+              AI가 문제를 해설하는 중입니다...
+            </span>
           </div>
         </div>
       </div>
@@ -78,8 +84,10 @@ export default function InterpretCard({ loading, interpret, onNext }: InterpretC
     <div className="p-6 bg-zinc-800 rounded-lg shadow-md animate-fade-up-1 space-y-6">
       {/* 헤더 */}
       <div className="border-b border-zinc-700 pb-4">
-        <h3 className="text-xl font-semibold mb-2 text-zinc-100">💡 문제 해석</h3>
-        <p className="text-sm text-zinc-400">"{interpret.Question}"</p>
+        <h3 className="text-xl font-semibold mb-2 text-zinc-100">
+          💡 문제 해석
+        </h3>
+        <p className="text-sm text-zinc-400">{interpret.Question}</p>
       </div>
 
       {/* 요약 섹션 */}
@@ -103,7 +111,9 @@ export default function InterpretCard({ loading, interpret, onNext }: InterpretC
           </h4>
           <span
             className="text-zinc-400 transform transition-transform duration-200"
-            style={{ transform: expandedTheory ? "rotate(180deg)" : "rotate(0deg)" }}
+            style={{
+              transform: expandedTheory ? "rotate(180deg)" : "rotate(0deg)",
+            }}
           >
             ▼
           </span>
@@ -117,12 +127,21 @@ export default function InterpretCard({ loading, interpret, onNext }: InterpretC
 
             {interpret.details.theory.rules.length > 0 && (
               <div className="space-y-3">
-                <h5 className="text-md font-medium text-zinc-200">주요 규칙들</h5>
+                <h5 className="text-md font-medium text-zinc-200">
+                  주요 규칙들
+                </h5>
                 <div className="space-y-2">
                   {interpret.details.theory.rules.map((rule, index) => (
-                    <div key={index} className="bg-zinc-800 p-3 rounded border-l-2 border-green-500">
-                      <h6 className="font-medium text-green-300 mb-1">{rule.title}</h6>
-                      <p className="text-zinc-400 text-sm">{rule.explanation}</p>
+                    <div
+                      key={index}
+                      className="bg-zinc-800 p-3 rounded border-l-2 border-green-500"
+                    >
+                      <h6 className="font-medium text-green-300 mb-1">
+                        {rule.title}
+                      </h6>
+                      <p className="text-zinc-400 text-sm">
+                        {rule.explanation}
+                      </p>
                     </div>
                   ))}
                 </div>
@@ -144,7 +163,9 @@ export default function InterpretCard({ loading, interpret, onNext }: InterpretC
           </h4>
           <span
             className="text-zinc-400 transform transition-transform duration-200"
-            style={{ transform: expandedAnalogy ? "rotate(180deg)" : "rotate(0deg)" }}
+            style={{
+              transform: expandedAnalogy ? "rotate(180deg)" : "rotate(0deg)",
+            }}
           >
             ▼
           </span>
@@ -153,12 +174,21 @@ export default function InterpretCard({ loading, interpret, onNext }: InterpretC
         {expandedAnalogy && (
           <div className="mt-4 space-y-4 animate-fade-in">
             {interpret.details.analogy.scenarios.map((scenario, index) => (
-              <div key={index} className="bg-zinc-800 p-4 rounded-lg border-l-4 border-purple-500">
+              <div
+                key={index}
+                className="bg-zinc-800 p-4 rounded-lg border-l-4 border-purple-500"
+              >
                 <div className="flex items-center mb-2">
-                  <span className="px-2 py-1 bg-purple-600 text-white text-xs rounded-full mr-3">{scenario.type}</span>
-                  <h6 className="font-medium text-purple-300">{scenario.title}</h6>
+                  <span className="px-2 py-1 bg-purple-600 text-white text-xs rounded-full mr-3">
+                    {scenario.type}
+                  </span>
+                  <h6 className="font-medium text-purple-300">
+                    {scenario.title}
+                  </h6>
                 </div>
-                <p className="text-zinc-300 leading-relaxed">{scenario.story}</p>
+                <p className="text-zinc-300 leading-relaxed">
+                  {scenario.story}
+                </p>
               </div>
             ))}
           </div>

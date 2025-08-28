@@ -1,4 +1,6 @@
-export const SUBJECTIVE_INTERVIEW_QUESTIONS_TYPESCRIPT = [
+import { SubjectiveQuestion } from "@/fsd/widgets/interviewOption/ui/subjectiveInterview/model/type";
+
+export const TYPESCRIPT_SUBJECTIVE_QUESTIONS: SubjectiveQuestion[] = [
   {
     id: 1,
     question: "TypeScript에서 `any`와 `unknown`의 차이점에 대해 설명하라.",

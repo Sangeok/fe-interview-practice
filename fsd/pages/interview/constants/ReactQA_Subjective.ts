@@ -1,4 +1,6 @@
-export const SUBJECTIVE_INTERVIEW_QUESTIONS_REACT = [
+import { SubjectiveQuestion } from "@/fsd/widgets/interviewOption/ui/subjectiveInterview/model/type";
+
+export const REACT_SUBJECTIVE_QUESTIONS: SubjectiveQuestion[] = [
   {
     id: 1,
     question: "React의 Virtual DOM(가상 DOM)에 대해 설명하라.",

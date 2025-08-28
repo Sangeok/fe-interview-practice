@@ -4,17 +4,16 @@ import { useState, useEffect, useRef } from "react";
 import { Message } from "../../../../../features/chat/chatMessage/model/type";
 import ChatMessage from "../../../../../features/chat/chatMessage/ui/ChatMessage";
 import ChatInput from "../../../../../features/chat/chatInput/ui/ChatInput";
-import StartConversation from "./_component/StartConversation";
+import ButtonMessage from "../../../../../features/chat/chatMessage/ui/_component/ButtonMessage";
+import { SubjectiveQuestion } from "../model/type";
 
-const initialMessages: Message[] = [
-  {
-    id: 1,
-    role: "Admin",
-    content: "안녕하세요! 면접 시뮬레이션을 시작합니다.",
-  },
-];
+interface SubjectiveInterviewProps {
+  questionAnswer: SubjectiveQuestion[];
+}
 
-export default function SubjectiveInterview() {
+export default function SubjectiveInterview({
+  questionAnswer,
+}: SubjectiveInterviewProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [questionIndex, setQuestionIndex] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -28,6 +27,18 @@ export default function SubjectiveInterview() {
     scrollToBottom();
   }, [messages]);
 
+  // 첫 번째 질문을 자동으로 표시
+  useEffect(() => {
+    if (questionAnswer.length > 0 && messages.length === 0) {
+      const firstQuestion: Message = {
+        id: Date.now(),
+        role: "assistant",
+        content: questionAnswer[0].question,
+      };
+      setMessages([firstQuestion]);
+    }
+  }, [questionAnswer, messages.length]);
+
   const handleSendMessage = (content: string) => {
     const userMessage: Message = {
       id: Date.now(),
@@ -37,29 +48,63 @@ export default function SubjectiveInterview() {
     setMessages((prev) => [...prev, userMessage]);
     setIsLoading(true);
 
-    // Simulate assistant response
+    // 사용자 답변에 대한 피드백 생성
     setTimeout(() => {
-      const assistantMessage: Message = {
+      const feedbackMessage: Message = {
         id: Date.now() + 1,
         role: "assistant",
-        content: `"${content}"에 대한 답변을 생성 중입니다... (시뮬레이션)`,
+        content: `좋은 답변입니다! "${content}"에 대한 피드백을 드리겠습니다. 이 답변은 문제의 핵심을 잘 이해하고 있음을 보여줍니다.`,
       };
 
-      setMessages((prev) => [...prev, assistantMessage]);
-      handleContinueMessage();
+      setMessages((prev) => [...prev, feedbackMessage]);
       setIsLoading(false);
+
+      // 피드백 후 다음 액션 버튼 표시
+      showActionButtons();
     }, 1500);
   };
 
-  const handleContinueMessage = () => {
+  const showActionButtons = () => {
     setTimeout(() => {
-      const adminMessage: Message = {
+      const buttonMessage: Message = {
         id: Date.now() + 2,
         role: "Admin",
-        content: "안녕하세요! 면접 시뮬레이션을 시작합니다.",
+        content: "SHOW_BUTTONS",
       };
-      setMessages((prev) => [...prev, adminMessage]);
+      setMessages((prev) => [...prev, buttonMessage]);
     }, 5000);
+  };
+
+  const handleNextQuestion = () => {
+    if (questionIndex < questionAnswer.length - 1) {
+      const nextIndex = questionIndex + 1;
+      setQuestionIndex(nextIndex);
+
+      const nextQuestionMessage: Message = {
+        id: Date.now(),
+        role: "assistant",
+        content: questionAnswer[nextIndex].question,
+      };
+
+      // 버튼 메시지를 제거하고 다음 질문 추가
+      setMessages((prev) => [
+        ...prev.filter((msg) => msg.content !== "SHOW_BUTTONS"),
+        nextQuestionMessage,
+      ]);
+    }
+  };
+
+  const handleEndInterview = () => {
+    const endMessage: Message = {
+      id: Date.now(),
+      role: "assistant",
+      content: "면접이 종료되었습니다. 수고하셨습니다!",
+    };
+
+    setMessages((prev) => [
+      ...prev.filter((msg) => msg.content !== "SHOW_BUTTONS"),
+      endMessage,
+    ]);
   };
 
   return (
@@ -67,9 +112,19 @@ export default function SubjectiveInterview() {
       <div className="flex-1 overflow-y-auto p-4">
         <div className="max-w-4xl mx-auto">
           <div className="space-y-6">
-            {messages.map((message) => (
-              <ChatMessage key={message.id} message={message} />
-            ))}
+            {messages.map((message) => {
+              if (message.content === "SHOW_BUTTONS") {
+                return (
+                  <ButtonMessage
+                    key={message.id}
+                    onNext={handleNextQuestion}
+                    onEnd={handleEndInterview}
+                    showNext={questionIndex < questionAnswer.length - 1}
+                  />
+                );
+              }
+              return <ChatMessage key={message.id} message={message} />;
+            })}
             <div ref={messagesEndRef} />
           </div>
         </div>
