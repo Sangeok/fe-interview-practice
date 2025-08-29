@@ -12,10 +12,10 @@ export const createUserMessage = (content: string): Message => ({
   content,
 });
 
-export const createFeedbackMessage = (userContent: string): Message => ({
+export const createFeedbackMessage = (content: string): Message => ({
   id: Date.now() + 1,
   role: "assistant",
-  content: `좋은 답변입니다! "${userContent}"에 대한 피드백을 드리겠습니다. 이 답변은 문제의 핵심을 잘 이해하고 있음을 보여줍니다.`,
+  content,
 });
 
 export const createActionButtonMessage = (): Message => ({
