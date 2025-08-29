@@ -41,16 +41,6 @@ export const useSubjectiveInterview = (
     setMessages((prev) => [...prev, userMessage]);
     setIsLoading(true);
 
-    // 사용자 답변에 대한 피드백 생성
-    // setTimeout(() => {
-    //   const feedbackMessage = createFeedbackMessage(content);
-    //   setMessages((prev) => [...prev, feedbackMessage]);
-    //   setIsLoading(false);
-
-    //   // 피드백 후 다음 액션 버튼 표시
-    //   showActionButtons();
-    // }, 1500);
-
     try {
       const response = await fetch("/api/generate-feedback", {
         method: "POST",
@@ -62,11 +52,18 @@ export const useSubjectiveInterview = (
       });
 
       const data = await response.json();
-      console.log(data);
+
+      const feedbackMessage = createFeedbackMessage(JSON.stringify(data));
+      setMessages((prev) => [...prev, feedbackMessage]);
     } catch (error) {
       console.error(error);
+      const errorMessage = createFeedbackMessage(
+        "죄송합니다. 피드백 생성 중 오류가 발생했습니다."
+      );
+      setMessages((prev) => [...prev, errorMessage]);
     } finally {
       setIsLoading(false);
+      showActionButtons();
     }
   };
 
