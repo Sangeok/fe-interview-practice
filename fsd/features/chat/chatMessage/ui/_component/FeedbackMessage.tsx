@@ -1,7 +1,6 @@
-import { Bot, AlertTriangle, Lightbulb, Target } from "lucide-react";
-import { useState, useEffect } from "react";
+import { AlertTriangle, Lightbulb, Target } from "lucide-react";
 
-interface FeedbackData {
+export interface FeedbackData {
   topic: string;
   evaluation: {
     score: number;
@@ -25,14 +24,6 @@ interface FeedbackData {
       solution: string;
     };
   };
-}
-
-function BotAvatar() {
-  return (
-    <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg">
-      <Bot size={24} className="text-white" />
-    </div>
-  );
 }
 
 function ScoreDisplay({
@@ -158,48 +149,7 @@ function ModelAnswerSection({
   );
 }
 
-// content가 FeedbackData 타입인지 판단하는 타입 가드 함수
-function isFeedbackData(
-  content: string | FeedbackData
-): content is FeedbackData {
-  return (
-    typeof content === "object" &&
-    content !== null &&
-    "topic" in content &&
-    "evaluation" in content &&
-    "feedbackDetails" in content &&
-    "modelAnswer" in content
-  );
-}
-
-function useTypewriter(text: string, speed: number = 30) {
-  const [displayedText, setDisplayedText] = useState("");
-  const [isTyping, setIsTyping] = useState(false);
-
-  useEffect(() => {
-    if (!text) return;
-
-    setIsTyping(true);
-    setDisplayedText("");
-
-    let index = 0;
-    const timer = setInterval(() => {
-      if (index < text.length) {
-        setDisplayedText(text.slice(0, index + 1));
-        index++;
-      } else {
-        setIsTyping(false);
-        clearInterval(timer);
-      }
-    }, speed);
-
-    return () => clearInterval(timer);
-  }, [text, speed]);
-
-  return { displayedText, isTyping };
-}
-
-function FeedbackMessage({ data }: { data: FeedbackData }) {
+export default function FeedbackMessage({ data }: { data: FeedbackData }) {
   return (
     <div className="space-y-6">
       <div className="border-b border-gray-200 pb-4">
@@ -217,50 +167,6 @@ function FeedbackMessage({ data }: { data: FeedbackData }) {
 
       <FeedbackSection details={data.feedbackDetails} />
       <ModelAnswerSection modelAnswer={data.modelAnswer} />
-    </div>
-  );
-}
-
-export default function BotMessage({
-  content,
-}: {
-  content: string | FeedbackData;
-}) {
-  // content가 FeedbackData인지 판단
-  const feedbackData = isFeedbackData(content);
-
-  // string 타입일 때만 useTypewriter 훅 사용
-  const { displayedText, isTyping } = useTypewriter(
-    feedbackData ? "" : (content as string),
-    30
-  );
-
-  // FeedbackData 타입인 경우 피드백 메시지 렌더링
-  if (feedbackData) {
-    return (
-      <div className="flex items-start gap-4 justify-start">
-        <BotAvatar />
-        <div className="max-w-4xl bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-          <FeedbackMessage data={content as FeedbackData} />
-        </div>
-      </div>
-    );
-  }
-
-  // string 타입인 경우 타이핑 효과와 함께 일반 메시지 렌더링
-  return (
-    <div className="flex items-start gap-4 justify-start">
-      <BotAvatar />
-      <div className="px-5 py-4 rounded-2xl max-w-2xl bg-white shadow-sm border border-gray-200">
-        <p className="text-sm text-gray-800 whitespace-pre-wrap leading-relaxed">
-          {displayedText}
-          {isTyping && (
-            <span className="ml-1 animate-pulse text-blue-500 font-bold">
-              |
-            </span>
-          )}
-        </p>
-      </div>
     </div>
   );
 }

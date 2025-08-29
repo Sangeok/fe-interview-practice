@@ -1,15 +1,10 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { SubjectiveQuestion } from "../type";
-import {
-  createQuestionMessage,
-  createUserMessage,
-  createFeedbackMessage,
-  createActionButtonMessage,
-  createEndMessage,
-  filterButtonMessages,
-} from "../../lib/messagelib";
 import { Message } from "@/fsd/features/chat/chatMessage/model/type";
 import { useSelectTechStore } from "@/fsd/shared/model/useSelectTechStore";
+import { useFeedbackAPI } from "./useFeedbackAPI";
+import { useQuestionNavigation } from "./useQuestionNavigation";
+import { useMessageState } from "./useMessageState";
 
 interface UseSubjectiveInterviewReturn {
   messages: Message[];
@@ -24,74 +19,55 @@ export const useSubjectiveInterview = (
   questionAnswer: SubjectiveQuestion[]
 ): UseSubjectiveInterviewReturn => {
   const tech = useSelectTechStore((state) => state.tech);
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [questionIndex, setQuestionIndex] = useState<number>(0);
-  const [isLoading, setIsLoading] = useState(false);
+  const { generateFeedback, isLoading } = useFeedbackAPI();
+  const { questionIndex, hasNextQuestion, moveToNextQuestion } =
+    useQuestionNavigation(questionAnswer.length);
+  const {
+    messages,
+    addQuestionMessage,
+    addUserMessage,
+    addFeedbackMessage,
+    addActionButtonMessage,
+    addEndMessage,
+    clearMessagesAndShowQuestion,
+  } = useMessageState();
 
   // 첫 번째 질문을 자동으로 표시
   useEffect(() => {
     if (questionAnswer.length > 0 && messages.length === 0) {
-      const firstQuestion = createQuestionMessage(questionAnswer[0].question);
-      setMessages([firstQuestion]);
+      addQuestionMessage(questionAnswer[0].question);
     }
-  }, [questionAnswer, messages.length]);
+  }, [questionAnswer, messages.length, addQuestionMessage]);
 
   const handleSendMessage = async (content: string) => {
-    const userMessage = createUserMessage(content);
-    setMessages((prev) => [...prev, userMessage]);
-    setIsLoading(true);
+    addUserMessage(content);
 
-    try {
-      const response = await fetch("/api/generate-feedback", {
-        method: "POST",
-        body: JSON.stringify({
-          tech: tech,
-          question: questionAnswer[questionIndex].question,
-          answer: content,
-        }),
-      });
+    const feedbackResult = await generateFeedback({
+      tech,
+      question: questionAnswer[questionIndex].question,
+      answer: content,
+    });
 
-      const data = await response.json();
-
-      const feedbackMessage = createFeedbackMessage(JSON.stringify(data));
-      setMessages((prev) => [...prev, feedbackMessage]);
-    } catch (error) {
-      console.error(error);
-      const errorMessage = createFeedbackMessage(
-        "죄송합니다. 피드백 생성 중 오류가 발생했습니다."
-      );
-      setMessages((prev) => [...prev, errorMessage]);
-    } finally {
-      setIsLoading(false);
-      showActionButtons();
-    }
+    addFeedbackMessage(feedbackResult.data);
+    showActionButtons();
   };
 
   const showActionButtons = () => {
     setTimeout(() => {
-      const buttonMessage = createActionButtonMessage();
-      setMessages((prev) => [...prev, buttonMessage]);
+      addActionButtonMessage();
     }, 5000);
   };
 
   const handleNextQuestion = () => {
-    if (questionIndex < questionAnswer.length - 1) {
-      const nextIndex = questionIndex + 1;
-      setQuestionIndex(nextIndex);
-
-      const nextQuestionMessage = createQuestionMessage(
-        questionAnswer[nextIndex].question
-      );
-
-      // 버튼 메시지를 제거하고 다음 질문 추가
-      setMessages([nextQuestionMessage]);
+    const moved = moveToNextQuestion();
+    if (moved) {
+      const nextQuestion = questionAnswer[questionIndex + 1];
+      clearMessagesAndShowQuestion(nextQuestion.question);
     }
   };
 
   const handleEndInterview = () => {
-    const endMessage = createEndMessage();
-
-    setMessages((prev) => [...filterButtonMessages(prev), endMessage]);
+    addEndMessage();
   };
 
   return {
