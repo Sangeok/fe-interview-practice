@@ -15,19 +15,15 @@ interface UseSubjectiveInterviewReturn {
   handleEndInterview: () => void;
 }
 
-export const useSubjectiveInterview = (
-  questionAnswer: SubjectiveQuestion[]
-): UseSubjectiveInterviewReturn => {
+export const useSubjectiveInterview = (questionAnswer: SubjectiveQuestion[]): UseSubjectiveInterviewReturn => {
   const tech = useSelectTechStore((state) => state.tech);
   const { generateFeedback, isLoading } = useFeedbackAPI();
-  const { questionIndex, hasNextQuestion, moveToNextQuestion } =
-    useQuestionNavigation(questionAnswer.length);
+  const { questionIndex, hasNextQuestion, moveToNextQuestion } = useQuestionNavigation(questionAnswer.length);
   const {
     messages,
     addQuestionMessage,
     addUserMessage,
-    addFeedbackMessage,
-    addActionButtonMessage,
+    addFeedback_ActionButtonMessage,
     addEndMessage,
     clearMessagesAndShowQuestion,
   } = useMessageState();
@@ -48,14 +44,7 @@ export const useSubjectiveInterview = (
       answer: content,
     });
 
-    addFeedbackMessage(feedbackResult.data);
-    showActionButtons();
-  };
-
-  const showActionButtons = () => {
-    setTimeout(() => {
-      addActionButtonMessage();
-    }, 5000);
+    addFeedback_ActionButtonMessage(feedbackResult.data);
   };
 
   const handleNextQuestion = () => {
