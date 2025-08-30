@@ -21,4 +21,30 @@ export type MultipleChoiceInterpretType = {
   };
 };
 
+export interface FeedbackData {
+  topic: string;
+  evaluation: {
+    score: number;
+    maxScore: number;
+    summary: string;
+  };
+  feedbackDetails: Array<{
+    title: string;
+    description: string;
+    points?: string[];
+  }>;
+  modelAnswer: {
+    introduction: string;
+    usage: string;
+    scenarios: Array<{
+      condition: string;
+      explanation: string;
+    }>;
+    example: {
+      context: string;
+      solution: string;
+    };
+  };
+}
+
 export type TechType = "JavaScript" | "NextJs" | "React" | "TypeScript" | "";
