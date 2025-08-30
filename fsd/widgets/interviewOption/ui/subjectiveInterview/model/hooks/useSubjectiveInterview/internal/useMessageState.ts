@@ -7,7 +7,7 @@ import {
   createActionButtonMessage,
   createEndMessage,
   filterButtonMessages,
-} from "../../lib/messagelib";
+} from "../../../../lib/messagelib";
 
 export const useMessageState = () => {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -27,11 +27,6 @@ export const useMessageState = () => {
     const buttonMessage = createActionButtonMessage();
     setMessages((prev) => [...prev, feedbackMessage, buttonMessage]);
   };
-
-  // const addActionButtonMessage = () => {
-  //   const buttonMessage = createActionButtonMessage();
-  //   setMessages(prev => [...prev, buttonMessage]);
-  // };
 
   const addEndMessage = () => {
     const endMessage = createEndMessage();

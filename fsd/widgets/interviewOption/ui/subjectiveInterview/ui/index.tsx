@@ -11,19 +11,11 @@ interface SubjectiveInterviewProps {
   questionAnswer: SubjectiveQuestion[];
 }
 
-export default function SubjectiveInterview({
-  questionAnswer,
-}: SubjectiveInterviewProps) {
+export default function SubjectiveInterview({ questionAnswer }: SubjectiveInterviewProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  
-  const {
-    messages,
-    questionIndex,
-    isLoading,
-    handleSendMessage,
-    handleNextQuestion,
-    handleEndInterview,
-  } = useSubjectiveInterview(questionAnswer);
+
+  const { messages, questionIndex, isLoading, handleSendMessage, handleNextQuestion, handleEndInterview } =
+    useSubjectiveInterview(questionAnswer);
 
   useScrollToBottom(messages, messagesEndRef);
 
