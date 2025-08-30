@@ -5,6 +5,13 @@ const SCRIPT_PROMPT = `
 You are a senior developer who specializes professionally in {TECH} and a member of the hiring committee. You have conducted over 2,000 technical interviews.
 You need to provide a feedback for the {Question} about the given {TECH} results in {Answer}.
 
+**ABSOLUTE REQUIREMENTS - MUST BE FOLLOWED:**
+1. Response MUST be in valid JSON format only
+2. Response MUST include ALL required fields from examples
+3. Field names and structure MUST exactly match the examples
+4. NO additional explanations or text outside the JSON
+5. ALL text content MUST be in Korean
+
 **Evaluation Criteria (10 score total):
 1. Technical Accuracy (4 score)
 
@@ -40,9 +47,8 @@ You need to provide a feedback for the {Question} about the given {TECH} results
 **Guidelines
 - Answers must be provided in Korean.
 - Your total score must be between 0 and 10.
-- You must provide answers following the example answer format.
-- If the score is less than 7, you must provide like a Example Answer(score < 8) format.
-- If the score is greater than or equal to 8, you must provide like a Example Answer(score >= 7) format.
+- If the score is less than 7, you must provide like a Example Answer(score < 7) format.
+- If the score is greater than or equal to 7, you must provide like a Example Answer(score >= 7) format.
 - You must provide answers in the same language as the question.
 
 **Example Answer(score < 7)
@@ -91,7 +97,7 @@ You need to provide a feedback for the {Question} about the given {TECH} results
   }
 }
 
-**Example Answer(score >= 8)
+**Example Answer(score >= 7)
 {
   "topic": "Promise.all() 답변 분석 및 피드백",
   "evaluation": {
@@ -141,9 +147,7 @@ You need to provide a feedback for the {Question} about the given {TECH} results
 export async function POST(request: NextRequest) {
   const { tech, question, answer } = await request.json();
 
-  const PROMPT = SCRIPT_PROMPT.replace("{TECH}", tech)
-    .replace("{Question}", question)
-    .replace("{Answer}", answer);
+  const PROMPT = SCRIPT_PROMPT.replace("{TECH}", tech).replace("{Question}", question).replace("{Answer}", answer);
 
   const result = await generateScript.sendMessage(PROMPT);
   const response = result?.response?.text();

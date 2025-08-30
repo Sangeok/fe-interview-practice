@@ -1,10 +1,10 @@
-import { useEffect } from "react";
-import { SubjectiveQuestion } from "../type";
-import { Message } from "@/fsd/features/chat/chatMessage/model/type";
 import { useSelectTechStore } from "@/fsd/shared/model/useSelectTechStore";
-import { useFeedbackAPI } from "./useFeedbackAPI";
-import { useQuestionNavigation } from "./useQuestionNavigation";
-import { useMessageState } from "./useMessageState";
+import { SubjectiveQuestion } from "../../type";
+import { Message } from "@/fsd/features/chat/chatMessage/model/type";
+import { useFeedbackAPI } from "./internal/useFeedbackAPI";
+import { useQuestionNavigation } from "./internal/useQuestionNavigation";
+import { useMessageState } from "./internal/useMessageState";
+import { useEffect } from "react";
 
 interface UseSubjectiveInterviewReturn {
   messages: Message[];
@@ -15,19 +15,15 @@ interface UseSubjectiveInterviewReturn {
   handleEndInterview: () => void;
 }
 
-export const useSubjectiveInterview = (
-  questionAnswer: SubjectiveQuestion[]
-): UseSubjectiveInterviewReturn => {
+export const useSubjectiveInterview = (questionAnswer: SubjectiveQuestion[]): UseSubjectiveInterviewReturn => {
   const tech = useSelectTechStore((state) => state.tech);
   const { generateFeedback, isLoading } = useFeedbackAPI();
-  const { questionIndex, hasNextQuestion, moveToNextQuestion } =
-    useQuestionNavigation(questionAnswer.length);
+  const { questionIndex, moveToNextQuestion } = useQuestionNavigation(questionAnswer.length);
   const {
     messages,
     addQuestionMessage,
     addUserMessage,
-    addFeedbackMessage,
-    addActionButtonMessage,
+    addFeedback_ActionButtonMessage,
     addEndMessage,
     clearMessagesAndShowQuestion,
   } = useMessageState();
@@ -48,14 +44,7 @@ export const useSubjectiveInterview = (
       answer: content,
     });
 
-    addFeedbackMessage(feedbackResult.data);
-    showActionButtons();
-  };
-
-  const showActionButtons = () => {
-    setTimeout(() => {
-      addActionButtonMessage();
-    }, 5000);
+    addFeedback_ActionButtonMessage(feedbackResult.data);
   };
 
   const handleNextQuestion = () => {

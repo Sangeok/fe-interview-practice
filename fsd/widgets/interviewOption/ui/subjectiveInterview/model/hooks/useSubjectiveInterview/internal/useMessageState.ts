@@ -7,7 +7,7 @@ import {
   createActionButtonMessage,
   createEndMessage,
   filterButtonMessages,
-} from "../../lib/messagelib";
+} from "../../../../lib/messagelib";
 
 export const useMessageState = () => {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -19,22 +19,18 @@ export const useMessageState = () => {
 
   const addUserMessage = (content: string) => {
     const userMessage = createUserMessage(content);
-    setMessages(prev => [...prev, userMessage]);
+    setMessages((prev) => [...prev, userMessage]);
   };
 
-  const addFeedbackMessage = (feedback: string) => {
+  const addFeedback_ActionButtonMessage = (feedback: string) => {
     const feedbackMessage = createFeedbackMessage(feedback);
-    setMessages(prev => [...prev, feedbackMessage]);
-  };
-
-  const addActionButtonMessage = () => {
     const buttonMessage = createActionButtonMessage();
-    setMessages(prev => [...prev, buttonMessage]);
+    setMessages((prev) => [...prev, feedbackMessage, buttonMessage]);
   };
 
   const addEndMessage = () => {
     const endMessage = createEndMessage();
-    setMessages(prev => [...filterButtonMessages(prev), endMessage]);
+    setMessages((prev) => [...filterButtonMessages(prev), endMessage]);
   };
 
   const clearMessagesAndShowQuestion = (question: string) => {
@@ -46,8 +42,8 @@ export const useMessageState = () => {
     messages,
     addQuestionMessage,
     addUserMessage,
-    addFeedbackMessage,
-    addActionButtonMessage,
+    addFeedback_ActionButtonMessage,
+    // addActionButtonMessage,
     addEndMessage,
     clearMessagesAndShowQuestion,
   };

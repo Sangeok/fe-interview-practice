@@ -1,6 +1,10 @@
-import { useState, useEffect } from "react";
+"use client";
 
-export function useTypewriter(text: string, speed: number = 30) {
+import { useEffect, useState } from "react";
+
+const TYPING_SPEED = 30;
+
+export function useTypewriter(text: string) {
   const [displayedText, setDisplayedText] = useState("");
   const [isTyping, setIsTyping] = useState(false);
 
@@ -19,10 +23,10 @@ export function useTypewriter(text: string, speed: number = 30) {
         setIsTyping(false);
         clearInterval(timer);
       }
-    }, speed);
+    }, TYPING_SPEED);
 
     return () => clearInterval(timer);
-  }, [text, speed]);
+  }, [text]);
 
   return { displayedText, isTyping };
 }

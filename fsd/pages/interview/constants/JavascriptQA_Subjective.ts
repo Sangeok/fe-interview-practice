@@ -19,8 +19,7 @@ export const JAVASCRIPT_SUBJECTIVE_QUESTIONS: SubjectiveQuestion[] = [
   },
   {
     id: 5,
-    question:
-      "화살표 함수(Arrow Function)와 일반 함수의 차이점에 대해 설명하라.",
+    question: "화살표 함수(Arrow Function)와 일반 함수의 차이점에 대해 설명하라.",
   },
   {
     id: 6,
@@ -132,8 +131,7 @@ export const JAVASCRIPT_SUBJECTIVE_QUESTIONS: SubjectiveQuestion[] = [
   },
   {
     id: 33,
-    question:
-      "JavaScript 이벤트 루프에서 Microtask Queue와 Task Queue(Macro Queue)의 실행 우선순위에 대해 설명하라.",
+    question: "JavaScript 이벤트 루프에서 Microtask Queue와 Task Queue(Macro Queue)의 실행 우선순위에 대해 설명하라.",
   },
   {
     id: 34,
@@ -149,8 +147,7 @@ export const JAVASCRIPT_SUBJECTIVE_QUESTIONS: SubjectiveQuestion[] = [
   },
   {
     id: 37,
-    question:
-      "얕은 복사(Shallow Copy)와 깊은 복사(Deep Copy)의 차이점에 대해 설명하라.",
+    question: "얕은 복사(Shallow Copy)와 깊은 복사(Deep Copy)의 차이점에 대해 설명하라.",
   },
   {
     id: 38,
@@ -166,8 +163,7 @@ export const JAVASCRIPT_SUBJECTIVE_QUESTIONS: SubjectiveQuestion[] = [
   },
   {
     id: 41,
-    question:
-      "디바운싱(Debouncing)과 스로틀링(Throttling)의 차이점에 대해 설명하라.",
+    question: "디바운싱(Debouncing)과 스로틀링(Throttling)의 차이점에 대해 설명하라.",
   },
   {
     id: 42,
