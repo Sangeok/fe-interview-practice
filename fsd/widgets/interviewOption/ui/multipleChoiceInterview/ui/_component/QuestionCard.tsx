@@ -1,10 +1,11 @@
 "use client";
 import RadioInput from "@/fsd/shared/ui/atoms/input/ui/RadioInput";
 import Button from "@/fsd/shared/ui/atoms/button/ui/Button";
-import { useState } from "react";
 import { MultipleChoiceInterpretType } from "@/fsd/shared/model/type";
 import { Option } from "../../model/type";
 import { useSelectTechStore } from "@/fsd/shared/model/useSelectTechStore";
+import { useAnswerValidation } from "../../model/hooks/useAnswerValidation";
+import { useInterpretAPI } from "../../model/hooks/useInterpretAPI";
 
 interface QuestionCardProps {
   question: string;
@@ -23,45 +24,44 @@ export default function QuestionCard({
   setInterpret,
   setIsAnswerCorrect,
 }: QuestionCardProps) {
-  const [selectedOption, setSelectedOption] = useState<Option | null>(null);
-  const [checkAnswerButtonDisabled, setCheckAnswerButtonDisabled] =
-    useState(false);
   const { tech } = useSelectTechStore();
+  const { generateInterpret } = useInterpretAPI();
+  const {
+    selectedOption,
+    canSubmit,
+    selectOption,
+    validateAnswer,
+  } = useAnswerValidation();
 
-  const handleOptionChange = (option: Option) => {
-    setSelectedOption(option);
-  };
-
-  const handleCheckAnswer = () => {
-    if (selectedOption === null) {
-      alert("Check your answer first");
+  const handleCheckAnswer = async () => {
+    const validation = validateAnswer();
+    
+    if (!validation.isValid) {
+      alert(validation.message);
       return;
     }
 
-    if (!selectedOption.answerBoolean) {
-      setIsAnswerCorrect(false);
-      handleGenerateInterpret();
-    } else {
-      setIsAnswerCorrect(true);
-      setCheckAnswerButtonDisabled(true);
+    setIsAnswerCorrect(validation.isCorrect!);
+
+    if (!validation.isCorrect) {
+      await handleGenerateInterpret();
     }
   };
 
   const handleGenerateInterpret = async () => {
     setLoading(true);
-    try {
-      const response = await fetch("/api/generate-interpret", {
-        method: "POST",
-        body: JSON.stringify({ tech: tech, question, answer: answerString }),
-      });
+    
+    const result = await generateInterpret({
+      tech,
+      question,
+      answer: answerString,
+    });
 
-      const data = await response.json();
-      setInterpret(data);
-    } catch (error) {
-      console.error("error", error);
-    } finally {
-      setLoading(false);
+    if (result.success && result.data) {
+      setInterpret(result.data);
     }
+    
+    setLoading(false);
   };
 
   return (
@@ -75,15 +75,12 @@ export default function QuestionCard({
             name={question}
             value={option.label}
             checked={selectedOption?.label === option.label}
-            onChange={() => handleOptionChange(option)}
+            onChange={() => selectOption(option)}
           />
         ))}
       </div>
       <div className="flex justify-end">
-        <Button
-          onClick={handleCheckAnswer}
-          disabled={!selectedOption || checkAnswerButtonDisabled}
-        >
+        <Button onClick={handleCheckAnswer} disabled={!canSubmit}>
           정답 확인
         </Button>
       </div>

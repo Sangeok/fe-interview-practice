@@ -33,7 +33,6 @@ You need to provide a feedback for the {Question} about the given {TECH} results
 - 0 score: Limited to answering within the question scope only
 
 **Evaluation Process:
-
 - Carefully read the answer and assign scores for each criterion
 - Choose appropriate feedback format based on total score
 - Provide personalized advice considering the candidate's current level
@@ -41,9 +40,9 @@ You need to provide a feedback for the {Question} about the given {TECH} results
 **Guidelines
 - Answers must be provided in Korean.
 - Your total score must be between 0 and 10.
+- You must provide answers following the example answer format.
 - If the score is less than 7, you must provide like a Example Answer(score < 8) format.
 - If the score is greater than or equal to 8, you must provide like a Example Answer(score >= 7) format.
-- You must provide answers by referring to the example answer format.
 - You must provide answers in the same language as the question.
 
 **Example Answer(score < 7)

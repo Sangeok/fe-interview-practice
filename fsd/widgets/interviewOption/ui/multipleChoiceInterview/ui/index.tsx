@@ -31,7 +31,9 @@ export default function MultipleChoiceInterview({
   }, [questionAnswer]);
 
   const isQuizFinished = currentQuestionIndex >= questionAnswer.length;
-
+  const showWrongAnswerInterpret = isAnswerCorrect === false;
+  const showCorrectAnswerCard = isAnswerCorrect === true;
+  
   const handleNextQuestion = (isCorrect: boolean) => {
     if (isCorrect) {
       setScore((prev) => prev + 1);
@@ -40,37 +42,42 @@ export default function MultipleChoiceInterview({
     setCurrentQuestionIndex((prev) => prev + 1);
   };
 
-  return (
-    <div className="w-full max-w-2xl mx-auto p-4">
-      {isQuizFinished && (
+  if (isQuizFinished) {
+    return (
+      <div className="w-full max-w-2xl mx-auto p-4">
         <EndQuestion
           score={score}
           questionAnswerLength={questionAnswer.length}
         />
-      )}
-      {!isQuizFinished && (
-        <div className="flex flex-col gap-8">
-          <QuestionCard
-            key={questionAnswer[currentQuestionIndex].id}
-            question={shuffledQuestions[currentQuestionIndex].question}
-            options={shuffledQuestions[currentQuestionIndex].options}
-            answerString={shuffledQuestions[currentQuestionIndex].answerString}
-            setInterpret={setInterpret}
-            setLoading={setLoading}
-            setIsAnswerCorrect={setIsAnswerCorrect}
+      </div>
+    );
+  }
+
+  return (
+    <div className="w-full max-w-2xl mx-auto p-4">
+      <div className="flex flex-col gap-8">
+        <QuestionCard
+          key={questionAnswer[currentQuestionIndex].id}
+          question={shuffledQuestions[currentQuestionIndex].question}
+          options={shuffledQuestions[currentQuestionIndex].options}
+          answerString={shuffledQuestions[currentQuestionIndex].answerString}
+          setInterpret={setInterpret}
+          setLoading={setLoading}
+          setIsAnswerCorrect={setIsAnswerCorrect}
+        />
+        
+        {showWrongAnswerInterpret && (
+          <InterpretCard
+            loading={loading}
+            interpret={interpret}
+            onNext={() => handleNextQuestion(true)}
           />
-          {isAnswerCorrect === false && (
-            <InterpretCard
-              loading={loading}
-              interpret={interpret}
-              onNext={() => handleNextQuestion(true)}
-            />
-          )}
-          {isAnswerCorrect && (
-            <AnswerCorrectCard onNext={() => handleNextQuestion(true)} />
-          )}
-        </div>
-      )}
+        )}
+        
+        {showCorrectAnswerCard && (
+          <AnswerCorrectCard onNext={() => handleNextQuestion(true)} />
+        )}
+      </div>
     </div>
   );
 }
