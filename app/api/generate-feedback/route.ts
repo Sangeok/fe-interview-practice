@@ -2,56 +2,38 @@ import { generateScript } from "@/fsd/shared/constants/AiModel";
 import { NextRequest, NextResponse } from "next/server";
 
 const SCRIPT_PROMPT = `
-You are a senior developer who specializes professionally in {TECH} and a member of the hiring committee. You have conducted over 2,000 technical interviews.
-You need to provide a feedback for the {Question} about the given {TECH} results in {Answer}.
+<instructions>
+You are a senior {TECH} developer and a hiring committee member with over 2,000 technical interviews experience.
+Your task is to provide feedback on the {Question} based on the provided {Answer}.
 
-**ABSOLUTE REQUIREMENTS - MUST BE FOLLOWED:**
-1. Response MUST be in valid JSON format only
-2. Response MUST include ALL required fields from examples
-3. Field names and structure MUST exactly match the examples
-4. NO additional explanations or text outside the JSON
-5. ALL text content MUST be in Korean
+Follow these steps precisely:
+1.  Carefully analyze the {Answer} according to the <evaluation_criteria>.
+2.  Calculate a total score from 0 to 10.
+3.  Based on the total score, you must select the appropriate JSON structure from the <output_formats> section.
+    - If score is less than 7, use the <format_low_score> structure.
+    - If score is 7 or higher, use the <format_high_score> structure.
+4.  Your final output must be ONLY the populated JSON object. Do not include any other text or explanations.
+5.  All text content inside the JSON must be in Korean.
+</instructions>
 
-**Evaluation Criteria (10 score total):
-1. Technical Accuracy (4 score)
+<evaluation_criteria>
+**Total Score: 10**
+1.  **Technical Accuracy (4 pts):**
+    - 4: Perfect understanding, accurate implementation, edge cases considered.
+    - 0: Fundamental misunderstanding.
+2.  **Communication Skills (3 pts):**
+    - 3: Perfect logical flow, explains complex concepts clearly.
+    - 0: Unclear explanations.
+3.  **Practical Application (2 pts):**
+    - 2: Demonstrates production experience with practical approaches.
+    - 0: Purely theoretical.
+4.  **Advanced Understanding (1 pt):**
+    - 1: Shows connection to related technologies, expansive thinking.
+    - 0: Limited to the question scope.
+</evaluation_criteria>
 
-- 4 score: Perfect understanding, accurate implementation methods, edge cases considered
-- 3 score: Core concepts correct, minor omissions but generally sound
-- 2 score: Basic concepts understood, some inaccuracies or incomplete areas
-- 1 score: Partial understanding, significant misconceptions or gaps exist
-- 0 score: Fundamental misunderstanding or irrelevant content
-
-2. Communication Skills (3 score)
-
-- 3 score: Perfect logical flow, explains complex concepts clearly
-- 2 score: Generally clear, some areas could use better explanation
-- 1 score: Basic explanation possible but somewhat scattered structure
-- 0 score: Unclear explanations or lacking logical flow
-
-3. Practical Application (2 score)
-
-- 2 score: Demonstrates production experience with practical approaches
-- 1 score: Theoretical knowledge present but limited practical experience
-- 0 score: Purely theoretical answers disconnected from real-world practice
-
-4. Advanced Understanding (1 score)
-
-- 1 score: Shows connection to related technologies, expansive thinking, understands trade-offs
-- 0 score: Limited to answering within the question scope only
-
-**Evaluation Process:
-- Carefully read the answer and assign scores for each criterion
-- Choose appropriate feedback format based on total score
-- Provide personalized advice considering the candidate's current level
-
-**Guidelines
-- Answers must be provided in Korean.
-- Your total score must be between 0 and 10.
-- If the score is less than 7, you must provide like a Example Answer(score < 7) format.
-- If the score is greater than or equal to 7, you must provide like a Example Answer(score >= 7) format.
-- You must provide answers in the same language as the question.
-
-**Example Answer(score < 7)
+<output_formats>
+<format_low_score description="Use this JSON structure if the total score is LESS THAN 7">
 {
   "topic": "Promise.all() 답변 분석 및 피드백",
   "evaluation": {
@@ -96,8 +78,9 @@ You need to provide a feedback for the {Question} about the given {TECH} results
     }
   }
 }
+</format_low_score>
 
-**Example Answer(score >= 7)
+<format_high_score description="Use this JSON structure if the total score is 7 OR HIGHER">
 {
   "topic": "Promise.all() 답변 분석 및 피드백",
   "evaluation": {
@@ -142,12 +125,18 @@ You need to provide a feedback for the {Question} about the given {TECH} results
       "solution": "두 API 요청 프로미스를 Promise.all로 묶어 병렬로 실행하면 로딩 속도를 개선할 수 있고, 두 정보가 모두 성공적으로 왔을 때만 화면을 그려주는 방식으로 안정적인 구현이 가능합니다."
     }
   }
-}`;
+}
+</format_high_score>
+</output_formats>`;
 
 export async function POST(request: NextRequest) {
   const { tech, question, answer } = await request.json();
 
-  const PROMPT = SCRIPT_PROMPT.replace("{TECH}", tech).replace("{Question}", question).replace("{Answer}", answer);
+  console.log(tech, question, answer);
+
+  const PROMPT = SCRIPT_PROMPT.replace("{TECH}", tech)
+    .replace("{Question}", question)
+    .replace("{Answer}", answer);
 
   const result = await generateScript.sendMessage(PROMPT);
   const response = result?.response?.text();
