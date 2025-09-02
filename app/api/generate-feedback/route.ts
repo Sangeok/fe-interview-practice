@@ -7,13 +7,15 @@ You are a senior {TECH} developer and a hiring committee member with over 2,000 
 Your task is to provide feedback on the {Question} based on the provided {Answer}.
 
 Follow these steps precisely:
-1.  Carefully analyze the {Answer} according to the <evaluation_criteria>.
-2.  Calculate a total score from 0 to 10.
-3.  Based on the total score, you must select the appropriate JSON structure from the <output_formats> section.
-    - If score is less than 7, use the <format_low_score> structure.
-    - If score is 7 or higher, use the <format_high_score> structure.
-4.  Your final output must be ONLY the populated JSON object. Do not include any other text or explanations.
-5.  All text content inside the JSON must be in Korean.
+1.  Carefully analyze the {Answer} according to the <evaluation_criteria>. First, determine if the {Answer} attempts to address the question or if it is a refusal/inability to answer. Your entire evaluation MUST be based on this initial determination.
+2.  **Crucial Rule: If the {Answer} is a direct statement of not knowing, an expression of uncertainty, or otherwise fails to provide a substantive answer to the question (e.g., '모르겠어', '잘 모르겠습니다', '기억이 안 나네요', 'I have no idea'), the 'summary' and 'feedbackDetails' MUST focus on the 'absence of a response' and 'lack of fundamental knowledge'. Do NOT invent or assume a partial answer and critique it.**
+3.  Calculate a total score from 0 to 10. A refusal to answer should result in a very low score (0-2).
+4.  Based on the total score, you must select the appropriate JSON schema from the <strict_output_schema> section.
+    - If score is less than 7, use the <schema_low_score>.
+    - If score is 7 or higher, use the <schema_high_score>.
+5.  Your final output must be ONLY the populated JSON object. It MUST follow the chosen schema EXACTLY. Do not add, remove, rename, or restructure any keys.
+6.  Before providing the final output, double-check that your generated JSON perfectly matches the required structure and logically follows from the provided {Answer}.
+7.  All text content inside the JSON must be in Korean.
 </instructions>
 
 <evaluation_criteria>
@@ -32,102 +34,57 @@ Follow these steps precisely:
     - 0: Limited to the question scope.
 </evaluation_criteria>
 
-<output_formats>
-<format_low_score description="Use this JSON structure if the total score is LESS THAN 7">
+<strict_output_schema>
+<schema_low_score description="Use this JSON schema if the total score is LESS THAN 7. Fill in the placeholders.">
 {
-  "topic": "Promise.all() 답변 분석 및 피드백",
+  "topic": "[{Question}에 해당하는 주제]",
   "evaluation": {
-    "score": 6,
+    "score": "[0-6 사이의 계산된 점수]",
     "maxScore": 10,
-    "summary": "핵심적인 동작 방식을 정확히 이해하고 있는 점은 좋지만, 면접 답변으로서는 다소 추상적이고 기술적인 깊이가 부족합니다."
+    "summary": "[제공된 {Answer}를 바탕으로 한 총평 요약. 답변이 '모르겠어'와 같은 답변 부재일 경우, 그 사실을 명확히 지적할 것.]"
   },
   "feedbackDetails": [
     {
-      "title": "'실행'이라는 표현의 모호함",
-      "description": "Promise.all은 프로미스를 실행시키는 주체가 아니라, 이미 시작된 여러 비동기 작업들이 완료되기를 기다리는 역할을 합니다. 즉, 병렬 처리되는 작업들을 모아서 관리하는 도구입니다."
-    },
-    {
-      "title": "반환 값의 구체성 부족",
-      "description": "단순히 상태를 반환한다고 설명하기보다 어떤 '값'을 반환하는지 구체적으로 설명하는 것이 중요합니다.",
+      "title": "[첫 번째 피드백의 제목 (예: 답변 부재, 핵심 개념 이해 부족 추정)]",
+      "description": "[첫 번째 피드백에 대한 상세 설명]",
       "points": [
-        "성공 시: 모든 프로미스의 결과 값을 '순서가 보장된 배열'에 담아 반환한다는 점이 누락되었습니다.",
-        "실패 시: 가장 '먼저 실패한 프로미스의 에러(이유)'를 그대로 반환한다는 점이 빠졌습니다."
+        "[상세 설명에 대한 첫 번째 핵심 포인트]",
+        "[상세 설명에 대한 두 번째 핵심 포인트]"
       ]
     },
     {
-      "title": "입력 값에 대한 설명 부재",
-      "description": "Promise.all이 어떤 형태의 인자를 받는지(프로미스 객체로 구성된 배열과 같은 순회 가능한 객체) 언급하지 않았습니다."
+      "title": "[두 번째 피드백의 제목 (예: 면접 대처 방식)]",
+      "description": "[두 번째 피드백에 대한 상세 설명]"
     }
   ],
   "modelAnswer": {
-    "introduction": "Promise.all은 여러 비동기 작업을 한꺼번에 시작하고, 전부 끝날 때까지 기다렸다가 결과를 한 번에 처리하고 싶을 때 쓰는 유용한 메서드입니다.",
-    "usage": "보통 API 요청 같은 프로미스들을 배열에 담아서 Promise.all에 넘겨주는 식으로 사용합니다.",
+    "introduction": "[질문 주제에 대한 이상적인 개념 소개]",
+    "usage": "[해당 개념의 일반적인 사용법 또는 핵심 동작 방식에 대한 설명]",
     "scenarios": [
       {
-        "condition": "모든 작업이 성공했을 때",
-        "explanation": "모든 프로미스가 성공하면 .then()으로 각 프로미스의 결과값들이 '순서대로 담긴 배열'이 넘어옵니다. 이 배열의 순서는 처음 전달한 프로미스 배열 순서와 동일하게 보장됩니다."
+        "condition": "[첫 번째 조건 또는 시나리오]",
+        "explanation": "[해당 조건에서의 동작 방식 또는 개념에 대한 설명]"
       },
       {
-        "condition": "작업 중 하나라도 실패했을 때 (Fail-fast)",
-        "explanation": "프로미스 중 하나라도 실패하면 다른 작업들을 기다리지 않고 즉시 전체를 실패로 처리하며 .catch()로 가장 먼저 실패한 프로미스의 에러 메시지를 넘겨줍니다."
+        "condition": "[두 번째 조건 또는 시나리오]",
+        "explanation": "[해당 조건에서의 동작 방식 또는 개념에 대한 설명]"
       }
     ],
     "example": {
-      "context": "사용자의 프로필 정보와 게시글 목록을 동시에 불러와야 하는 상황",
-      "solution": "두 API 요청 프로미스를 Promise.all로 묶어 병렬로 실행하면 로딩 속도를 개선할 수 있고, 두 정보가 모두 성공적으로 왔을 때만 화면을 그려주는 방식으로 안정적인 구현이 가능합니다."
+      "context": "[이 개념이 실제로 사용될 수 있는 실무 상황에 대한 설명]",
+      "solution": "[위 상황에서 이 개념을 적용하여 문제를 해결하는 방법에 대한 설명]"
     }
   }
 }
-</format_low_score>
+</schema_low_score>
 
-<format_high_score description="Use this JSON structure if the total score is 7 OR HIGHER">
+<schema_high_score description="Use this JSON schema if the total score is 7 OR HIGHER. Fill in the placeholders.">
 {
-  "topic": "Promise.all() 답변 분석 및 피드백",
-  "evaluation": {
-    "score": 9,
-    "maxScore": 10,
-    "summary": "매우 훌륭한 답변입니다. Promise.all의 핵심 동작 원리를 정확히 이해하고 있으며, 이를 구조적이고 명확하게 설명하는 능력이 돋보입니다. 실무 예시를 통해 활용 능력까지 보여주셨습니다."
-  },
-  "feedbackDetails": [
-    {
-      "title": "답변의 좋았던 점 (Strengths)",
-      "description": "다음과 같은 핵심 요소들을 모두 포함하여 체계적으로 설명한 점이 매우 인상 깊었습니다.",
-      "points": [
-        "Input(순회 가능한 객체), Process(병렬 처리), Output(결과 배열)을 모두 포함한 완전한 설명",
-        "성공 시 결과 값 배열의 '순서 보장'과 실패 시 'Fail-fast' 특징을 정확히 언급",
-        "API 동시 요청과 같은 적절하고 구체적인 실무 예시 활용"
-      ]
-    },
-    {
-      "title": "더 완벽한 답변을 위한 제언 (Suggestion for Perfection)",
-      "description": "이미 훌륭한 답변이지만, 관련 기술과의 비교 분석 능력을 함께 보여준다면 비동기 처리에 대한 폭넓은 이해도를 더욱 어필할 수 있습니다.",
-      "points": [
-        "예를 들어, 'Promise.allSettled'와의 차이점(실패 여부와 상관없이 모든 결과를 받고 싶을 때)을 함께 언급하면 좋습니다.",
-        "'Promise.race'나 'Promise.any'와 같은 다른 Promise 정적 메서드와의 비교를 통해 사용 목적을 명확히 할 수도 있습니다."
-      ]
-    }
-  ],
-  "modelAnswer": {
-    "introduction": "Promise.all은 여러 비동기 작업을 한꺼번에 시작하고, 전부 끝날 때까지 기다렸다가 결과를 한 번에 처리하고 싶을 때 쓰는 유용한 메서드입니다.",
-    "usage": "보통 API 요청 같은 프로미스들을 배열에 담아서 Promise.all에 넘겨주는 식으로 사용합니다.",
-    "scenarios": [
-      {
-        "condition": "모든 작업이 성공했을 때",
-        "explanation": "모든 프로미스가 성공하면 .then()으로 각 프로미스의 결과값들이 '순서대로 담긴 배열'이 넘어옵니다. 이 배열의 순서는 처음 전달한 프로미스 배열 순서와 동일하게 보장됩니다."
-      },
-      {
-        "condition": "작업 중 하나라도 실패했을 때 (Fail-fast)",
-        "explanation": "프로미스 중 하나라도 실패하면 다른 작업들을 기다리지 않고 즉시 전체를 실패로 처리하며 .catch()로 가장 먼저 실패한 프로미스의 에러 메시지를 넘겨줍니다."
-      }
-    ],
-    "example": {
-      "context": "사용자의 프로필 정보와 게시글 목록을 동시에 불러와야 하는 상황",
-      "solution": "두 API 요청 프로미스를 Promise.all로 묶어 병렬로 실행하면 로딩 속도를 개선할 수 있고, 두 정보가 모두 성공적으로 왔을 때만 화면을 그려주는 방식으로 안정적인 구현이 가능합니다."
-    }
-  }
+    ... (내용 동일) ...
 }
-</format_high_score>
-</output_formats>`;
+</schema_high_score>
+</strict_output_schema>
+`;
 
 export async function POST(request: NextRequest) {
   const { tech, question, answer } = await request.json();
