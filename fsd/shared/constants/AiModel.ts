@@ -12,7 +12,7 @@ const generationConfig = {
 };
 
 const geminiModel = genAI.getGenerativeModel({
-  model: "gemini-2.5-flash",
+  model: "gemini-2.5-flash-lite",
 });
 
 export const generateScript = geminiModel.startChat({
