@@ -80,7 +80,49 @@ Follow these steps precisely:
 
 <schema_high_score description="Use this JSON schema if the total score is 7 OR HIGHER. Fill in the placeholders.">
 {
-    ... (내용 동일) ...
+  "topic": "[{Question}에 해당하는 주제]",
+  "evaluation": {
+    "score": "[7-10 사이의 계산된 점수]",
+    "maxScore": 10,
+    "summary": "[훌륭한 답변에 대한 칭찬과 핵심적인 장점을 요약]"
+  },
+  "feedbackDetails": [
+    {
+      "title": "답변의 좋았던 점 (Strengths)",
+      "description": "[답변의 어떤 부분이 훌륭했는지에 대한 종합적인 설명]",
+      "points": [
+        "[첫 번째 강점 (예: 핵심 개념의 정확한 이해)]",
+        "[두 번째 강점 (예: 명확하고 구조적인 설명)]",
+        "[세 번째 강점 (예: 실무 예시의 적절성)]"
+      ]
+    },
+    {
+      "title": "더 완벽한 답변을 위한 제언 (Suggestion for Perfection)",
+      "description": "[이미 훌륭하지만, 답변을 더 발전시킬 수 있는 방법에 대한 제안]",
+      "points": [
+        "[추가하면 좋을 첫 번째 내용 (예: 관련 기술과의 비교 분석)]",
+        "[추가하면 좋을 두 번째 내용 (예: 엣지 케이스나 성능 측면 언급)]"
+      ]
+    }
+  ],
+  "modelAnswer": {
+    "introduction": "[질문 주제에 대한 이상적인 개념 소개]",
+    "usage": "[해당 개념의 일반적인 사용법 또는 핵심 동작 방식에 대한 설명]",
+    "scenarios": [
+      {
+        "condition": "[첫 번째 조건 또는 시나리오]",
+        "explanation": "[해당 조건에서의 동작 방식 또는 개념에 대한 설명]"
+      },
+      {
+        "condition": "[두 번째 조건 또는 시나리오]",
+        "explanation": "[해당 조건에서의 동작 방식 또는 개념에 대한 설명]"
+      }
+    ],
+    "example": {
+      "context": "[이 개념이 실제로 사용될 수 있는 실무 상황에 대한 설명]",
+      "solution": "[위 상황에서 이 개념을 적용하여 문제를 해결하는 방법에 대한 설명]"
+    }
+  }
 }
 </schema_high_score>
 </strict_output_schema>
