@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Message } from "@/fsd/features/chat/chatMessage/model/type";
 import {
   createQuestionMessage,
@@ -43,7 +43,6 @@ export const useMessageState = () => {
     addQuestionMessage,
     addUserMessage,
     addFeedback_ActionButtonMessage,
-    // addActionButtonMessage,
     addEndMessage,
     clearMessagesAndShowQuestion,
   };
