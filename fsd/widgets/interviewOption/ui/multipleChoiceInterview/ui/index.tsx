@@ -1,12 +1,11 @@
 "use client";
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { MultipleChoiceQuestion } from "../model/type";
 import QuestionCard from "./_component/QuestionCard";
 import EndQuestion from "./_component/EndQuestion";
 import InterpretCard from "./_component/InterpretCard";
 import { MultipleChoiceInterpretType } from "@/fsd/shared/model/type";
 import AnswerCorrectCard from "./_component/AnswerCorrectCard";
-import { arrayShuffle } from "@/fsd/shared/lib/array-shuffle";
 
 interface MultipleChoiceInterviewProps {
   questionAnswer: MultipleChoiceQuestion[];
@@ -22,18 +21,10 @@ export default function MultipleChoiceInterview({
     useState<MultipleChoiceInterpretType | null>(null);
   const [isAnswerCorrect, setIsAnswerCorrect] = useState<boolean | null>(null);
 
-  // 각 질문의 옵션을 한 번만 섞어서 메모이제이션
-  const shuffledQuestions = useMemo(() => {
-    return questionAnswer.map((qa) => ({
-      ...qa,
-      options: arrayShuffle([...qa.options]),
-    }));
-  }, [questionAnswer]);
-
   const isQuizFinished = currentQuestionIndex >= questionAnswer.length;
   const showWrongAnswerInterpret = isAnswerCorrect === false;
   const showCorrectAnswerCard = isAnswerCorrect === true;
-  
+
   const handleNextQuestion = (isCorrect: boolean) => {
     if (isCorrect) {
       setScore((prev) => prev + 1);
@@ -58,14 +49,14 @@ export default function MultipleChoiceInterview({
       <div className="flex flex-col gap-8">
         <QuestionCard
           key={questionAnswer[currentQuestionIndex].id}
-          question={shuffledQuestions[currentQuestionIndex].question}
-          options={shuffledQuestions[currentQuestionIndex].options}
-          answerString={shuffledQuestions[currentQuestionIndex].answerString}
+          question={questionAnswer[currentQuestionIndex].question}
+          options={questionAnswer[currentQuestionIndex].options}
+          answerString={questionAnswer[currentQuestionIndex].answerString}
           setInterpret={setInterpret}
           setLoading={setLoading}
           setIsAnswerCorrect={setIsAnswerCorrect}
         />
-        
+
         {showWrongAnswerInterpret && (
           <InterpretCard
             loading={loading}
@@ -73,7 +64,7 @@ export default function MultipleChoiceInterview({
             onNext={() => handleNextQuestion(true)}
           />
         )}
-        
+
         {showCorrectAnswerCard && (
           <AnswerCorrectCard onNext={() => handleNextQuestion(true)} />
         )}
