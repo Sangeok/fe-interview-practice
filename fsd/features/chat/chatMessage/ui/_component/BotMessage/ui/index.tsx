@@ -1,6 +1,7 @@
-import { FeedbackData } from "@/fsd/shared/model/type";
-import { isFeedbackData } from "../lib/isFeedbackData";
+import { FeedbackResponse } from "@/fsd/shared/model/type";
+import { isFeedbackData, isDeepDiveFeedbackData } from "../lib/isFeedbackData";
 import FeedbackMessage from "./_component/FeedbackMessage/ui";
+import DeepDiveFeedbackMessage from "./_component/DeepDiveFeedbackMessage/ui";
 import GeneralBotMessage from "./_component/GeneralBotMessage";
 import { Bot } from "lucide-react";
 
@@ -12,13 +13,15 @@ function BotAvatar() {
   );
 }
 
-export default function BotMessage({ content }: { content: string | FeedbackData }) {
-  // content가 FeedbackData인지 판단
-  const feedbackData = isFeedbackData(content);
-
+export default function BotMessage({ content }: { content: string | FeedbackResponse }) {
   // FeedbackData 타입인 경우 피드백 메시지 렌더링
-  if (feedbackData) {
-    return <FeedbackMessage BotAvatar={<BotAvatar />} data={content as FeedbackData} />;
+  if (isFeedbackData(content)) {
+    return <FeedbackMessage BotAvatar={<BotAvatar />} data={content} />;
+  }
+
+  // DeepDiveFeedbackData 타입인 경우 DeepDive 피드백 메시지 렌더링
+  if (isDeepDiveFeedbackData(content)) {
+    return <DeepDiveFeedbackMessage BotAvatar={<BotAvatar />} data={content} />;
   }
 
   // string 타입인 경우 타이핑 효과와 함께 일반 메시지 렌더링
