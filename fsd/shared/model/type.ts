@@ -47,4 +47,25 @@ export interface FeedbackData {
   };
 }
 
+export interface DeepDiveFeedbackData {
+  topic: string;
+  evaluation: {
+    score: number;
+    maxScore: number;
+    summary: string;
+  };
+  feedbackDetails: Array<{
+    title: string;
+    description: string;
+    points?: string[];
+  }>;
+  deepDive: {
+    title: string;
+    description: string;
+    topics: string[];
+  };
+}
+
+export type FeedbackResponse = FeedbackData | DeepDiveFeedbackData;
+
 export type TechType = "JavaScript" | "NextJs" | "React" | "TypeScript" | "";
