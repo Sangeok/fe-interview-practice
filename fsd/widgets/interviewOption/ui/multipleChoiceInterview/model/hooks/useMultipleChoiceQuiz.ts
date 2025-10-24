@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react";
-import { MultipleChoiceQuestion } from "../../type";
+import { MultipleChoiceQuestion } from "../type";
 
 interface UseMultipleChoiceQuizParams {
   questions: MultipleChoiceQuestion[];
@@ -18,9 +18,7 @@ interface UseMultipleChoiceQuizReturn {
   onIncorrectAnswer: () => void;
 }
 
-export function useMultipleChoiceQuiz({
-  questions,
-}: UseMultipleChoiceQuizParams): UseMultipleChoiceQuizReturn {
+export function useMultipleChoiceQuiz({ questions }: UseMultipleChoiceQuizParams): UseMultipleChoiceQuizReturn {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
 
