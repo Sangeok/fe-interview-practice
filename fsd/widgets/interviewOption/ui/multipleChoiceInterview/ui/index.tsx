@@ -1,11 +1,11 @@
 "use client";
-import { useState } from "react";
 import { MultipleChoiceQuestion } from "../model/type";
 import QuestionCard from "./_component/QuestionCard";
 import EndQuestion from "./_component/EndQuestion";
 import InterpretCard from "./_component/InterpretCard";
-import { MultipleChoiceInterpretType } from "@/fsd/shared/model/type";
 import AnswerCorrectCard from "./_component/AnswerCorrectCard";
+import { useMultipleChoiceQuiz } from "../model/hooks/useMultipleChoiceQuiz";
+import { useAnswerFeedbackState } from "../model/hooks/useAnswerFeedbackState";
 
 interface MultipleChoiceInterviewProps {
   questionAnswer: MultipleChoiceQuestion[];
@@ -14,59 +14,80 @@ interface MultipleChoiceInterviewProps {
 export default function MultipleChoiceInterview({
   questionAnswer,
 }: MultipleChoiceInterviewProps) {
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [score, setScore] = useState(0);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [interpret, setInterpret] =
-    useState<MultipleChoiceInterpretType | null>(null);
-  const [isAnswerCorrect, setIsAnswerCorrect] = useState<boolean | null>(null);
+  // 퀴즈 진행 상태 관리
+  const {
+    currentQuestion,
+    score,
+    isQuizFinished,
+    totalQuestions,
+    onCorrectAnswer,
+    onIncorrectAnswer,
+  } = useMultipleChoiceQuiz({ questions: questionAnswer });
 
-  const isQuizFinished = currentQuestionIndex >= questionAnswer.length;
-  const showWrongAnswerInterpret = isAnswerCorrect === false;
-  const showCorrectAnswerCard = isAnswerCorrect === true;
+  // 답변 피드백 상태 관리
+  const {
+    isLoading,
+    interpret,
+    showCorrectCard,
+    showIncorrectInterpret,
+    setAnswerCorrect,
+    setAnswerIncorrect,
+    setInterpret,
+    setLoading,
+    resetAnswerState,
+  } = useAnswerFeedbackState();
 
-  const handleNextQuestion = (isCorrect: boolean) => {
-    if (isCorrect) {
-      setScore((prev) => prev + 1);
-    }
-    setIsAnswerCorrect(null);
-    setCurrentQuestionIndex((prev) => prev + 1);
+  // 정답 처리
+  const handleCorrectAnswer = () => {
+    resetAnswerState();
+    onCorrectAnswer();
   };
 
+  // 오답 처리
+  const handleIncorrectAnswer = () => {
+    resetAnswerState();
+    onIncorrectAnswer();
+  };
+
+  // Early return: 퀴즈 종료 상태
   if (isQuizFinished) {
     return (
       <div className="w-full max-w-2xl mx-auto p-4">
-        <EndQuestion
-          score={score}
-          questionAnswerLength={questionAnswer.length}
-        />
+        <EndQuestion score={score} questionAnswerLength={totalQuestions} />
       </div>
     );
   }
 
+  // 퀴즈 진행 중 UI
   return (
     <div className="w-full max-w-2xl mx-auto p-4">
       <div className="flex flex-col gap-8">
         <QuestionCard
-          key={questionAnswer[currentQuestionIndex].id}
-          question={questionAnswer[currentQuestionIndex].question}
-          options={questionAnswer[currentQuestionIndex].options}
-          answerString={questionAnswer[currentQuestionIndex].answerString}
+          key={currentQuestion.id}
+          question={currentQuestion.question}
+          options={currentQuestion.options}
+          answerString={currentQuestion.answerString}
           setInterpret={setInterpret}
           setLoading={setLoading}
-          setIsAnswerCorrect={setIsAnswerCorrect}
+          setIsAnswerCorrect={(isCorrect) => {
+            if (isCorrect) {
+              setAnswerCorrect();
+            } else {
+              setAnswerIncorrect();
+            }
+          }}
         />
 
-        {showWrongAnswerInterpret && (
+        {showIncorrectInterpret && (
           <InterpretCard
-            loading={loading}
+            loading={isLoading}
             interpret={interpret}
-            onNext={() => handleNextQuestion(true)}
+            onNext={handleIncorrectAnswer}
           />
         )}
 
-        {showCorrectAnswerCard && (
-          <AnswerCorrectCard onNext={() => handleNextQuestion(true)} />
+        {showCorrectCard && (
+          <AnswerCorrectCard onNext={handleCorrectAnswer} />
         )}
       </div>
     </div>

@@ -161,9 +161,7 @@ export async function POST(request: NextRequest) {
 
   console.log(tech, question, answer);
 
-  const PROMPT = SCRIPT_PROMPT.replace("{TECH}", tech)
-    .replace("{Question}", question)
-    .replace("{Answer}", answer);
+  const PROMPT = SCRIPT_PROMPT.replace("{TECH}", tech).replace("{Question}", question).replace("{Answer}", answer);
 
   const result = await generateScript.sendMessage(PROMPT);
   const response = result?.response?.text();

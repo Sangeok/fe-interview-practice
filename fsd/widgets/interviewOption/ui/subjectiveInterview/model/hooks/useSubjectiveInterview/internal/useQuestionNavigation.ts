@@ -9,10 +9,11 @@ export const useQuestionNavigation = (totalQuestions: number) => {
 
   const moveToNextQuestion = () => {
     if (hasNextQuestion) {
-      setQuestionIndex(prev => prev + 1);
-      return true;
+      const newIndex = questionIndex + 1;
+      setQuestionIndex(newIndex);
+      return { success: true, newIndex }; // 새로운 인덱스 반환
     }
-    return false;
+    return { success: false, newIndex: questionIndex }; // 현재 인덱스 반환
   };
 
   const resetToFirst = () => {

@@ -21,7 +21,7 @@ const TechStackSelector = ({ onClose }: TechStackSelectorProps) => {
     setSelectedTitle(event.target.value as TechType);
   };
 
-  const handleSelectForRoute = () => {
+  const handleRouteToInterview = () => {
     setTech(selectedTitle as TechType);
     router.push(`/interviews/${selectedTitle}`);
     onClose();
@@ -40,7 +40,7 @@ const TechStackSelector = ({ onClose }: TechStackSelectorProps) => {
       ))}
 
       <div className="flex justify-between mt-4">
-        <Button variant="light" size="sm" onClick={handleSelectForRoute}>
+        <Button variant="light" size="sm" onClick={handleRouteToInterview}>
           Select
         </Button>
         <Button variant="light" size="sm" onClick={onClose}>

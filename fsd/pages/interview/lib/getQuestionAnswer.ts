@@ -30,15 +30,10 @@ export const getQuestionAnswer = (
   };
 
   if (interviewType === "Subjective") {
-    question_answer =
-      INTERVIEW_QUESTIONS_SUBJECTIVE[
-        tech as keyof typeof INTERVIEW_QUESTIONS_SUBJECTIVE
-      ] || [];
+    question_answer = INTERVIEW_QUESTIONS_SUBJECTIVE[tech as keyof typeof INTERVIEW_QUESTIONS_SUBJECTIVE] || [];
   } else if (interviewType === "Multiple Choice") {
     question_answer =
-      INTERVIEW_QUESTIONS_MULTIPLE_CHOICE[
-        tech as keyof typeof INTERVIEW_QUESTIONS_MULTIPLE_CHOICE
-      ] || [];
+      INTERVIEW_QUESTIONS_MULTIPLE_CHOICE[tech as keyof typeof INTERVIEW_QUESTIONS_MULTIPLE_CHOICE] || [];
   }
 
   return question_answer;
