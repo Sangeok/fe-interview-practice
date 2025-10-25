@@ -9,11 +9,7 @@ interface FeedbackAPIOptions {
 export const useFeedbackAPI = () => {
   const [isLoading, setIsLoading] = useState(false);
 
-  const generateFeedback = async ({
-    tech,
-    question,
-    answer,
-  }: FeedbackAPIOptions) => {
+  const generateFeedback = async ({ tech, question, answer }: FeedbackAPIOptions) => {
     setIsLoading(true);
 
     try {
@@ -45,5 +41,5 @@ export const useFeedbackAPI = () => {
     }
   };
 
-  return { generateFeedback, isLoading };
+  return { generateFeedback, isLoading, setIsLoading };
 };

@@ -17,14 +17,16 @@ interface UseSubjectiveInterviewReturn {
 
 export const useSubjectiveInterview = (questionAnswer: SubjectiveQuestion[]): UseSubjectiveInterviewReturn => {
   const tech = useSelectTechStore((state) => state.tech);
-  const { generateFeedback, isLoading } = useFeedbackAPI();
+  const { generateFeedback, isLoading, setIsLoading } = useFeedbackAPI();
   const { questionIndex, moveToNextQuestion } = useQuestionNavigation(questionAnswer.length);
   const {
     messages,
+    addLoadingMessage,
     addQuestionMessage,
     addUserMessage,
     addFeedback_ActionButtonMessage,
     addEndMessage,
+    removeLoadingMessage,
     clearMessagesAndShowQuestion,
   } = useMessageState();
 
@@ -37,12 +39,14 @@ export const useSubjectiveInterview = (questionAnswer: SubjectiveQuestion[]): Us
 
   const handleSendMessage = async (content: string) => {
     addUserMessage(content);
+    addLoadingMessage();
 
     const feedbackResult = await generateFeedback({
       tech,
       question: questionAnswer[questionIndex].question,
       answer: content,
     });
+    removeLoadingMessage();
 
     addFeedback_ActionButtonMessage(feedbackResult.data);
   };

@@ -18,6 +18,12 @@ export const createFeedbackMessage = (content: string): Message => ({
   content,
 });
 
+export const createLoadingMessage = (): Message => ({
+  id: Date.now() + 3,
+  role: "assistant",
+  content: "AI가 답변을 생성하는 중입니다...",
+});
+
 export const createActionButtonMessage = (): Message => ({
   id: Date.now() + 2,
   role: "system",

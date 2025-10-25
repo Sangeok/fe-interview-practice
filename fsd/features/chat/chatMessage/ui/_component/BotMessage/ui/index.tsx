@@ -3,6 +3,7 @@ import { isFeedbackData, isDeepDiveFeedbackData } from "../lib/isFeedbackData";
 import FeedbackMessage from "./_component/FeedbackMessage/ui";
 import DeepDiveFeedbackMessage from "./_component/DeepDiveFeedbackMessage/ui";
 import GeneralBotMessage from "./_component/GeneralBotMessage";
+import LoadingBotMessage from "./_component/LoadingBotMessage";
 import { Bot } from "lucide-react";
 
 function BotAvatar() {
@@ -13,7 +14,19 @@ function BotAvatar() {
   );
 }
 
-export default function BotMessage({ content }: { content: string | FeedbackResponse }) {
+export default function BotMessage({
+  content,
+  isLoading,
+}: {
+  content: string | FeedbackResponse;
+  isLoading?: boolean;
+}) {
+  const loadingMessage = "AI가 답변을 생성하는 중입니다...";
+  // 로딩 상태일 때 로딩 UI 우선 표시
+  if (isLoading && content === loadingMessage) {
+    return <LoadingBotMessage BotAvatar={<BotAvatar />} />;
+  }
+
   // FeedbackData 타입인 경우 피드백 메시지 렌더링
   if (isFeedbackData(content)) {
     return <FeedbackMessage BotAvatar={<BotAvatar />} data={content} />;

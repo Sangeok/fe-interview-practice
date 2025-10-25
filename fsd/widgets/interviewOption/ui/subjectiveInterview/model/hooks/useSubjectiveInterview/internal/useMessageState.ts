@@ -7,6 +7,7 @@ import {
   createActionButtonMessage,
   createEndMessage,
   filterButtonMessages,
+  createLoadingMessage,
 } from "../../../../lib/messagelib";
 
 export const useMessageState = () => {
@@ -20,6 +21,15 @@ export const useMessageState = () => {
   const addUserMessage = (content: string) => {
     const userMessage = createUserMessage(content);
     setMessages((prev) => [...prev, userMessage]);
+  };
+
+  const addLoadingMessage = () => {
+    const loadingMessage = createLoadingMessage();
+    setMessages((prev) => [...prev, loadingMessage]);
+  };
+
+  const removeLoadingMessage = () => {
+    setMessages((prev) => prev.filter((message) => message.content !== "AI가 답변을 생성하는 중입니다..."));
   };
 
   const addFeedback_ActionButtonMessage = (feedback: string) => {
@@ -43,6 +53,8 @@ export const useMessageState = () => {
     messages,
     addQuestionMessage,
     addUserMessage,
+    addLoadingMessage,
+    removeLoadingMessage,
     addFeedback_ActionButtonMessage,
     addEndMessage,
     clearMessagesAndShowQuestion,
