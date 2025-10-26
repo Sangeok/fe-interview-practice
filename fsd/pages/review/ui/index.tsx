@@ -26,6 +26,8 @@ export default function ReviewPage() {
 
   const question_answer = selectedOptions === "Subjective" ? inCorrectSubQuestion : inCorrectMultipleChoiceQuestion;
 
+  console.log("inCorrectSubQuestion", inCorrectSubQuestion);
+
   // 세션 시작 시 1회 스냅샷 생성 (옵션 선택 완료 + 다이얼로그 닫힘)
   useEffect(() => {
     if (!openDialog && selectedOptions !== "" && sessionQuestions === null) {

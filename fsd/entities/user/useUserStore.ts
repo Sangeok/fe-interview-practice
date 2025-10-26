@@ -15,6 +15,10 @@ interface UserStore {
 
   setInCorrectSubQuestion: (inCorrectSubQuestion: SubjectiveQuestion[]) => void;
   setInCorrectMultipleChoiceQuestion: (inCorrectMultipleChoiceQuestion: MultipleChoiceQuestion[]) => void;
+
+  addInCorrectSubQuestion: (question: SubjectiveQuestion) => void;
+  removeInCorrectSubQuestion: (questionId: number) => void;
+
   addInCorrectMultipleChoiceQuestion: (question: MultipleChoiceQuestion) => void;
   removeInCorrectMultipleChoiceQuestion: (questionId: number) => void;
 
@@ -25,10 +29,28 @@ interface UserStore {
 export const useUserStore = create<UserStore>((set, get) => ({
   user: initialUserData,
   setUser: (user: UserData) => set({ user }),
+
   setInCorrectSubQuestion: (inCorrectSubQuestion: SubjectiveQuestion[]) =>
     set((state) => ({ user: { ...state.user, inCorrectSubQuestion } })),
   setInCorrectMultipleChoiceQuestion: (inCorrectMultipleChoiceQuestion: MultipleChoiceQuestion[]) =>
     set((state) => ({ user: { ...state.user, inCorrectMultipleChoiceQuestion } })),
+
+  addInCorrectSubQuestion: (question: SubjectiveQuestion) =>
+    set((state) => {
+      const exists = state.user.inCorrectSubQuestion.some((q) => q.id === question.id);
+      if (exists) return state;
+      return {
+        user: { ...state.user, inCorrectSubQuestion: [...state.user.inCorrectSubQuestion, question] },
+      };
+    }),
+  removeInCorrectSubQuestion: (questionId: number) =>
+    set((state) => ({
+      user: {
+        ...state.user,
+        inCorrectSubQuestion: state.user.inCorrectSubQuestion.filter((q) => q.id !== questionId),
+      },
+    })),
+
   addInCorrectMultipleChoiceQuestion: (question: MultipleChoiceQuestion) =>
     set((state) => {
       const exists = state.user.inCorrectMultipleChoiceQuestion.some((q) => q.id === question.id);

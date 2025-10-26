@@ -5,6 +5,7 @@ import { useFeedbackAPI } from "./internal/useFeedbackAPI";
 import { useQuestionNavigation } from "./internal/useQuestionNavigation";
 import { useMessageState } from "./internal/useMessageState";
 import { useEffect } from "react";
+import { useUserStore } from "@/fsd/entities/user/useUserStore";
 
 interface UseSubjectiveInterviewReturn {
   messages: Message[];
@@ -30,6 +31,10 @@ export const useSubjectiveInterview = (questionAnswer: SubjectiveQuestion[]): Us
     clearMessagesAndShowQuestion,
   } = useMessageState();
 
+  const addInCorrectSubQuestion = useUserStore((s) => s.addInCorrectSubQuestion);
+  const removeInCorrectSubQuestion = useUserStore((s) => s.removeInCorrectSubQuestion);
+  const persistUserToDB = useUserStore((s) => s.persistUserToDB);
+
   // 첫 번째 질문을 자동으로 표시
   useEffect(() => {
     if (questionAnswer.length > 0 && messages.length === 0) {
@@ -46,6 +51,16 @@ export const useSubjectiveInterview = (questionAnswer: SubjectiveQuestion[]): Us
       question: questionAnswer[questionIndex].question,
       answer: content,
     });
+    console.log("feedbackResult", feedbackResult);
+
+    if (feedbackResult.success && feedbackResult.data.evaluation.score <= 4) {
+      addInCorrectSubQuestion(questionAnswer[questionIndex]);
+    } else {
+      removeInCorrectSubQuestion(questionAnswer[questionIndex].id);
+    }
+
+    // 정답/오답 여부와 무관하게 현재 user 상태를 저장
+    await persistUserToDB();
     removeLoadingMessage();
 
     addFeedback_ActionButtonMessage(feedbackResult.data);
