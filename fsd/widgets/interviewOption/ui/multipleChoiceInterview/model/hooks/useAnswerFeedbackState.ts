@@ -1,5 +1,9 @@
+"use client";
+
 import { useState, useCallback } from "react";
 import { MultipleChoiceInterpretType } from "@/fsd/shared/model/type";
+import { useUserStore } from "@/fsd/entities/user/useUserStore";
+import { MultipleChoiceQuestion } from "../type";
 
 type AnswerState = "idle" | "correct" | "incorrect";
 
@@ -21,22 +25,30 @@ interface UseAnswerFeedbackStateReturn {
   resetAnswerState: () => void;
 }
 
-export function useAnswerFeedbackState(): UseAnswerFeedbackStateReturn {
+export function useAnswerFeedbackState(currentQuestion: MultipleChoiceQuestion | null): UseAnswerFeedbackStateReturn {
   const [answerState, setAnswerState] = useState<AnswerState>("idle");
   const [isLoading, setIsLoading] = useState(false);
-  const [interpret, setInterpret] =
-    useState<MultipleChoiceInterpretType | null>(null);
+  const [interpret, setInterpret] = useState<MultipleChoiceInterpretType | null>(null);
+
+  const addInCorrectMultipleChoiceQuestion = useUserStore((state) => state.addInCorrectMultipleChoiceQuestion);
+  const removeInCorrectMultipleChoiceQuestion = useUserStore((state) => state.removeInCorrectMultipleChoiceQuestion);
 
   const showCorrectCard = answerState === "correct";
   const showIncorrectInterpret = answerState === "incorrect";
 
   const setAnswerCorrect = useCallback(() => {
     setAnswerState("correct");
-  }, []);
+    if (currentQuestion) {
+      removeInCorrectMultipleChoiceQuestion(currentQuestion.id);
+    }
+  }, [currentQuestion, removeInCorrectMultipleChoiceQuestion]);
 
   const setAnswerIncorrect = useCallback(() => {
     setAnswerState("incorrect");
-  }, []);
+    if (currentQuestion) {
+      addInCorrectMultipleChoiceQuestion(currentQuestion);
+    }
+  }, [currentQuestion, addInCorrectMultipleChoiceQuestion]);
 
   const resetAnswerState = useCallback(() => {
     setAnswerState("idle");

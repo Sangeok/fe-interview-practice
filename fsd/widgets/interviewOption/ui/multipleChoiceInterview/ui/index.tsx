@@ -11,18 +11,10 @@ interface MultipleChoiceInterviewProps {
   questionAnswer: MultipleChoiceQuestion[];
 }
 
-export default function MultipleChoiceInterview({
-  questionAnswer,
-}: MultipleChoiceInterviewProps) {
+export default function MultipleChoiceInterview({ questionAnswer }: MultipleChoiceInterviewProps) {
   // 퀴즈 진행 상태 관리
-  const {
-    currentQuestion,
-    score,
-    isQuizFinished,
-    totalQuestions,
-    onCorrectAnswer,
-    onIncorrectAnswer,
-  } = useMultipleChoiceQuiz({ questions: questionAnswer });
+  const { currentQuestion, score, isQuizFinished, totalQuestions, onCorrectAnswer, onIncorrectAnswer } =
+    useMultipleChoiceQuiz({ questions: questionAnswer });
 
   // 답변 피드백 상태 관리
   const {
@@ -35,7 +27,7 @@ export default function MultipleChoiceInterview({
     setInterpret,
     setLoading,
     resetAnswerState,
-  } = useAnswerFeedbackState();
+  } = useAnswerFeedbackState(currentQuestion);
 
   // 정답 처리
   const handleCorrectAnswer = () => {
@@ -79,16 +71,10 @@ export default function MultipleChoiceInterview({
         />
 
         {showIncorrectInterpret && (
-          <InterpretCard
-            loading={isLoading}
-            interpret={interpret}
-            onNext={handleIncorrectAnswer}
-          />
+          <InterpretCard loading={isLoading} interpret={interpret} onNext={handleIncorrectAnswer} />
         )}
 
-        {showCorrectCard && (
-          <AnswerCorrectCard onNext={handleCorrectAnswer} />
-        )}
+        {showCorrectCard && <AnswerCorrectCard onNext={handleCorrectAnswer} />}
       </div>
     </div>
   );

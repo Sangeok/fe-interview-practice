@@ -4,16 +4,27 @@ import { useState } from "react";
 import TechStackSelector from "./_component/TechStackSelector";
 import Button from "fsd/shared/ui/atoms/button/ui/Button";
 import Dialog from "fsd/shared/ui/atoms/dialog/ui";
+import { useUserStore } from "@/fsd/entities/user/useUserStore";
+import { useRouter } from "next/navigation";
 
 export default function Hero() {
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const router = useRouter();
+  const [interviewDialogOpen, setInterviewDialogOpen] = useState(false);
 
-  const handleDialogOpen = () => {
-    setDialogOpen(true);
+  const hydrateUserFromDB = useUserStore((s) => s.hydrateUserFromDB);
+
+  const handleInterviewDialogOpen = async () => {
+    await hydrateUserFromDB();
+    setInterviewDialogOpen(true);
   };
 
-  const handleDialogClose = () => {
-    setDialogOpen(false);
+  const handleInterviewDialogClose = () => {
+    setInterviewDialogOpen(false);
+  };
+
+  const handleReviewDialogOpen = async () => {
+    await hydrateUserFromDB();
+    router.push("/reviews");
   };
 
   return (
@@ -23,14 +34,18 @@ export default function Hero() {
         <p className="text-zinc-400 text-lg animate-fade-up-2">Practice Frontend Interview with AI.</p>
       </div>
 
-      <div className="flex items-center animate-fade-up-2">
-        <Button variant="light" onClick={handleDialogOpen}>
+      <div className="flex gap-x-4 items-center animate-fade-up-2">
+        <Button variant="light" onClick={handleInterviewDialogOpen}>
           Try now
+        </Button>
+
+        <Button variant="light" onClick={handleReviewDialogOpen}>
+          Review
         </Button>
       </div>
 
-      <Dialog open={dialogOpen} onClose={handleDialogClose} title="Select Tech Stack">
-        <TechStackSelector onClose={handleDialogClose} />
+      <Dialog open={interviewDialogOpen} onClose={handleInterviewDialogClose} title="Select Tech Stack">
+        <TechStackSelector onClose={handleInterviewDialogClose} />
       </Dialog>
     </>
   );
