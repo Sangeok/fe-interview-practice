@@ -8,13 +8,14 @@ interface ChatMessageProps {
   onNext?: () => void;
   onEnd?: () => void;
   showNext?: boolean;
+  isLoading?: boolean;
 }
 
-export default function ChatMessage({ message, onNext, onEnd, showNext }: ChatMessageProps) {
+export default function ChatMessage({ message, onNext, onEnd, showNext, isLoading }: ChatMessageProps) {
   const MESSAGE_ROLES = {
     user: <UserMessage content={message.content} />,
     system: <ButtonMessage onNext={onNext} onEnd={onEnd} showNext={showNext} />,
-    assistant: <BotMessage content={message.content} />,
+    assistant: <BotMessage content={message.content} isLoading={isLoading} />,
   };
 
   return MESSAGE_ROLES[message.role as keyof typeof MESSAGE_ROLES];

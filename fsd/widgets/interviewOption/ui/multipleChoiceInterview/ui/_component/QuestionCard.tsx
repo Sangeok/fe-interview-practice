@@ -6,6 +6,7 @@ import { Option } from "../../model/type";
 import { useSelectTechStore } from "@/fsd/shared/model/useSelectTechStore";
 import { useAnswerValidation } from "../../model/hooks/useAnswerValidation";
 import { useInterpretAPI } from "../../model/hooks/useInterpretAPI";
+import { useUserStore } from "@/fsd/entities/user/useUserStore";
 
 interface QuestionCardProps {
   question: string;
@@ -13,7 +14,7 @@ interface QuestionCardProps {
   answerString: string;
   setLoading: (loading: boolean) => void;
   setInterpret: (interpret: MultipleChoiceInterpretType) => void;
-  setIsAnswerCorrect: (isAnswerCorrect: boolean) => void;
+  onSubmitAnswer: (isCorrect: boolean) => void;
 }
 
 export default function QuestionCard({
@@ -22,26 +23,25 @@ export default function QuestionCard({
   answerString,
   setLoading,
   setInterpret,
-  setIsAnswerCorrect,
+  onSubmitAnswer,
 }: QuestionCardProps) {
   const { tech } = useSelectTechStore();
   const { generateInterpret } = useInterpretAPI();
-  const {
-    selectedOption,
-    canSubmit,
-    selectOption,
-    validateAnswer,
-  } = useAnswerValidation();
+  const { selectedOption, canSubmit, selectOption, validateAnswer } = useAnswerValidation();
+  const persistUserToDB = useUserStore((s) => s.persistUserToDB);
 
   const handleCheckAnswer = async () => {
     const validation = validateAnswer();
-    
+
     if (!validation.isValid) {
       alert(validation.message);
       return;
     }
 
-    setIsAnswerCorrect(validation.isCorrect!);
+    onSubmitAnswer(validation.isCorrect!);
+
+    // 정답/오답 여부와 무관하게 현재 user 상태를 저장
+    await persistUserToDB();
 
     if (!validation.isCorrect) {
       await handleGenerateInterpret();
@@ -50,7 +50,7 @@ export default function QuestionCard({
 
   const handleGenerateInterpret = async () => {
     setLoading(true);
-    
+
     const result = await generateInterpret({
       tech,
       question,
@@ -60,7 +60,7 @@ export default function QuestionCard({
     if (result.success && result.data) {
       setInterpret(result.data);
     }
-    
+
     setLoading(false);
   };
 

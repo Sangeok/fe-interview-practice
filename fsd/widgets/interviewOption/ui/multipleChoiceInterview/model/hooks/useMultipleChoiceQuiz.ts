@@ -14,8 +14,7 @@ interface UseMultipleChoiceQuizReturn {
   totalQuestions: number;
 
   // Actions
-  onCorrectAnswer: () => void;
-  onIncorrectAnswer: () => void;
+  goNext: (isCorrect: boolean) => void;
 }
 
 export function useMultipleChoiceQuiz({ questions }: UseMultipleChoiceQuizParams): UseMultipleChoiceQuizReturn {
@@ -25,13 +24,10 @@ export function useMultipleChoiceQuiz({ questions }: UseMultipleChoiceQuizParams
   const isQuizFinished = currentQuestionIndex >= questions.length;
   const currentQuestion = questions[currentQuestionIndex];
 
-  const onCorrectAnswer = useCallback(() => {
-    setScore((prev) => prev + 1);
-    setCurrentQuestionIndex((prev) => prev + 1);
-  }, []);
-
-  const onIncorrectAnswer = useCallback(() => {
-    // 점수는 증가하지 않고 다음 문제로만 이동
+  const goNext = useCallback((isCorrect: boolean) => {
+    if (isCorrect) {
+      setScore((prev) => prev + 1);
+    }
     setCurrentQuestionIndex((prev) => prev + 1);
   }, []);
 
@@ -41,7 +37,6 @@ export function useMultipleChoiceQuiz({ questions }: UseMultipleChoiceQuizParams
     score,
     isQuizFinished,
     totalQuestions: questions.length,
-    onCorrectAnswer,
-    onIncorrectAnswer,
+    goNext,
   };
 }
