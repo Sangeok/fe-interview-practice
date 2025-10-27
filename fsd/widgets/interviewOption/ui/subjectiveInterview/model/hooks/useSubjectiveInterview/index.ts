@@ -4,13 +4,16 @@ import { Message } from "@/fsd/features/chat/chatMessage/model/type";
 import { useFeedbackAPI } from "./internal/useFeedbackAPI";
 import { useQuestionNavigation } from "./internal/useQuestionNavigation";
 import { useMessageState } from "./internal/useMessageState";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useUserStore } from "@/fsd/entities/user/useUserStore";
 
 interface UseSubjectiveInterviewReturn {
   messages: Message[];
   questionIndex: number;
   isLoading: boolean;
+  score: number;
+  totalQuestions: number;
+  isFinished: boolean;
   handleSendMessage: (content: string) => void;
   handleNextQuestion: () => void;
   handleEndInterview: () => void;
@@ -35,6 +38,10 @@ export const useSubjectiveInterview = (questionAnswer: SubjectiveQuestion[]): Us
   const removeInCorrectSubQuestion = useUserStore((s) => s.removeInCorrectSubQuestion);
   const persistUserToDB = useUserStore((s) => s.persistUserToDB);
 
+  const [score, setScore] = useState(0);
+  const [isFinished, setIsFinished] = useState(false);
+  const totalQuestions = questionAnswer.length;
+
   // 첫 번째 질문을 자동으로 표시
   useEffect(() => {
     if (questionAnswer.length > 0 && messages.length === 0) {
@@ -53,9 +60,16 @@ export const useSubjectiveInterview = (questionAnswer: SubjectiveQuestion[]): Us
     });
     console.log("feedbackResult", feedbackResult);
 
-    if (feedbackResult.success && feedbackResult.data.evaluation.score <= 4) {
+    // 점수 및 오답 처리 규칙
+    // - API 오류(success: false): 감점(가산 없음) + 오답 추가
+    // - success && evaluation.score <= 4: 감점(가산 없음) + 오답 추가
+    // - 그 외: 정답으로 판정하여 +1 점수, 오답 목록 제거
+    if (!feedbackResult.success) {
+      addInCorrectSubQuestion(questionAnswer[questionIndex]);
+    } else if (feedbackResult.data.evaluation.score <= 4) {
       addInCorrectSubQuestion(questionAnswer[questionIndex]);
     } else {
+      setScore((prev) => prev + 1);
       removeInCorrectSubQuestion(questionAnswer[questionIndex].id);
     }
 
@@ -76,12 +90,16 @@ export const useSubjectiveInterview = (questionAnswer: SubjectiveQuestion[]): Us
 
   const handleEndInterview = () => {
     addEndMessage();
+    setIsFinished(true);
   };
 
   return {
     messages,
     questionIndex,
     isLoading,
+    score,
+    totalQuestions,
+    isFinished,
     handleSendMessage,
     handleNextQuestion,
     handleEndInterview,

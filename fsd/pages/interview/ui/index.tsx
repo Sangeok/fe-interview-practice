@@ -29,7 +29,9 @@ export default function InterviewPage() {
 
   return (
     <div className="p-8 h-screen">
-      <header className="text-2xl font-bold">{tech} Interview</header>
+      <header className="text-2xl font-bold flex justify-between">
+        <div>{tech} Interview</div>
+      </header>
 
       {canShowInterview && (
         <InterviewTypeRenderer

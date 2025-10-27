@@ -13,13 +13,17 @@ interface UseAnswerFeedbackStateReturn {
   isLoading: boolean;
   interpret: MultipleChoiceInterpretType | null;
 
-  // Computed
+  // Derived
+  isAnswerCorrect: boolean;
+  isAnswerChecked: boolean;
+
+  // Computed (UI flags)
   showCorrectCard: boolean;
   showIncorrectInterpret: boolean;
 
   // Actions
-  setAnswerCorrect: () => void;
-  setAnswerIncorrect: () => void;
+  markCorrect: () => void;
+  markIncorrect: () => void;
   setInterpret: (interpret: MultipleChoiceInterpretType | null) => void;
   setLoading: (loading: boolean) => void;
   resetAnswerState: () => void;
@@ -35,15 +39,17 @@ export function useAnswerFeedbackState(currentQuestion: MultipleChoiceQuestion |
 
   const showCorrectCard = answerState === "correct";
   const showIncorrectInterpret = answerState === "incorrect";
+  const isAnswerCorrect = answerState === "correct";
+  const isAnswerChecked = answerState !== "idle";
 
-  const setAnswerCorrect = useCallback(() => {
+  const markCorrect = useCallback(() => {
     setAnswerState("correct");
     if (currentQuestion) {
       removeInCorrectMultipleChoiceQuestion(currentQuestion.id);
     }
   }, [currentQuestion, removeInCorrectMultipleChoiceQuestion]);
 
-  const setAnswerIncorrect = useCallback(() => {
+  const markIncorrect = useCallback(() => {
     setAnswerState("incorrect");
     if (currentQuestion) {
       addInCorrectMultipleChoiceQuestion(currentQuestion);
@@ -59,10 +65,12 @@ export function useAnswerFeedbackState(currentQuestion: MultipleChoiceQuestion |
     answerState,
     isLoading,
     interpret,
+    isAnswerCorrect,
+    isAnswerChecked,
     showCorrectCard,
     showIncorrectInterpret,
-    setAnswerCorrect,
-    setAnswerIncorrect,
+    markCorrect,
+    markIncorrect,
     setInterpret,
     setLoading: setIsLoading,
     resetAnswerState,

@@ -24,11 +24,7 @@ export default function ReviewPage() {
   const isDialogClosed = !openDialog;
   const canShowInterview = isInterviewSelected && isDialogClosed;
 
-  const question_answer = selectedOptions === "Subjective" ? inCorrectSubQuestion : inCorrectMultipleChoiceQuestion;
-
-  console.log("inCorrectSubQuestion", inCorrectSubQuestion);
-
-  // 세션 시작 시 1회 스냅샷 생성 (옵션 선택 완료 + 다이얼로그 닫힘)
+  // 세션 시작 시 1회 스냅샷 생성
   useEffect(() => {
     if (!openDialog && selectedOptions !== "" && sessionQuestions === null) {
       const base =
@@ -40,13 +36,6 @@ export default function ReviewPage() {
       setSessionQuestions(frozen);
     }
   }, [openDialog, selectedOptions, sessionQuestions, inCorrectMultipleChoiceQuestion, inCorrectSubQuestion]);
-
-  // 다이얼로그를 다시 열면 새 세션을 위해 초기화
-  useEffect(() => {
-    if (openDialog) {
-      setSessionQuestions(null);
-    }
-  }, [openDialog]);
 
   return (
     <div className="p-8 h-screen">

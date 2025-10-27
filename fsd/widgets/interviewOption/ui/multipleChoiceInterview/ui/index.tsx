@@ -6,6 +6,7 @@ import InterpretCard from "./_component/InterpretCard";
 import AnswerCorrectCard from "./_component/AnswerCorrectCard";
 import { useMultipleChoiceQuiz } from "../model/hooks/useMultipleChoiceQuiz";
 import { useAnswerFeedbackState } from "../model/hooks/useAnswerFeedbackState";
+import ProgressHeader from "./_component/ProgressHeader";
 
 interface MultipleChoiceInterviewProps {
   questionAnswer: MultipleChoiceQuestion[];
@@ -13,7 +14,7 @@ interface MultipleChoiceInterviewProps {
 
 export default function MultipleChoiceInterview({ questionAnswer }: MultipleChoiceInterviewProps) {
   // 퀴즈 진행 상태 관리
-  const { currentQuestion, score, isQuizFinished, totalQuestions, onCorrectAnswer, onIncorrectAnswer } =
+  const { currentQuestion, currentQuestionIndex, score, isQuizFinished, totalQuestions, goNext } =
     useMultipleChoiceQuiz({ questions: questionAnswer });
 
   // 답변 피드백 상태 관리
@@ -22,23 +23,19 @@ export default function MultipleChoiceInterview({ questionAnswer }: MultipleChoi
     interpret,
     showCorrectCard,
     showIncorrectInterpret,
-    setAnswerCorrect,
-    setAnswerIncorrect,
+    isAnswerCorrect,
+    markCorrect,
+    markIncorrect,
     setInterpret,
     setLoading,
     resetAnswerState,
   } = useAnswerFeedbackState(currentQuestion);
 
-  // 정답 처리
-  const handleCorrectAnswer = () => {
+  // 다음 문제로 진행 (단일 액션)
+  const handleNext = () => {
+    const correct = isAnswerCorrect;
     resetAnswerState();
-    onCorrectAnswer();
-  };
-
-  // 오답 처리
-  const handleIncorrectAnswer = () => {
-    resetAnswerState();
-    onIncorrectAnswer();
+    goNext(correct);
   };
 
   // Early return: 퀴즈 종료 상태
@@ -54,27 +51,29 @@ export default function MultipleChoiceInterview({ questionAnswer }: MultipleChoi
   return (
     <div className="w-full max-w-2xl mx-auto p-4">
       <div className="flex flex-col gap-8">
-        <QuestionCard
-          key={currentQuestion.id}
-          question={currentQuestion.question}
-          options={currentQuestion.options}
-          answerString={currentQuestion.answerString}
-          setInterpret={setInterpret}
-          setLoading={setLoading}
-          setIsAnswerCorrect={(isCorrect) => {
-            if (isCorrect) {
-              setAnswerCorrect();
-            } else {
-              setAnswerIncorrect();
-            }
-          }}
-        />
+        <ProgressHeader score={score} currentQuestionIndex={currentQuestionIndex} totalQuestions={totalQuestions} />
 
-        {showIncorrectInterpret && (
-          <InterpretCard loading={isLoading} interpret={interpret} onNext={handleIncorrectAnswer} />
+        {currentQuestion && (
+          <QuestionCard
+            key={currentQuestion.id}
+            question={currentQuestion.question}
+            options={currentQuestion.options}
+            answerString={currentQuestion.answerString}
+            setInterpret={setInterpret}
+            setLoading={setLoading}
+            onSubmitAnswer={(isCorrect) => {
+              if (isCorrect) {
+                markCorrect();
+              } else {
+                markIncorrect();
+              }
+            }}
+          />
         )}
 
-        {showCorrectCard && <AnswerCorrectCard onNext={handleCorrectAnswer} />}
+        {showIncorrectInterpret && <InterpretCard loading={isLoading} interpret={interpret} onNext={handleNext} />}
+
+        {showCorrectCard && <AnswerCorrectCard onNext={handleNext} />}
       </div>
     </div>
   );

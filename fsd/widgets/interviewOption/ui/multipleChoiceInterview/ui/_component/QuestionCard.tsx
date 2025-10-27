@@ -14,7 +14,7 @@ interface QuestionCardProps {
   answerString: string;
   setLoading: (loading: boolean) => void;
   setInterpret: (interpret: MultipleChoiceInterpretType) => void;
-  setIsAnswerCorrect: (isAnswerCorrect: boolean) => void;
+  onSubmitAnswer: (isCorrect: boolean) => void;
 }
 
 export default function QuestionCard({
@@ -23,7 +23,7 @@ export default function QuestionCard({
   answerString,
   setLoading,
   setInterpret,
-  setIsAnswerCorrect,
+  onSubmitAnswer,
 }: QuestionCardProps) {
   const { tech } = useSelectTechStore();
   const { generateInterpret } = useInterpretAPI();
@@ -38,7 +38,7 @@ export default function QuestionCard({
       return;
     }
 
-    setIsAnswerCorrect(validation.isCorrect!);
+    onSubmitAnswer(validation.isCorrect!);
 
     // 정답/오답 여부와 무관하게 현재 user 상태를 저장
     await persistUserToDB();
