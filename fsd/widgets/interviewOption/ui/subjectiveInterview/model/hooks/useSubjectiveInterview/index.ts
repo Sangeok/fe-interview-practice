@@ -17,6 +17,7 @@ interface UseSubjectiveInterviewReturn {
   handleSendMessage: (content: string) => void;
   handleNextQuestion: () => void;
   handleEndInterview: () => void;
+  handleAddReview: () => void;
 }
 
 export const useSubjectiveInterview = (questionAnswer: SubjectiveQuestion[]): UseSubjectiveInterviewReturn => {
@@ -85,12 +86,21 @@ export const useSubjectiveInterview = (questionAnswer: SubjectiveQuestion[]): Us
     if (result.success) {
       const nextQuestion = questionAnswer[result.newIndex];
       clearMessagesAndShowQuestion(nextQuestion.question);
+    } else {
+      addEndMessage();
+      setIsFinished(true);
     }
   };
 
   const handleEndInterview = () => {
     addEndMessage();
     setIsFinished(true);
+  };
+
+  const handleAddReview = async () => {
+    addInCorrectSubQuestion(questionAnswer[questionIndex]);
+    await persistUserToDB();
+    handleNextQuestion();
   };
 
   return {
@@ -103,5 +113,6 @@ export const useSubjectiveInterview = (questionAnswer: SubjectiveQuestion[]): Us
     handleSendMessage,
     handleNextQuestion,
     handleEndInterview,
+    handleAddReview,
   };
 };

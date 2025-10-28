@@ -27,6 +27,7 @@ interface UseAnswerFeedbackStateReturn {
   setInterpret: (interpret: MultipleChoiceInterpretType | null) => void;
   setLoading: (loading: boolean) => void;
   resetAnswerState: () => void;
+  handleAddReview: () => void;
 }
 
 export function useAnswerFeedbackState(currentQuestion: MultipleChoiceQuestion | null): UseAnswerFeedbackStateReturn {
@@ -41,6 +42,8 @@ export function useAnswerFeedbackState(currentQuestion: MultipleChoiceQuestion |
   const showIncorrectInterpret = answerState === "incorrect";
   const isAnswerCorrect = answerState === "correct";
   const isAnswerChecked = answerState !== "idle";
+
+  const persistUserToDB = useUserStore((s) => s.persistUserToDB);
 
   const markCorrect = useCallback(() => {
     setAnswerState("correct");
@@ -61,6 +64,14 @@ export function useAnswerFeedbackState(currentQuestion: MultipleChoiceQuestion |
     setInterpret(null);
   }, []);
 
+  const handleAddReview = useCallback(async () => {
+    if (currentQuestion) {
+      addInCorrectMultipleChoiceQuestion(currentQuestion);
+      await persistUserToDB();
+      alert("복습 문제에 추가되었습니다.");
+    }
+  }, [currentQuestion, addInCorrectMultipleChoiceQuestion]);
+
   return {
     answerState,
     isLoading,
@@ -74,5 +85,6 @@ export function useAnswerFeedbackState(currentQuestion: MultipleChoiceQuestion |
     setInterpret,
     setLoading: setIsLoading,
     resetAnswerState,
+    handleAddReview,
   };
 }

@@ -29,6 +29,7 @@ export default function MultipleChoiceInterview({ questionAnswer }: MultipleChoi
     setInterpret,
     setLoading,
     resetAnswerState,
+    handleAddReview,
   } = useAnswerFeedbackState(currentQuestion);
 
   // 다음 문제로 진행 (단일 액션)
@@ -61,6 +62,7 @@ export default function MultipleChoiceInterview({ questionAnswer }: MultipleChoi
             answerString={currentQuestion.answerString}
             setInterpret={setInterpret}
             setLoading={setLoading}
+            onAddReview={handleAddReview}
             onSubmitAnswer={(isCorrect) => {
               if (isCorrect) {
                 markCorrect();
