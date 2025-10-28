@@ -21,6 +21,7 @@ export default function SubjectiveInterview({ questionAnswer }: SubjectiveInterv
     handleSendMessage,
     handleNextQuestion,
     handleEndInterview,
+    handleAddReview,
     score,
     totalQuestions,
     isFinished,
@@ -61,6 +62,7 @@ export default function SubjectiveInterview({ questionAnswer }: SubjectiveInterv
                   message={message}
                   onNext={handleNextQuestion}
                   onEnd={handleEndInterview}
+                  onAddReview={handleAddReview}
                   showNext={questionIndex < questionAnswer.length - 1}
                   isLoading={isLoading}
                 />

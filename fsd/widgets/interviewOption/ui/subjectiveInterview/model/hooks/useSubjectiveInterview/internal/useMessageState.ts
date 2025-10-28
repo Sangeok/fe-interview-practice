@@ -33,7 +33,6 @@ export const useMessageState = () => {
   };
 
   const addFeedback_ActionButtonMessage = (feedback: string) => {
-    console.log("feedback", feedback);
     const feedbackMessage = createFeedbackMessage(feedback);
     const buttonMessage = createActionButtonMessage();
     setMessages((prev) => [...prev, feedbackMessage, buttonMessage]);
