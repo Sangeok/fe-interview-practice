@@ -8,7 +8,8 @@ export const isFeedbackData = (content: string | FeedbackResponse): content is F
     "topic" in content &&
     "evaluation" in content &&
     "feedbackDetails" in content &&
-    "modelAnswer" in content
+    "modelAnswer" in content &&
+    !("deepDive" in content)
   );
 };
 
@@ -20,7 +21,8 @@ export const isDeepDiveFeedbackData = (content: string | FeedbackResponse): cont
     "topic" in content &&
     "evaluation" in content &&
     "feedbackDetails" in content &&
-    "deepDive" in content
+    "deepDive" in content &&
+    !("modelAnswer" in content)
   );
 };
 
