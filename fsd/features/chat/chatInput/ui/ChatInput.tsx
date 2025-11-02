@@ -37,7 +37,7 @@ export default function ChatInput({ onSendMessage, isLoading = false }: ChatInpu
   }, [inputValue]);
 
   return (
-    <div className="w-full p-4 bg-white rounded-xl shadow-lg">
+    <div className="w-full p-4 bg-white rounded-xl shadow-lg" data-testid="chat-input">
       <div className="relative flex w-full">
         <textarea
           ref={textareaRef}
@@ -59,7 +59,7 @@ export default function ChatInput({ onSendMessage, isLoading = false }: ChatInpu
           size="sm"
           aria-label="Send message"
         >
-          <Send size={20} />
+          <Send size={20} /> Send
         </Button>
       </div>
     </div>

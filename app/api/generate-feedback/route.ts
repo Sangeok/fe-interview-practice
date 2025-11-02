@@ -169,16 +169,14 @@ export async function POST(request: NextRequest) {
   try {
     const { tech, question, answer } = await request.json();
 
-    if (!tech || !question || !answer) {
-      return NextResponse.json(
-        { success: false, error: "Missing required fields: tech, question, or answer" },
-        { status: 400 }
-      );
-    }
+    // if (!tech || !question || !answer) {
+    //   return NextResponse.json(
+    //     { success: false, error: "Missing required fields: tech, question, or answer" },
+    //     { status: 400 }
+    //   );
+    // }
 
-    const PROMPT = SCRIPT_PROMPT.replace("{TECH}", tech)
-      .replace("{Question}", question)
-      .replace("{Answer}", answer);
+    const PROMPT = SCRIPT_PROMPT.replace("{TECH}", tech).replace("{Question}", question).replace("{Answer}", answer);
 
     const result = await generateScript.sendMessage(PROMPT);
     const responseText = result?.response?.text();

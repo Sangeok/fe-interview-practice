@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import type { NextRequest } from "next/server";
 
 vi.mock("@/fsd/shared/constants/AiModel", () => ({
   generateScript: {
@@ -16,7 +17,13 @@ describe("POST /api/generate-interpret", () => {
     vi.clearAllMocks();
   });
 
-  const buildRequest = (body: any) =>
+  type InterpretRequestBody = {
+    tech: string;
+    question: string;
+    answer: string;
+  };
+
+  const buildRequest = (body: Partial<InterpretRequestBody>) =>
     new Request("http://localhost/api/generate-interpret", {
       method: "POST",
       body: JSON.stringify(body),
@@ -36,7 +43,9 @@ describe("POST /api/generate-interpret", () => {
       response: { text: () => JSON.stringify(mockResponse) },
     });
 
-    const res = await POST(buildRequest({ tech: "JavaScript", question: "===", answer: "Answer" }) as any);
+    const res = await POST(
+      buildRequest({ tech: "JavaScript", question: "===", answer: "Answer" }) as unknown as NextRequest
+    );
     const data = await res.json();
 
     expect(res.status).toBe(200);
@@ -45,7 +54,7 @@ describe("POST /api/generate-interpret", () => {
   });
 
   it("returns 400 for missing fields", async () => {
-    const res = await POST(buildRequest({ tech: "React" }) as any);
+    const res = await POST(buildRequest({ tech: "React" }) as unknown as NextRequest);
     const data = await res.json();
     expect(res.status).toBe(400);
     expect(data.success).toBe(false);
@@ -54,7 +63,9 @@ describe("POST /api/generate-interpret", () => {
   it("handles AI API errors", async () => {
     mockSend.mockRejectedValueOnce(new Error("API error"));
 
-    const res = await POST(buildRequest({ tech: "TypeScript", question: "Generics", answer: "A" }) as any);
+    const res = await POST(
+      buildRequest({ tech: "TypeScript", question: "Generics", answer: "A" }) as unknown as NextRequest
+    );
     const data = await res.json();
 
     expect(res.status).toBe(500);
@@ -65,7 +76,7 @@ describe("POST /api/generate-interpret", () => {
   it("handles JSON parse errors", async () => {
     mockSend.mockResolvedValueOnce({ response: { text: () => "not-json" } });
 
-    const res = await POST(buildRequest({ tech: "JavaScript", question: "Q", answer: "A" }) as any);
+    const res = await POST(buildRequest({ tech: "JavaScript", question: "Q", answer: "A" }) as unknown as NextRequest);
     const data = await res.json();
 
     expect(res.status).toBe(500);

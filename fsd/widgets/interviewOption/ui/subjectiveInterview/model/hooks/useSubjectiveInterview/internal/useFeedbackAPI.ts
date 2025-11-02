@@ -12,6 +12,10 @@ export const useFeedbackAPI = () => {
   const generateFeedback = async ({ tech, question, answer }: FeedbackAPIOptions) => {
     setIsLoading(true);
 
+    console.log("tech", tech);
+    console.log("question", question);
+    console.log("answer", answer);
+
     try {
       const response = await fetch("/api/generate-feedback", {
         method: "POST",

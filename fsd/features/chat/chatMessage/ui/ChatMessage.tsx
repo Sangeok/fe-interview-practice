@@ -19,5 +19,9 @@ export default function ChatMessage({ message, onAddReview, onNext, onEnd, showN
     assistant: <BotMessage content={message.content} isLoading={isLoading} />,
   };
 
-  return MESSAGE_ROLES[message.role as keyof typeof MESSAGE_ROLES];
+  return (
+    <div data-testid={`chat-message-${message.id}`}>
+      {MESSAGE_ROLES[message.role as keyof typeof MESSAGE_ROLES]}
+    </div>
+  );
 }

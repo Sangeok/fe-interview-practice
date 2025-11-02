@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import type { NextRequest } from "next/server";
 
 vi.mock("@/fsd/shared/constants/AiModel", () => ({
   generateScript: {
@@ -10,13 +11,21 @@ import { POST } from "../route";
 import { generateScript } from "@/fsd/shared/constants/AiModel";
 
 describe("POST /api/generate-feedback", () => {
+  // 모킹은 되었으나, 모킹 메소드를 typescript에서 사용할 수 있도록 타입 선언을 해줘야 함
   const mockSend = generateScript.sendMessage as unknown as ReturnType<typeof vi.fn>;
 
+  // 각 테스트 전에 모킹 메소드를 초기화
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  const buildRequest = (body: any) =>
+  type FeedbackRequestBody = {
+    tech: string;
+    question: string;
+    answer: string;
+  };
+
+  const buildRequest = (body: Partial<FeedbackRequestBody>) =>
     new Request("http://localhost/api/generate-feedback", {
       method: "POST",
       body: JSON.stringify(body),
@@ -40,7 +49,9 @@ describe("POST /api/generate-feedback", () => {
         response: { text: () => JSON.stringify(mockResponse) },
       });
 
-      const res = await POST(buildRequest({ tech: "JavaScript", question: "Q", answer: "A" }) as any);
+      const res = await POST(
+        buildRequest({ tech: "JavaScript", question: "Q", answer: "A" }) as unknown as NextRequest
+      );
       const data = await res.json();
 
       expect(res.status).toBe(200);
@@ -69,7 +80,9 @@ describe("POST /api/generate-feedback", () => {
         response: { text: () => JSON.stringify(mockResponse) },
       });
 
-      const res = await POST(buildRequest({ tech: "JavaScript", question: "Q", answer: "A2" }) as any);
+      const res = await POST(
+        buildRequest({ tech: "JavaScript", question: "Q", answer: "A2" }) as unknown as NextRequest
+      );
       const data = await res.json();
 
       expect(data.data.evaluation.score).toBeGreaterThanOrEqual(5);
@@ -88,7 +101,9 @@ describe("POST /api/generate-feedback", () => {
         response: { text: () => JSON.stringify(mockResponse) },
       });
 
-      const res = await POST(buildRequest({ tech: "JavaScript", question: "Q", answer: "A3" }) as any);
+      const res = await POST(
+        buildRequest({ tech: "JavaScript", question: "Q", answer: "A3" }) as unknown as NextRequest
+      );
       const data = await res.json();
 
       expect(data.data).toHaveProperty("deepDive");
@@ -98,7 +113,7 @@ describe("POST /api/generate-feedback", () => {
 
   describe("Error Handling", () => {
     it("returns 400 for missing fields", async () => {
-      const res = await POST(buildRequest({ tech: "JavaScript" }) as any);
+      const res = await POST(buildRequest({ tech: "JavaScript" }) as unknown as NextRequest);
       const data = await res.json();
       expect(res.status).toBe(400);
       expect(data.success).toBe(false);
@@ -107,7 +122,9 @@ describe("POST /api/generate-feedback", () => {
     it("handles AI API errors", async () => {
       mockSend.mockRejectedValueOnce(new Error("API quota exceeded"));
 
-      const res = await POST(buildRequest({ tech: "JavaScript", question: "Q", answer: "A" }) as any);
+      const res = await POST(
+        buildRequest({ tech: "JavaScript", question: "Q", answer: "A" }) as unknown as NextRequest
+      );
       const data = await res.json();
 
       expect(res.status).toBe(500);
@@ -120,7 +137,9 @@ describe("POST /api/generate-feedback", () => {
         response: { text: () => "Invalid JSON" },
       });
 
-      const res = await POST(buildRequest({ tech: "JavaScript", question: "Q", answer: "A" }) as any);
+      const res = await POST(
+        buildRequest({ tech: "JavaScript", question: "Q", answer: "A" }) as unknown as NextRequest
+      );
       const data = await res.json();
 
       expect(res.status).toBe(500);
