@@ -166,16 +166,36 @@ Follow these steps precisely:
 `;
 
 export async function POST(request: NextRequest) {
-  const { tech, question, answer } = await request.json();
+  try {
+    const { tech, question, answer } = await request.json();
 
-  console.log(tech, question, answer);
+    if (!tech || !question || !answer) {
+      return NextResponse.json(
+        { success: false, error: "Missing required fields: tech, question, or answer" },
+        { status: 400 }
+      );
+    }
 
-  const PROMPT = SCRIPT_PROMPT.replace("{TECH}", tech).replace("{Question}", question).replace("{Answer}", answer);
+    const PROMPT = SCRIPT_PROMPT.replace("{TECH}", tech)
+      .replace("{Question}", question)
+      .replace("{Answer}", answer);
 
-  const result = await generateScript.sendMessage(PROMPT);
-  const response = result?.response?.text();
+    const result = await generateScript.sendMessage(PROMPT);
+    const responseText = result?.response?.text();
 
-  console.log(response);
+    if (!responseText) {
+      throw new Error("AI model returned an empty response.");
+    }
 
-  return NextResponse.json(JSON.parse(response));
+    const parsedResponse = JSON.parse(responseText);
+
+    return NextResponse.json({ success: true, data: parsedResponse });
+  } catch (error) {
+    console.error("Error in generate-feedback API:", error);
+    const errorMessage = error instanceof Error ? error.message : "An unknown error occurred";
+    return NextResponse.json(
+      { success: false, error: `Failed to generate feedback: ${errorMessage}` },
+      { status: 500 }
+    );
+  }
 }
