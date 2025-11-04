@@ -3,7 +3,7 @@ import { MultipleChoiceQuestion } from "../type";
 import { useMCQSessionStore } from "../store/useMCQSessionStore";
 
 interface UseMultipleChoiceQuizParams {
-  setOpenDialog: (open: boolean) => void;
+  setOpenInterviewOptionsDialog: (open: boolean) => void;
   questionsOverride?: MultipleChoiceQuestion[];
 }
 
@@ -21,7 +21,7 @@ interface UseMultipleChoiceQuizReturn {
 }
 
 export function useMultipleChoiceQuiz({
-  setOpenDialog,
+  setOpenInterviewOptionsDialog,
   questionsOverride,
 }: UseMultipleChoiceQuizParams): UseMultipleChoiceQuizReturn {
   // store 기반 상태
@@ -48,12 +48,12 @@ export function useMultipleChoiceQuiz({
     if (isOverride) {
       setLocalIndex(0);
       setLocalScore(0);
-      setOpenDialog(true);
+      setOpenInterviewOptionsDialog(true);
     } else {
       resetSession();
-      setOpenDialog(true);
+      setOpenInterviewOptionsDialog(true);
     }
-  }, [isOverride, resetSession, setOpenDialog]);
+  }, [isOverride, resetSession, setOpenInterviewOptionsDialog]);
 
   const goNext = useCallback(
     (isCorrect: boolean) => {

@@ -10,14 +10,17 @@ import ProgressHeader from "./_component/ProgressHeader";
 import { MultipleChoiceQuestion } from "../model/type";
 
 interface MultipleChoiceInterviewProps {
-  setOpenDialog: (open: boolean) => void;
+  setOpenInterviewOptionsDialog: (open: boolean) => void;
   questionsOverride?: MultipleChoiceQuestion[];
 }
 
-export default function MultipleChoiceInterview({ setOpenDialog, questionsOverride }: MultipleChoiceInterviewProps) {
+export default function MultipleChoiceInterview({
+  setOpenInterviewOptionsDialog,
+  questionsOverride,
+}: MultipleChoiceInterviewProps) {
   // 퀴즈 진행 상태 관리
   const { currentQuestion, currentQuestionIndex, score, isQuizFinished, totalQuestions, goNext, goFirst } =
-    useMultipleChoiceQuiz({ setOpenDialog, questionsOverride });
+    useMultipleChoiceQuiz({ setOpenInterviewOptionsDialog, questionsOverride });
 
   // 답변 피드백 상태 관리
   const {
