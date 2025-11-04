@@ -14,7 +14,7 @@ export default function ButtonMessage({ onNext, onEnd, onAddReview, showNext = t
       {showNext && (
         <Button size="sm" variant="light" className="flex items-center gap-2" onClick={onNext}>
           <Pen size={14} />
-          Next
+          Next Question
         </Button>
       )}
       <Button size="sm" variant="light" className="flex items-center gap-2" onClick={onAddReview}>
@@ -22,7 +22,7 @@ export default function ButtonMessage({ onNext, onEnd, onAddReview, showNext = t
       </Button>
       <Button size="sm" variant="light" className="flex items-center gap-2" onClick={onEnd}>
         <X size={14} />
-        End
+        End Interview
       </Button>
     </div>
   );

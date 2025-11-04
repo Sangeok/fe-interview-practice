@@ -35,16 +35,16 @@ export default function Hero() {
       </div>
 
       <div className="flex gap-x-4 items-center animate-fade-up-2">
-        <Button variant="light" onClick={handleInterviewDialogOpen}>
+        <Button variant="light" onClick={handleInterviewDialogOpen} data-testid="try-now-button">
           Try now
         </Button>
 
-        <Button variant="light" onClick={handleReviewDialogOpen}>
+        <Button variant="light" onClick={handleReviewDialogOpen} data-testid="review-button">
           Review
         </Button>
       </div>
 
-      <Dialog open={interviewDialogOpen} onClose={handleInterviewDialogClose} title="Select Tech Stack">
+      <Dialog open={interviewDialogOpen} onClose={handleInterviewDialogClose} title="Select Tech Stack" data-testid="tech-selector-dialog">
         <TechStackSelector onClose={handleInterviewDialogClose} />
       </Dialog>
     </>

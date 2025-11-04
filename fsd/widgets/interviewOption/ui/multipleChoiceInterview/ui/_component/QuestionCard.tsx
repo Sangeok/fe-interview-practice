@@ -16,6 +16,7 @@ interface QuestionCardProps {
   setInterpret: (interpret: MultipleChoiceInterpretType) => void;
   onSubmitAnswer: (isCorrect: boolean) => void;
   onAddReview: () => void;
+  goFirst: () => void;
 }
 
 export default function QuestionCard({
@@ -26,6 +27,7 @@ export default function QuestionCard({
   setInterpret,
   onSubmitAnswer,
   onAddReview,
+  goFirst,
 }: QuestionCardProps) {
   const { tech } = useSelectTechStore();
   const { generateInterpret } = useInterpretAPI();
@@ -81,8 +83,9 @@ export default function QuestionCard({
           />
         ))}
       </div>
-      <div className="flex justify-between">
-        <Button onClick={onAddReview}>복습 문제에 추가하기</Button>
+      <div className="flex justify-end">
+        {/* <Button onClick={onAddReview}>복습 문제에 추가하기</Button>
+        <Button onClick={goFirst}>처음으로 돌아가기</Button> */}
         <Button onClick={handleCheckAnswer} disabled={!canSubmit}>
           정답 확인
         </Button>

@@ -28,7 +28,7 @@ const TechStackSelector = ({ onClose }: TechStackSelectorProps) => {
   };
 
   return (
-    <div className="flex flex-col gap-4" role="radiogroup" aria-label="기술 스택 선택">
+    <div className="flex flex-col gap-4" role="radiogroup" aria-label="기술 스택 선택" data-testid="tech-stack-selector">
       {TECH_STACK_OPTIONS.map((option) => (
         <RadioInput
           key={option.id}
@@ -36,14 +36,15 @@ const TechStackSelector = ({ onClose }: TechStackSelectorProps) => {
           value={option.value}
           checked={selectedTitle === option.value}
           onChange={handleChange}
+          data-testid={`tech-option-${option.value}`}
         />
       ))}
 
       <div className="flex justify-between mt-4">
-        <Button variant="light" size="sm" onClick={handleRouteToInterview}>
+        <Button variant="light" size="sm" onClick={handleRouteToInterview} data-testid="tech-select-button">
           Select
         </Button>
-        <Button variant="light" size="sm" onClick={onClose}>
+        <Button variant="light" size="sm" onClick={onClose} data-testid="tech-close-button">
           Close
         </Button>
       </div>

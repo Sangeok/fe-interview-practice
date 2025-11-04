@@ -1,5 +1,5 @@
 "use client";
-import { MultipleChoiceQuestion } from "../model/type";
+
 import QuestionCard from "./_component/QuestionCard";
 import EndQuestion from "./_component/EndQuestion";
 import InterpretCard from "./_component/InterpretCard";
@@ -7,15 +7,17 @@ import AnswerCorrectCard from "./_component/AnswerCorrectCard";
 import { useMultipleChoiceQuiz } from "../model/hooks/useMultipleChoiceQuiz";
 import { useAnswerFeedbackState } from "../model/hooks/useAnswerFeedbackState";
 import ProgressHeader from "./_component/ProgressHeader";
+import { MultipleChoiceQuestion } from "../model/type";
 
 interface MultipleChoiceInterviewProps {
-  questionAnswer: MultipleChoiceQuestion[];
+  setOpenDialog: (open: boolean) => void;
+  questionsOverride?: MultipleChoiceQuestion[];
 }
 
-export default function MultipleChoiceInterview({ questionAnswer }: MultipleChoiceInterviewProps) {
+export default function MultipleChoiceInterview({ setOpenDialog, questionsOverride }: MultipleChoiceInterviewProps) {
   // 퀴즈 진행 상태 관리
-  const { currentQuestion, currentQuestionIndex, score, isQuizFinished, totalQuestions, goNext } =
-    useMultipleChoiceQuiz({ questions: questionAnswer });
+  const { currentQuestion, currentQuestionIndex, score, isQuizFinished, totalQuestions, goNext, goFirst } =
+    useMultipleChoiceQuiz({ setOpenDialog, questionsOverride });
 
   // 답변 피드백 상태 관리
   const {
@@ -63,6 +65,7 @@ export default function MultipleChoiceInterview({ questionAnswer }: MultipleChoi
             setInterpret={setInterpret}
             setLoading={setLoading}
             onAddReview={handleAddReview}
+            goFirst={goFirst}
             onSubmitAnswer={(isCorrect) => {
               if (isCorrect) {
                 markCorrect();

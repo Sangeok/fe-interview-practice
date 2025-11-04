@@ -12,7 +12,7 @@ export const useInterpretAPI = () => {
 
   const generateInterpret = async ({ tech, question, answer }: InterpretAPIOptions) => {
     setIsLoading(true);
-    
+
     try {
       const response = await fetch("/api/generate-interpret", {
         method: "POST",
@@ -24,7 +24,7 @@ export const useInterpretAPI = () => {
       }
 
       const data = await response.json();
-      return { success: true, data };
+      return { success: true, data: data.data as MultipleChoiceInterpretType };
     } catch (error) {
       console.error("Error generating interpretation:", error);
       return { success: false, data: null };

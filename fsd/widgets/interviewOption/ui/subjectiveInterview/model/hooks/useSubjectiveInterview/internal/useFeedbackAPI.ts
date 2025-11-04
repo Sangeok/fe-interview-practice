@@ -12,6 +12,10 @@ export const useFeedbackAPI = () => {
   const generateFeedback = async ({ tech, question, answer }: FeedbackAPIOptions) => {
     setIsLoading(true);
 
+    console.log("tech", tech);
+    console.log("question", question);
+    console.log("answer", answer);
+
     try {
       const response = await fetch("/api/generate-feedback", {
         method: "POST",
@@ -29,7 +33,8 @@ export const useFeedbackAPI = () => {
       const data = await response.json();
 
       console.log("서버에서 받은 data", data);
-      return { success: true, data };
+      // 서버 응답 형식을 그대로 반환합니다. (예: { success: true, data: { ... } })
+      return data;
     } catch (error) {
       console.error("Error generating feedback:", error);
       return {

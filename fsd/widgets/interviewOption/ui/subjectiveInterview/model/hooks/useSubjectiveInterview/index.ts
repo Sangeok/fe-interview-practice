@@ -2,10 +2,10 @@ import { useSelectTechStore } from "@/fsd/shared/model/useSelectTechStore";
 import { SubjectiveQuestion } from "../../type";
 import { Message } from "@/fsd/features/chat/chatMessage/model/type";
 import { useFeedbackAPI } from "./internal/useFeedbackAPI";
-import { useQuestionNavigation } from "./internal/useQuestionNavigation";
 import { useMessageState } from "./internal/useMessageState";
 import { useEffect, useState } from "react";
 import { useUserStore } from "@/fsd/entities/user/useUserStore";
+import { useSubjectiveSessionStore } from "../../store/useSubjectiveSessionStore";
 
 interface UseSubjectiveInterviewReturn {
   messages: Message[];
@@ -23,7 +23,10 @@ interface UseSubjectiveInterviewReturn {
 export const useSubjectiveInterview = (questionAnswer: SubjectiveQuestion[]): UseSubjectiveInterviewReturn => {
   const tech = useSelectTechStore((state) => state.tech);
   const { generateFeedback, isLoading, setIsLoading } = useFeedbackAPI();
-  const { questionIndex, moveToNextQuestion } = useQuestionNavigation(questionAnswer.length);
+  const questionIndex = useSubjectiveSessionStore((s) => s.currentIndex);
+  const score = useSubjectiveSessionStore((s) => s.score);
+  const advance = useSubjectiveSessionStore((s) => s.advance);
+  const addScore = useSubjectiveSessionStore((s) => s.addScore);
   const {
     messages,
     addLoadingMessage,
@@ -39,7 +42,6 @@ export const useSubjectiveInterview = (questionAnswer: SubjectiveQuestion[]): Us
   const removeInCorrectSubQuestion = useUserStore((s) => s.removeInCorrectSubQuestion);
   const persistUserToDB = useUserStore((s) => s.persistUserToDB);
 
-  const [score, setScore] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
   const totalQuestions = questionAnswer.length;
 
@@ -70,7 +72,7 @@ export const useSubjectiveInterview = (questionAnswer: SubjectiveQuestion[]): Us
     } else if (feedbackResult.data.evaluation.score <= 4) {
       addInCorrectSubQuestion(questionAnswer[questionIndex]);
     } else {
-      setScore((prev) => prev + 1);
+      addScore(1);
       removeInCorrectSubQuestion(questionAnswer[questionIndex].id);
     }
 
@@ -82,9 +84,10 @@ export const useSubjectiveInterview = (questionAnswer: SubjectiveQuestion[]): Us
   };
 
   const handleNextQuestion = () => {
-    const result = moveToNextQuestion();
-    if (result.success) {
-      const nextQuestion = questionAnswer[result.newIndex];
+    const nextIndex = questionIndex + 1;
+    if (nextIndex < totalQuestions) {
+      advance(false);
+      const nextQuestion = questionAnswer[nextIndex];
       clearMessagesAndShowQuestion(nextQuestion.question);
     } else {
       addEndMessage();

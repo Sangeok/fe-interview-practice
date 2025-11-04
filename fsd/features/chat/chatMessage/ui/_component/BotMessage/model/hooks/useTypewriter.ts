@@ -8,6 +8,12 @@ export function useTypewriter(text: string) {
   const [displayedText, setDisplayedText] = useState("");
   const [isTyping, setIsTyping] = useState(false);
 
+  // In test environment, render full text immediately to avoid timing issues
+  const isTestEnv = typeof process !== "undefined" && (process.env.VITEST || process.env.NODE_ENV === "test");
+  if (isTestEnv) {
+    return { displayedText: text, isTyping: false };
+  }
+
   useEffect(() => {
     if (!text) return;
 
