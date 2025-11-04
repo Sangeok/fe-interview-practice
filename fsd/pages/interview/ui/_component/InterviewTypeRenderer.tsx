@@ -7,26 +7,22 @@ import { MultipleChoiceQuestion } from "@/fsd/widgets/interviewOption/ui/multipl
 interface InterviewTypeRendererProps {
   selectedOptions: InterviewOptionsValue;
   shuffledQuestions: (SubjectiveQuestion | MultipleChoiceQuestion)[];
+  setOpenDialog: (open: boolean) => void;
+  mcqQuestionsOverride?: MultipleChoiceQuestion[];
 }
 
-export default function InterviewTypeRenderer({
+export default function InterviewwTypeRenderer({
   selectedOptions,
   shuffledQuestions,
+  setOpenDialog,
+  mcqQuestionsOverride,
 }: InterviewTypeRendererProps) {
   if (selectedOptions === "Subjective") {
-    return (
-      <SubjectiveInterview
-        questionAnswer={shuffledQuestions as SubjectiveQuestion[]}
-      />
-    );
+    return <SubjectiveInterview questionAnswer={shuffledQuestions as SubjectiveQuestion[]} />;
   }
 
   if (selectedOptions === "Multiple Choice") {
-    return (
-      <MultipleChoiceInterview
-        questionAnswer={shuffledQuestions as MultipleChoiceQuestion[]}
-      />
-    );
+    return <MultipleChoiceInterview setOpenDialog={setOpenDialog} questionsOverride={mcqQuestionsOverride} />;
   }
 
   return null;

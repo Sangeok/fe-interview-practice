@@ -59,7 +59,9 @@ export default function ChatInput({ onSendMessage, isLoading = false }: ChatInpu
           size="sm"
           aria-label="Send message"
         >
-          <Send size={20} /> Send
+          <span className="flex items-center gap-2">
+            <Send size={20} /> Send
+          </span>
         </Button>
       </div>
     </div>

@@ -20,6 +20,8 @@ export default function ReviewPage() {
   const inCorrectSubQuestion = useUserStore((s) => s.user.inCorrectSubQuestion);
   const inCorrectMultipleChoiceQuestion = useUserStore((s) => s.user.inCorrectMultipleChoiceQuestion);
 
+  console.log("inCorrectMultipleChoiceQuestion", inCorrectMultipleChoiceQuestion);
+
   const isInterviewSelected = selectedOptions !== "";
   const isDialogClosed = !openDialog;
   const canShowInterview = isInterviewSelected && isDialogClosed;
@@ -45,6 +47,10 @@ export default function ReviewPage() {
         <InterviewTypeRenderer
           selectedOptions={selectedOptions as InterviewOptionsValue}
           shuffledQuestions={sessionQuestions}
+          setOpenDialog={setOpenDialog}
+          mcqQuestionsOverride={
+            selectedOptions === "Multiple Choice" ? (sessionQuestions as MultipleChoiceQuestion[]) : undefined
+          }
         />
       )}
 
