@@ -13,17 +13,17 @@ import InterviewOptions from "./_component/InterviewOptions";
 import InterviewTypeRenderer from "./_component/InterviewTypeRenderer";
 import { getQuestionAnswer } from "../lib/getQuestionAnswer";
 import Button from "@/fsd/shared/ui/atoms/button/ui/Button";
-import { useUserStore } from "@/fsd/entities/user/useUserStore";
+import { useHeaderButton } from "../model/useHeaderButton";
 
 export default function InterviewPage() {
   const [selectedOptions, setSelectedOptions] = useState<InterviewOptionsValue | "">("");
-  const [openDialog, setOpenDialog] = useState(true);
+  const [openInterviewOptionsDialog, setOpenInterviewOptionsDialog] = useState<boolean>(true);
   const { tech, setTech } = useSelectTechStore();
   const params = useParams();
   const routeTech = (params as any)?.title as string | undefined;
 
   const isInterviewSelected = selectedOptions !== "";
-  const isDialogClosed = !openDialog;
+  const isDialogClosed = !openInterviewOptionsDialog;
   const canShowInterview = isInterviewSelected && isDialogClosed;
 
   const question_answer = getQuestionAnswer(tech, selectedOptions as InterviewOptionsValue);
@@ -35,17 +35,9 @@ export default function InterviewPage() {
   const initSession = useMCQSessionStore((s) => s.initSession);
   const mcqQuestions = useMCQSessionStore((s) => s.shuffledQuestions);
   const initSubjSession = useSubjectiveSessionStore((s) => s.initSession);
-  const resetSubjSession = useSubjectiveSessionStore((s) => s.resetSession);
   const subjQuestions = useSubjectiveSessionStore((s) => s.orderedQuestions);
-  const resetMCQSession = useMCQSessionStore((s) => s.resetSession);
 
-  const subjQuestionIndex = useSubjectiveSessionStore((s) => s.currentIndex);
-  const mcqQuestionIndex = useMCQSessionStore((s) => s.currentIndex);
-
-  const addInCorrectSubQuestion = useUserStore((s) => s.addInCorrectSubQuestion);
-  const addInCorrectMultipleChoiceQuestion = useUserStore((s) => s.addInCorrectMultipleChoiceQuestion);
-
-  const persistUserToDB = useUserStore((s) => s.persistUserToDB);
+  const currentQuestions = selectedOptions === "Multiple Choice" ? mcqQuestions : subjQuestions;
 
   // 새로고침/직접 진입 시 라우트 파라미터로 tech를 복원
   useEffect(() => {
@@ -69,24 +61,11 @@ export default function InterviewPage() {
     initSubjSession({ sessionId, rawQuestions: raw });
   }, [selectedOptions, canShowInterview, sessionId, question_answer, initSubjSession]);
 
-  const handleGoFirst = () => {
-    setOpenDialog(true);
-    if (selectedOptions === "Subjective") {
-      resetSubjSession();
-    } else if (selectedOptions === "Multiple Choice") {
-      resetMCQSession();
-    }
-  };
-
-  const handleAddToReview = async () => {
-    if (selectedOptions === "Subjective") {
-      addInCorrectSubQuestion(subjQuestions[subjQuestionIndex]);
-    } else if (selectedOptions === "Multiple Choice") {
-      addInCorrectMultipleChoiceQuestion(mcqQuestions[mcqQuestionIndex]);
-    }
-
-    await persistUserToDB();
-  };
+  const { handleGoFirst, handleAddToReview } = useHeaderButton({
+    selectedOptions: selectedOptions as InterviewOptionsValue,
+    setOpenInterviewOptionsDialog,
+    questions: currentQuestions,
+  });
 
   // 렌더용 질문 배열: MCQ는 스토어의 셔플/복원 결과 사용
   const shuffledQuestions = selectedOptions === "Multiple Choice" ? mcqQuestions : subjQuestions;
@@ -112,15 +91,19 @@ export default function InterviewPage() {
         <InterviewTypeRenderer
           selectedOptions={selectedOptions as InterviewOptionsValue}
           shuffledQuestions={shuffledQuestions}
-          setOpenDialog={setOpenDialog}
+          setOpenInterviewOptionsDialog={setOpenInterviewOptionsDialog}
         />
       )}
 
-      <Dialog open={openDialog} onClose={() => setOpenDialog(false)} title="Select Options">
+      <Dialog
+        open={openInterviewOptionsDialog}
+        onClose={() => setOpenInterviewOptionsDialog(false)}
+        title="Select Options"
+      >
         <InterviewOptions
           selectedOptions={selectedOptions}
           setSelectedOptions={setSelectedOptions}
-          onClose={() => setOpenDialog(false)}
+          onClose={() => setOpenInterviewOptionsDialog(false)}
         />
       </Dialog>
     </div>
