@@ -1,7 +1,7 @@
 "use client";
 
 import { useMCQSessionStore } from "@/fsd/widgets/interviewOption/ui/multipleChoiceInterview/model/store/useMCQSessionStore";
-import { InterviewOptionsValue } from "./type";
+import { InterviewOptionsValue } from "../type";
 import { useSubjectiveSessionStore } from "@/fsd/widgets/interviewOption/ui/subjectiveInterview/model/store/useSubjectiveSessionStore";
 import { useUserStore } from "@/fsd/entities/user/useUserStore";
 import { SubjectiveQuestion } from "@/fsd/widgets/interviewOption/ui/subjectiveInterview/model/type";
