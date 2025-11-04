@@ -1,43 +1,30 @@
 "use client";
 
 import { InterviewOptionsValue } from "@/fsd/pages/interview/model/type";
-import { useEffect, useState } from "react";
-import { arrayShuffle, shuffleMultipleChoiceQuestions } from "@/fsd/shared/lib/array-shuffle";
-import { MultipleChoiceQuestion } from "@/fsd/widgets/interviewOption/ui/multipleChoiceInterview/model/type";
-import { SubjectiveQuestion } from "@/fsd/widgets/interviewOption/ui/subjectiveInterview/model/type";
+import { useState } from "react";
 import Dialog from "@/fsd/shared/ui/atoms/dialog/ui";
 import InterviewOptions from "@/fsd/pages/interview/ui/_component/InterviewOptions";
 import InterviewTypeRenderer from "@/fsd/pages/interview/ui/_component/InterviewTypeRenderer";
 import { useUserStore } from "@/fsd/entities/user/useUserStore";
+import { useReviewSession } from "@/fsd/pages/review/model/hooks/useReviewSession";
 
 export default function ReviewPage() {
   const [selectedOptions, setSelectedOptions] = useState<InterviewOptionsValue | "">("");
-  const [openDialog, setOpenDialog] = useState(true);
-  const [sessionQuestions, setSessionQuestions] = useState<(SubjectiveQuestion | MultipleChoiceQuestion)[] | null>(
-    null
-  );
+  const [openInterviewOptionsDialog, setOpenInterviewOptionsDialog] = useState(true);
 
   const inCorrectSubQuestion = useUserStore((s) => s.user.inCorrectSubQuestion);
   const inCorrectMultipleChoiceQuestion = useUserStore((s) => s.user.inCorrectMultipleChoiceQuestion);
 
-  console.log("inCorrectMultipleChoiceQuestion", inCorrectMultipleChoiceQuestion);
+  const sessionQuestions = useReviewSession(
+    selectedOptions,
+    openInterviewOptionsDialog,
+    inCorrectMultipleChoiceQuestion,
+    inCorrectSubQuestion
+  );
 
   const isInterviewSelected = selectedOptions !== "";
-  const isDialogClosed = !openDialog;
+  const isDialogClosed = !openInterviewOptionsDialog;
   const canShowInterview = isInterviewSelected && isDialogClosed;
-
-  // 세션 시작 시 1회 스냅샷 생성
-  useEffect(() => {
-    if (!openDialog && selectedOptions !== "" && sessionQuestions === null) {
-      const base =
-        selectedOptions === "Multiple Choice" ? inCorrectMultipleChoiceQuestion || [] : inCorrectSubQuestion || [];
-      const frozen =
-        selectedOptions === "Multiple Choice"
-          ? shuffleMultipleChoiceQuestions(base as MultipleChoiceQuestion[])
-          : arrayShuffle(base as SubjectiveQuestion[]);
-      setSessionQuestions(frozen);
-    }
-  }, [openDialog, selectedOptions, sessionQuestions, inCorrectMultipleChoiceQuestion, inCorrectSubQuestion]);
 
   return (
     <div className="p-8 h-screen">
@@ -47,18 +34,19 @@ export default function ReviewPage() {
         <InterviewTypeRenderer
           selectedOptions={selectedOptions as InterviewOptionsValue}
           shuffledQuestions={sessionQuestions}
-          setOpenDialog={setOpenDialog}
-          mcqQuestionsOverride={
-            selectedOptions === "Multiple Choice" ? (sessionQuestions as MultipleChoiceQuestion[]) : undefined
-          }
+          setOpenInterviewOptionsDialog={setOpenInterviewOptionsDialog}
         />
       )}
 
-      <Dialog open={openDialog} onClose={() => setOpenDialog(false)} title="Select Options">
+      <Dialog
+        open={openInterviewOptionsDialog}
+        onClose={() => setOpenInterviewOptionsDialog(false)}
+        title="Select Options"
+      >
         <InterviewOptions
           selectedOptions={selectedOptions}
           setSelectedOptions={setSelectedOptions}
-          onClose={() => setOpenDialog(false)}
+          onClose={() => setOpenInterviewOptionsDialog(false)}
         />
       </Dialog>
     </div>
