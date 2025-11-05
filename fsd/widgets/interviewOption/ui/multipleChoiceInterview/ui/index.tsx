@@ -1,26 +1,31 @@
 "use client";
 
-import QuestionCard from "./_component/QuestionCard";
+import QuestionCard from "./_component/QuestionCard/ui/QuestionCard";
 import EndQuestion from "./_component/EndQuestion";
 import InterpretCard from "./_component/InterpretCard";
 import AnswerCorrectCard from "./_component/AnswerCorrectCard";
-import { useMultipleChoiceQuiz } from "../model/hooks/useMultipleChoiceQuiz";
+import { useNormalMCQSession } from "../model/hooks/useNormalMCQSession";
+import { useReviewMCQSession } from "../model/hooks/useReviewMCQSession";
 import { useAnswerFeedbackState } from "../model/hooks/useAnswerFeedbackState";
 import ProgressHeader from "./_component/ProgressHeader";
 import { MultipleChoiceQuestion } from "../model/type";
 
 interface MultipleChoiceInterviewProps {
-  setOpenInterviewOptionsDialog: (open: boolean) => void;
   questionsOverride?: MultipleChoiceQuestion[];
+  isReviewMode?: boolean;
 }
 
-export default function MultipleChoiceInterview({
-  setOpenInterviewOptionsDialog,
-  questionsOverride,
-}: MultipleChoiceInterviewProps) {
-  // 퀴즈 진행 상태 관리
-  const { currentQuestion, currentQuestionIndex, score, isQuizFinished, totalQuestions, goNext, goFirst } =
-    useMultipleChoiceQuiz({ setOpenInterviewOptionsDialog, questionsOverride });
+export default function MultipleChoiceInterview({ questionsOverride, isReviewMode }: MultipleChoiceInterviewProps) {
+  // 퀴즈 진행 상태 관리 (모드별 훅 사용)
+  const normalSession = useNormalMCQSession();
+  const reviewSession = useReviewMCQSession({
+    questions: questionsOverride ?? [],
+  });
+
+  // 모드에 따라 적절한 세션 선택
+  const { currentQuestion, currentQuestionIndex, score, isQuizFinished, totalQuestions, goNext } = isReviewMode
+    ? reviewSession
+    : normalSession;
 
   // 답변 피드백 상태 관리
   const {
@@ -34,7 +39,6 @@ export default function MultipleChoiceInterview({
     setInterpret,
     setLoading,
     resetAnswerState,
-    handleAddReview,
   } = useAnswerFeedbackState(currentQuestion);
 
   // 다음 문제로 진행 (단일 액션)
@@ -67,8 +71,6 @@ export default function MultipleChoiceInterview({
             answerString={currentQuestion.answerString}
             setInterpret={setInterpret}
             setLoading={setLoading}
-            onAddReview={handleAddReview}
-            goFirst={goFirst}
             onSubmitAnswer={(isCorrect) => {
               if (isCorrect) {
                 markCorrect();

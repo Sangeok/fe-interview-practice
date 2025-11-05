@@ -1,49 +1,49 @@
-import { describe, it, expect } from 'vitest';
-import { renderHook, act } from '@testing-library/react';
-import { useAnswerValidation } from '../useAnswerValidation';
+import { describe, it, expect } from "vitest";
+import { renderHook, act } from "@testing-library/react";
+import { useAnswerValidation } from "../../../ui/_component/QuestionCard/model/hooks/useAnswerValidation";
 
-describe('useAnswerValidation', () => {
-  describe('Initial State', () => {
-    it('should have null selectedOption initially', () => {
+describe("useAnswerValidation", () => {
+  describe("Initial State", () => {
+    it("should have null selectedOption initially", () => {
       const { result } = renderHook(() => useAnswerValidation());
       expect(result.current.selectedOption).toBeNull();
     });
 
-    it('should have null isAnswerCorrect initially', () => {
+    it("should have null isAnswerCorrect initially", () => {
       const { result } = renderHook(() => useAnswerValidation());
       expect(result.current.isAnswerCorrect).toBeNull();
     });
 
-    it('should have isSubmitted as false initially', () => {
+    it("should have isSubmitted as false initially", () => {
       const { result } = renderHook(() => useAnswerValidation());
       expect(result.current.isSubmitted).toBe(false);
     });
 
-    it('should have canSubmit as false initially', () => {
+    it("should have canSubmit as false initially", () => {
       const { result } = renderHook(() => useAnswerValidation());
       expect(result.current.canSubmit).toBe(false);
     });
 
-    it('should expose all required methods and properties', () => {
+    it("should expose all required methods and properties", () => {
       const { result } = renderHook(() => useAnswerValidation());
 
-      expect(result.current).toHaveProperty('selectedOption');
-      expect(result.current).toHaveProperty('isAnswerCorrect');
-      expect(result.current).toHaveProperty('isSubmitted');
-      expect(result.current).toHaveProperty('canSubmit');
-      expect(typeof result.current.selectOption).toBe('function');
-      expect(typeof result.current.validateAnswer).toBe('function');
-      expect(typeof result.current.resetValidation).toBe('function');
+      expect(result.current).toHaveProperty("selectedOption");
+      expect(result.current).toHaveProperty("isAnswerCorrect");
+      expect(result.current).toHaveProperty("isSubmitted");
+      expect(result.current).toHaveProperty("canSubmit");
+      expect(typeof result.current.selectOption).toBe("function");
+      expect(typeof result.current.validateAnswer).toBe("function");
+      expect(typeof result.current.resetValidation).toBe("function");
     });
   });
 
-  describe('selectOption', () => {
-    it('should set selected option', () => {
+  describe("selectOption", () => {
+    it("should set selected option", () => {
       const { result } = renderHook(() => useAnswerValidation());
 
       const option = {
         id: 1,
-        label: 'Correct answer',
+        label: "Correct answer",
         answerBoolean: true,
       };
 
@@ -54,11 +54,11 @@ describe('useAnswerValidation', () => {
       expect(result.current.selectedOption).toEqual(option);
     });
 
-    it('should allow changing selection before submission', () => {
+    it("should allow changing selection before submission", () => {
       const { result } = renderHook(() => useAnswerValidation());
 
-      const option1 = { id: 1, label: 'Option 1', answerBoolean: false };
-      const option2 = { id: 2, label: 'Option 2', answerBoolean: true };
+      const option1 = { id: 1, label: "Option 1", answerBoolean: false };
+      const option2 = { id: 2, label: "Option 2", answerBoolean: true };
 
       act(() => {
         result.current.selectOption(option1);
@@ -71,11 +71,11 @@ describe('useAnswerValidation', () => {
       expect(result.current.selectedOption?.id).toBe(2);
     });
 
-    it('should not allow changing selection after submission', () => {
+    it("should not allow changing selection after submission", () => {
       const { result } = renderHook(() => useAnswerValidation());
 
-      const option1 = { id: 1, label: 'Option 1', answerBoolean: true };
-      const option2 = { id: 2, label: 'Option 2', answerBoolean: false };
+      const option1 = { id: 1, label: "Option 1", answerBoolean: true };
+      const option2 = { id: 2, label: "Option 2", answerBoolean: false };
 
       act(() => {
         result.current.selectOption(option1);
@@ -92,24 +92,24 @@ describe('useAnswerValidation', () => {
       expect(result.current.selectedOption?.id).toBe(1);
     });
 
-    it('should update canSubmit when option is selected', () => {
+    it("should update canSubmit when option is selected", () => {
       const { result } = renderHook(() => useAnswerValidation());
 
       expect(result.current.canSubmit).toBe(false);
 
       act(() => {
-        result.current.selectOption({ id: 1, label: 'A', answerBoolean: true });
+        result.current.selectOption({ id: 1, label: "A", answerBoolean: true });
       });
 
       expect(result.current.canSubmit).toBe(true);
     });
 
-    it('should preserve option properties', () => {
+    it("should preserve option properties", () => {
       const { result } = renderHook(() => useAnswerValidation());
 
       const option = {
         id: 42,
-        label: 'Detailed option text',
+        label: "Detailed option text",
         answerBoolean: false,
       };
 
@@ -119,17 +119,17 @@ describe('useAnswerValidation', () => {
 
       expect(result.current.selectedOption).toEqual(option);
       expect(result.current.selectedOption?.id).toBe(42);
-      expect(result.current.selectedOption?.label).toBe('Detailed option text');
+      expect(result.current.selectedOption?.label).toBe("Detailed option text");
       expect(result.current.selectedOption?.answerBoolean).toBe(false);
     });
 
-    it('should handle rapid option changes before submission', () => {
+    it("should handle rapid option changes before submission", () => {
       const { result } = renderHook(() => useAnswerValidation());
 
       const options = [
-        { id: 1, label: 'A', answerBoolean: false },
-        { id: 2, label: 'B', answerBoolean: false },
-        { id: 3, label: 'C', answerBoolean: true },
+        { id: 1, label: "A", answerBoolean: false },
+        { id: 2, label: "B", answerBoolean: false },
+        { id: 3, label: "C", answerBoolean: true },
       ];
 
       act(() => {
@@ -140,8 +140,8 @@ describe('useAnswerValidation', () => {
     });
   });
 
-  describe('validateAnswer', () => {
-    it('should return invalid when no option selected', () => {
+  describe("validateAnswer", () => {
+    it("should return invalid when no option selected", () => {
       const { result } = renderHook(() => useAnswerValidation());
 
       let validationResult;
@@ -151,14 +151,14 @@ describe('useAnswerValidation', () => {
 
       expect(validationResult).toEqual({
         isValid: false,
-        message: 'Check your answer first',
+        message: "Check your answer first",
       });
     });
 
-    it('should return valid with correct answer', () => {
+    it("should return valid with correct answer", () => {
       const { result } = renderHook(() => useAnswerValidation());
 
-      const correctOption = { id: 1, label: 'Correct', answerBoolean: true };
+      const correctOption = { id: 1, label: "Correct", answerBoolean: true };
 
       act(() => {
         result.current.selectOption(correctOption);
@@ -177,10 +177,10 @@ describe('useAnswerValidation', () => {
       expect(result.current.isSubmitted).toBe(true);
     });
 
-    it('should return valid with incorrect answer', () => {
+    it("should return valid with incorrect answer", () => {
       const { result } = renderHook(() => useAnswerValidation());
 
-      const incorrectOption = { id: 2, label: 'Wrong', answerBoolean: false };
+      const incorrectOption = { id: 2, label: "Wrong", answerBoolean: false };
 
       act(() => {
         result.current.selectOption(incorrectOption);
@@ -198,11 +198,11 @@ describe('useAnswerValidation', () => {
       expect(result.current.isAnswerCorrect).toBe(false);
     });
 
-    it('should set isSubmitted to true after validation', () => {
+    it("should set isSubmitted to true after validation", () => {
       const { result } = renderHook(() => useAnswerValidation());
 
       act(() => {
-        result.current.selectOption({ id: 1, label: 'A', answerBoolean: true });
+        result.current.selectOption({ id: 1, label: "A", answerBoolean: true });
       });
 
       act(() => {
@@ -212,11 +212,11 @@ describe('useAnswerValidation', () => {
       expect(result.current.isSubmitted).toBe(true);
     });
 
-    it('should disable canSubmit after validation', () => {
+    it("should disable canSubmit after validation", () => {
       const { result } = renderHook(() => useAnswerValidation());
 
       act(() => {
-        result.current.selectOption({ id: 1, label: 'A', answerBoolean: true });
+        result.current.selectOption({ id: 1, label: "A", answerBoolean: true });
       });
 
       expect(result.current.canSubmit).toBe(true);
@@ -228,7 +228,7 @@ describe('useAnswerValidation', () => {
       expect(result.current.canSubmit).toBe(false);
     });
 
-    it('should not change isAnswerCorrect when validation fails', () => {
+    it("should not change isAnswerCorrect when validation fails", () => {
       const { result } = renderHook(() => useAnswerValidation());
 
       expect(result.current.isAnswerCorrect).toBeNull();
@@ -240,10 +240,10 @@ describe('useAnswerValidation', () => {
       expect(result.current.isAnswerCorrect).toBeNull();
     });
 
-    it('should prevent multiple validations', () => {
+    it("should prevent multiple validations", () => {
       const { result } = renderHook(() => useAnswerValidation());
 
-      const option = { id: 1, label: 'Test', answerBoolean: true };
+      const option = { id: 1, label: "Test", answerBoolean: true };
 
       act(() => {
         result.current.selectOption(option);
@@ -263,11 +263,11 @@ describe('useAnswerValidation', () => {
       expect(result.current.isSubmitted).toBe(true);
     });
 
-    it('should correctly identify true answerBoolean as correct', () => {
+    it("should correctly identify true answerBoolean as correct", () => {
       const { result } = renderHook(() => useAnswerValidation());
 
       act(() => {
-        result.current.selectOption({ id: 1, label: 'Correct', answerBoolean: true });
+        result.current.selectOption({ id: 1, label: "Correct", answerBoolean: true });
       });
 
       act(() => {
@@ -277,11 +277,11 @@ describe('useAnswerValidation', () => {
       expect(result.current.isAnswerCorrect).toBe(true);
     });
 
-    it('should correctly identify false answerBoolean as incorrect', () => {
+    it("should correctly identify false answerBoolean as incorrect", () => {
       const { result } = renderHook(() => useAnswerValidation());
 
       act(() => {
-        result.current.selectOption({ id: 1, label: 'Wrong', answerBoolean: false });
+        result.current.selectOption({ id: 1, label: "Wrong", answerBoolean: false });
       });
 
       act(() => {
@@ -292,12 +292,12 @@ describe('useAnswerValidation', () => {
     });
   });
 
-  describe('resetValidation', () => {
-    it('should reset all state to initial values', () => {
+  describe("resetValidation", () => {
+    it("should reset all state to initial values", () => {
       const { result } = renderHook(() => useAnswerValidation());
 
       act(() => {
-        result.current.selectOption({ id: 1, label: 'A', answerBoolean: true });
+        result.current.selectOption({ id: 1, label: "A", answerBoolean: true });
       });
 
       act(() => {
@@ -317,11 +317,11 @@ describe('useAnswerValidation', () => {
       expect(result.current.canSubmit).toBe(false);
     });
 
-    it('should allow reselection after reset', () => {
+    it("should allow reselection after reset", () => {
       const { result } = renderHook(() => useAnswerValidation());
 
       act(() => {
-        result.current.selectOption({ id: 1, label: 'First', answerBoolean: true });
+        result.current.selectOption({ id: 1, label: "First", answerBoolean: true });
       });
 
       act(() => {
@@ -332,7 +332,7 @@ describe('useAnswerValidation', () => {
         result.current.resetValidation();
       });
 
-      const newOption = { id: 2, label: 'Second', answerBoolean: false };
+      const newOption = { id: 2, label: "Second", answerBoolean: false };
 
       act(() => {
         result.current.selectOption(newOption);
@@ -342,7 +342,7 @@ describe('useAnswerValidation', () => {
       expect(result.current.canSubmit).toBe(true);
     });
 
-    it('should reset even when no option was selected', () => {
+    it("should reset even when no option was selected", () => {
       const { result } = renderHook(() => useAnswerValidation());
 
       act(() => {
@@ -354,11 +354,11 @@ describe('useAnswerValidation', () => {
       expect(result.current.isSubmitted).toBe(false);
     });
 
-    it('should reset canSubmit to false', () => {
+    it("should reset canSubmit to false", () => {
       const { result } = renderHook(() => useAnswerValidation());
 
       act(() => {
-        result.current.selectOption({ id: 1, label: 'A', answerBoolean: true });
+        result.current.selectOption({ id: 1, label: "A", answerBoolean: true });
       });
 
       expect(result.current.canSubmit).toBe(true);
@@ -371,27 +371,27 @@ describe('useAnswerValidation', () => {
     });
   });
 
-  describe('canSubmit Computed Property', () => {
-    it('should be false when no option selected', () => {
+  describe("canSubmit Computed Property", () => {
+    it("should be false when no option selected", () => {
       const { result } = renderHook(() => useAnswerValidation());
       expect(result.current.canSubmit).toBe(false);
     });
 
-    it('should be true when option selected and not submitted', () => {
+    it("should be true when option selected and not submitted", () => {
       const { result } = renderHook(() => useAnswerValidation());
 
       act(() => {
-        result.current.selectOption({ id: 1, label: 'A', answerBoolean: true });
+        result.current.selectOption({ id: 1, label: "A", answerBoolean: true });
       });
 
       expect(result.current.canSubmit).toBe(true);
     });
 
-    it('should be false when option selected and submitted', () => {
+    it("should be false when option selected and submitted", () => {
       const { result } = renderHook(() => useAnswerValidation());
 
       act(() => {
-        result.current.selectOption({ id: 1, label: 'A', answerBoolean: true });
+        result.current.selectOption({ id: 1, label: "A", answerBoolean: true });
       });
 
       act(() => {
@@ -401,11 +401,11 @@ describe('useAnswerValidation', () => {
       expect(result.current.canSubmit).toBe(false);
     });
 
-    it('should be false after reset', () => {
+    it("should be false after reset", () => {
       const { result } = renderHook(() => useAnswerValidation());
 
       act(() => {
-        result.current.selectOption({ id: 1, label: 'A', answerBoolean: true });
+        result.current.selectOption({ id: 1, label: "A", answerBoolean: true });
         result.current.resetValidation();
       });
 
@@ -413,13 +413,13 @@ describe('useAnswerValidation', () => {
     });
   });
 
-  describe('Integration Scenarios', () => {
-    it('should handle complete quiz flow: select → validate → reset → select again', () => {
+  describe("Integration Scenarios", () => {
+    it("should handle complete quiz flow: select → validate → reset → select again", () => {
       const { result } = renderHook(() => useAnswerValidation());
 
       // Round 1
       act(() => {
-        result.current.selectOption({ id: 1, label: 'A', answerBoolean: true });
+        result.current.selectOption({ id: 1, label: "A", answerBoolean: true });
       });
 
       act(() => {
@@ -435,7 +435,7 @@ describe('useAnswerValidation', () => {
 
       // Round 2
       act(() => {
-        result.current.selectOption({ id: 2, label: 'B', answerBoolean: false });
+        result.current.selectOption({ id: 2, label: "B", answerBoolean: false });
       });
 
       act(() => {
@@ -445,17 +445,17 @@ describe('useAnswerValidation', () => {
       expect(result.current.isAnswerCorrect).toBe(false);
     });
 
-    it('should handle user changing mind before submission', () => {
+    it("should handle user changing mind before submission", () => {
       const { result } = renderHook(() => useAnswerValidation());
 
       act(() => {
-        result.current.selectOption({ id: 1, label: 'Wrong', answerBoolean: false });
+        result.current.selectOption({ id: 1, label: "Wrong", answerBoolean: false });
       });
 
       expect(result.current.selectedOption?.id).toBe(1);
 
       act(() => {
-        result.current.selectOption({ id: 2, label: 'Correct', answerBoolean: true });
+        result.current.selectOption({ id: 2, label: "Correct", answerBoolean: true });
       });
 
       expect(result.current.selectedOption?.id).toBe(2);
@@ -467,11 +467,11 @@ describe('useAnswerValidation', () => {
       expect(result.current.isAnswerCorrect).toBe(true);
     });
 
-    it('should prevent resubmission without reset', () => {
+    it("should prevent resubmission without reset", () => {
       const { result } = renderHook(() => useAnswerValidation());
 
       act(() => {
-        result.current.selectOption({ id: 1, label: 'A', answerBoolean: true });
+        result.current.selectOption({ id: 1, label: "A", answerBoolean: true });
       });
 
       act(() => {
@@ -483,7 +483,7 @@ describe('useAnswerValidation', () => {
 
       // Try to select different option after submission
       act(() => {
-        result.current.selectOption({ id: 2, label: 'B', answerBoolean: false });
+        result.current.selectOption({ id: 2, label: "B", answerBoolean: false });
       });
 
       // Selection should not change
@@ -491,12 +491,12 @@ describe('useAnswerValidation', () => {
       expect(result.current.canSubmit).toBe(false);
     });
 
-    it('should handle full interview question sequence', () => {
+    it("should handle full interview question sequence", () => {
       const { result } = renderHook(() => useAnswerValidation());
 
       // Question 1
       act(() => {
-        result.current.selectOption({ id: 1, label: 'Q1 Answer', answerBoolean: true });
+        result.current.selectOption({ id: 1, label: "Q1 Answer", answerBoolean: true });
       });
       act(() => {
         result.current.validateAnswer();
@@ -510,7 +510,7 @@ describe('useAnswerValidation', () => {
 
       // Question 2
       act(() => {
-        result.current.selectOption({ id: 2, label: 'Q2 Answer', answerBoolean: false });
+        result.current.selectOption({ id: 2, label: "Q2 Answer", answerBoolean: false });
       });
       act(() => {
         result.current.validateAnswer();
@@ -524,7 +524,7 @@ describe('useAnswerValidation', () => {
 
       // Question 3
       act(() => {
-        result.current.selectOption({ id: 3, label: 'Q3 Answer', answerBoolean: true });
+        result.current.selectOption({ id: 3, label: "Q3 Answer", answerBoolean: true });
       });
       act(() => {
         result.current.validateAnswer();
@@ -532,7 +532,7 @@ describe('useAnswerValidation', () => {
       expect(result.current.isAnswerCorrect).toBe(true);
     });
 
-    it('should handle validation without selection gracefully', () => {
+    it("should handle validation without selection gracefully", () => {
       const { result } = renderHook(() => useAnswerValidation());
 
       let validationResult;
@@ -542,18 +542,18 @@ describe('useAnswerValidation', () => {
 
       expect(validationResult).toEqual({
         isValid: false,
-        message: 'Check your answer first',
+        message: "Check your answer first",
       });
 
       expect(result.current.isSubmitted).toBe(false);
       expect(result.current.isAnswerCorrect).toBeNull();
     });
 
-    it('should maintain isAnswerCorrect value after submission', () => {
+    it("should maintain isAnswerCorrect value after submission", () => {
       const { result } = renderHook(() => useAnswerValidation());
 
       act(() => {
-        result.current.selectOption({ id: 1, label: 'Correct', answerBoolean: true });
+        result.current.selectOption({ id: 1, label: "Correct", answerBoolean: true });
       });
 
       act(() => {
@@ -571,13 +571,13 @@ describe('useAnswerValidation', () => {
     });
   });
 
-  describe('Edge Cases', () => {
-    it('should handle option with edge case values', () => {
+  describe("Edge Cases", () => {
+    it("should handle option with edge case values", () => {
       const { result } = renderHook(() => useAnswerValidation());
 
       const edgeOption = {
         id: 0,
-        label: '',
+        label: "",
         answerBoolean: false,
       };
 
@@ -588,12 +588,12 @@ describe('useAnswerValidation', () => {
       expect(result.current.selectedOption).toEqual(edgeOption);
     });
 
-    it('should handle very long option text', () => {
+    it("should handle very long option text", () => {
       const { result } = renderHook(() => useAnswerValidation());
 
       const longOption = {
         id: 1,
-        label: 'A'.repeat(1000),
+        label: "A".repeat(1000),
         answerBoolean: true,
       };
 
@@ -609,11 +609,11 @@ describe('useAnswerValidation', () => {
       expect(result.current.isAnswerCorrect).toBe(true);
     });
 
-    it('should handle multiple resets in sequence', () => {
+    it("should handle multiple resets in sequence", () => {
       const { result } = renderHook(() => useAnswerValidation());
 
       act(() => {
-        result.current.selectOption({ id: 1, label: 'A', answerBoolean: true });
+        result.current.selectOption({ id: 1, label: "A", answerBoolean: true });
       });
 
       act(() => {

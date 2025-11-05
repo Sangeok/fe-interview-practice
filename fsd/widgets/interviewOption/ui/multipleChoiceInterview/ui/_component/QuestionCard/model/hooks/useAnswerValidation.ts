@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Option } from "../type";
+import { Option } from "../../../../../model/type";
 
 export const useAnswerValidation = () => {
   const [selectedOption, setSelectedOption] = useState<Option | null>(null);
@@ -23,7 +23,7 @@ export const useAnswerValidation = () => {
     setIsSubmitted(true);
     const isCorrect = selectedOption!.answerBoolean;
     setIsAnswerCorrect(isCorrect);
-    
+
     return { isValid: true, isCorrect };
   };
 

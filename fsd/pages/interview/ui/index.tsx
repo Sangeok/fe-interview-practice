@@ -69,7 +69,6 @@ export default function InterviewPage() {
         <InterviewTypeRenderer
           selectedOptions={selectedOptions as InterviewOptionsValue}
           shuffledQuestions={currentQuestions}
-          setOpenInterviewOptionsDialog={setOpenInterviewOptionsDialog}
         />
       )}
 

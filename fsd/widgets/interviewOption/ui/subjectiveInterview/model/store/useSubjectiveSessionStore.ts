@@ -48,10 +48,9 @@ export const useSubjectiveSessionStore = create<SubjectiveSessionState>()(
         });
       },
 
-      advance: (isCorrect) => {
+      advance: () => {
         set((state) => ({
           currentIndex: state.currentIndex + 1,
-          score: isCorrect ? state.score + 1 : state.score,
         }));
       },
 

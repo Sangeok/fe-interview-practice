@@ -6,12 +6,14 @@ import ChatInput from "../../../../../features/chat/chatInput/ui/ChatInput";
 import { SubjectiveQuestion } from "../model/type";
 import { useScrollToBottom } from "../model/hooks/useScrollToBottom";
 import { useSubjectiveInterview } from "../model/hooks/useSubjectiveInterview";
+import EndSubjectQuestion from "./_component/EndSubjectQuestion";
 
 interface SubjectiveInterviewProps {
   questionAnswer: SubjectiveQuestion[];
+  isReviewMode?: boolean;
 }
 
-export default function SubjectiveInterview({ questionAnswer }: SubjectiveInterviewProps) {
+export default function SubjectiveInterview({ questionAnswer, isReviewMode = false }: SubjectiveInterviewProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const {
@@ -25,26 +27,13 @@ export default function SubjectiveInterview({ questionAnswer }: SubjectiveInterv
     score,
     totalQuestions,
     isFinished,
-  } = useSubjectiveInterview(questionAnswer);
+  } = useSubjectiveInterview(questionAnswer, isReviewMode);
 
   useScrollToBottom(messages, messagesEndRef);
 
   // 종료 상태면 점수 요약 UI 렌더링
   if (isFinished) {
-    return (
-      <div className="w-full h-full flex flex-col bg-parent">
-        <div className="flex-1 overflow-y-auto p-4">
-          <div className="max-w-4xl mx-auto">
-            <div className="text-center">
-              <h2 className="text-2xl font-bold mb-4">면접 완료!</h2>
-              <p className="text-xl">
-                총 점수: {score} / {totalQuestions}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+    return <EndSubjectQuestion score={score} totalQuestions={totalQuestions} />;
   }
 
   return (

@@ -2,10 +2,10 @@
 import RadioInput from "@/fsd/shared/ui/atoms/input/ui/RadioInput";
 import Button from "@/fsd/shared/ui/atoms/button/ui/Button";
 import { MultipleChoiceInterpretType } from "@/fsd/shared/model/type";
-import { Option } from "../../model/type";
+import { Option } from "../../../../model/type";
 import { useSelectTechStore } from "@/fsd/shared/model/useSelectTechStore";
-import { useAnswerValidation } from "../../model/hooks/useAnswerValidation";
-import { useInterpretAPI } from "../../model/hooks/useInterpretAPI";
+import { useAnswerValidation } from "../model/hooks/useAnswerValidation";
+import { useInterpretAPI } from "../model/hooks/useInterpretAPI";
 import { useUserStore } from "@/fsd/entities/user/useUserStore";
 
 interface QuestionCardProps {
@@ -15,8 +15,6 @@ interface QuestionCardProps {
   setLoading: (loading: boolean) => void;
   setInterpret: (interpret: MultipleChoiceInterpretType) => void;
   onSubmitAnswer: (isCorrect: boolean) => void;
-  onAddReview: () => void;
-  goFirst: () => void;
 }
 
 export default function QuestionCard({
@@ -26,8 +24,6 @@ export default function QuestionCard({
   setLoading,
   setInterpret,
   onSubmitAnswer,
-  onAddReview,
-  goFirst,
 }: QuestionCardProps) {
   const { tech } = useSelectTechStore();
   const { generateInterpret } = useInterpretAPI();
@@ -84,8 +80,6 @@ export default function QuestionCard({
         ))}
       </div>
       <div className="flex justify-end">
-        {/* <Button onClick={onAddReview}>복습 문제에 추가하기</Button>
-        <Button onClick={goFirst}>처음으로 돌아가기</Button> */}
         <Button onClick={handleCheckAnswer} disabled={!canSubmit}>
           정답 확인
         </Button>
