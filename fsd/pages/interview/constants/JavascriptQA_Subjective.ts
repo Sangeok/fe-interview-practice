@@ -177,8 +177,4 @@ export const JAVASCRIPT_SUBJECTIVE_QUESTIONS: SubjectiveQuestion[] = [
     id: 44,
     question: "JavaScript의 Proxy 객체에 대해 설명하라.",
   },
-  // {
-  //   id: 38,
-  //   question: "JavaScript의 가비지 컬렉션(Garbage Collection)에 대해 설명하라.",
-  // },
 ];

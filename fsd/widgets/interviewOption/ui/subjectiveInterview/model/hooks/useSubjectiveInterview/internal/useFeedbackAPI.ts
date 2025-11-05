@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { FeedbackResponse } from "@/fsd/shared/model/type";
 
 interface FeedbackAPIOptions {
   tech: string;
@@ -6,10 +7,14 @@ interface FeedbackAPIOptions {
   answer: string;
 }
 
+export type FeedbackAPIResult =
+  | { success: true; data: FeedbackResponse }
+  | { success: false; data: string };
+
 export const useFeedbackAPI = () => {
   const [isLoading, setIsLoading] = useState(false);
 
-  const generateFeedback = async ({ tech, question, answer }: FeedbackAPIOptions) => {
+  const generateFeedback = async ({ tech, question, answer }: FeedbackAPIOptions): Promise<FeedbackAPIResult> => {
     setIsLoading(true);
 
     console.log("tech", tech);

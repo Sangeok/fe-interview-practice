@@ -3,9 +3,13 @@ import { SubjectiveQuestion } from "../../type";
 import { Message } from "@/fsd/features/chat/chatMessage/model/type";
 import { useFeedbackAPI } from "./internal/useFeedbackAPI";
 import { useMessageState } from "./internal/useMessageState";
+import { useAnswerEvaluation } from "./internal/useAnswerEvaluation";
 import { useEffect, useState } from "react";
 import { useUserStore } from "@/fsd/entities/user/useUserStore";
 import { useSubjectiveSessionStore } from "../../store/useSubjectiveSessionStore";
+import { useSendMessage } from "../useSendMessage";
+import { useHandleQuestionButton } from "../useHandleQuestionButton";
+import { useReviewSubjectiveSession } from "../useReviewSubjectiveSession";
 
 interface UseSubjectiveInterviewReturn {
   messages: Message[];
@@ -20,13 +24,21 @@ interface UseSubjectiveInterviewReturn {
   handleAddReview: () => void;
 }
 
-export const useSubjectiveInterview = (questionAnswer: SubjectiveQuestion[]): UseSubjectiveInterviewReturn => {
-  const tech = useSelectTechStore((state) => state.tech);
-  const { generateFeedback, isLoading, setIsLoading } = useFeedbackAPI();
-  const questionIndex = useSubjectiveSessionStore((s) => s.currentIndex);
-  const score = useSubjectiveSessionStore((s) => s.score);
-  const advance = useSubjectiveSessionStore((s) => s.advance);
-  const addScore = useSubjectiveSessionStore((s) => s.addScore);
+export const useSubjectiveInterview = (
+  questionAnswer: SubjectiveQuestion[],
+  isReviewMode = false
+): UseSubjectiveInterviewReturn => {
+  // 모드별 세션 관리
+  const normalSession = {
+    questionIndex: useSubjectiveSessionStore((s) => s.currentIndex),
+    score: useSubjectiveSessionStore((s) => s.score),
+    advance: useSubjectiveSessionStore((s) => s.advance),
+    addScore: useSubjectiveSessionStore((s) => s.addScore),
+  };
+  const reviewSession = useReviewSubjectiveSession();
+
+  const { questionIndex, score, advance, addScore } = isReviewMode ? reviewSession : normalSession;
+
   const {
     messages,
     addLoadingMessage,
@@ -38,10 +50,6 @@ export const useSubjectiveInterview = (questionAnswer: SubjectiveQuestion[]): Us
     clearMessagesAndShowQuestion,
   } = useMessageState();
 
-  const addInCorrectSubQuestion = useUserStore((s) => s.addInCorrectSubQuestion);
-  const removeInCorrectSubQuestion = useUserStore((s) => s.removeInCorrectSubQuestion);
-  const persistUserToDB = useUserStore((s) => s.persistUserToDB);
-
   const [isFinished, setIsFinished] = useState(false);
   const totalQuestions = questionAnswer.length;
 
@@ -52,59 +60,48 @@ export const useSubjectiveInterview = (questionAnswer: SubjectiveQuestion[]): Us
     }
   }, [questionAnswer, messages.length, addQuestionMessage]);
 
-  const handleSendMessage = async (content: string) => {
-    addUserMessage(content);
-    addLoadingMessage();
+  const { handleSendMessage, isLoading } = useSendMessage({
+    questionAnswer,
+    questionIndex,
+    addUserMessage,
+    addLoadingMessage,
+    removeLoadingMessage,
+    addFeedback_ActionButtonMessage,
+    addScore,
+  });
 
-    const feedbackResult = await generateFeedback({
-      tech,
-      question: questionAnswer[questionIndex].question,
-      answer: content,
-    });
-    console.log("feedbackResult", feedbackResult);
+  const { handleNextQuestion, handleEndInterview, handleAddReview } = useHandleQuestionButton({
+    totalQuestions,
+    questionAnswer,
+    addEndMessage,
+    setIsFinished,
+    clearMessagesAndShowQuestion,
+    advance,
+    questionIndex,
+  });
 
-    // 점수 및 오답 처리 규칙
-    // - API 오류(success: false): 감점(가산 없음) + 오답 추가
-    // - success && evaluation.score <= 4: 감점(가산 없음) + 오답 추가
-    // - 그 외: 정답으로 판정하여 +1 점수, 오답 목록 제거
-    if (!feedbackResult.success) {
-      addInCorrectSubQuestion(questionAnswer[questionIndex]);
-    } else if (feedbackResult.data.evaluation.score <= 4) {
-      addInCorrectSubQuestion(questionAnswer[questionIndex]);
-    } else {
-      addScore(1);
-      removeInCorrectSubQuestion(questionAnswer[questionIndex].id);
-    }
+  // const handleNextQuestion = () => {
+  //   const nextIndex = questionIndex + 1;
+  //   if (nextIndex < totalQuestions) {
+  //     advance(false);
+  //     const nextQuestion = questionAnswer[nextIndex];
+  //     clearMessagesAndShowQuestion(nextQuestion.question);
+  //   } else {
+  //     addEndMessage();
+  //     setIsFinished(true);
+  //   }
+  // };
 
-    // 정답/오답 여부와 무관하게 현재 user 상태를 저장
-    await persistUserToDB();
-    removeLoadingMessage();
+  // const handleEndInterview = () => {
+  //   addEndMessage();
+  //   setIsFinished(true);
+  // };
 
-    addFeedback_ActionButtonMessage(feedbackResult.data);
-  };
-
-  const handleNextQuestion = () => {
-    const nextIndex = questionIndex + 1;
-    if (nextIndex < totalQuestions) {
-      advance(false);
-      const nextQuestion = questionAnswer[nextIndex];
-      clearMessagesAndShowQuestion(nextQuestion.question);
-    } else {
-      addEndMessage();
-      setIsFinished(true);
-    }
-  };
-
-  const handleEndInterview = () => {
-    addEndMessage();
-    setIsFinished(true);
-  };
-
-  const handleAddReview = async () => {
-    addInCorrectSubQuestion(questionAnswer[questionIndex]);
-    await persistUserToDB();
-    handleNextQuestion();
-  };
+  // const handleAddReview = async () => {
+  //   addInCorrectSubQuestion(questionAnswer[questionIndex]);
+  //   await persistUserToDB();
+  //   handleNextQuestion();
+  // };
 
   return {
     messages,

@@ -34,7 +34,7 @@ export default function ReviewPage() {
         <InterviewTypeRenderer
           selectedOptions={selectedOptions as InterviewOptionsValue}
           shuffledQuestions={sessionQuestions}
-          setOpenInterviewOptionsDialog={setOpenInterviewOptionsDialog}
+          isReviewMode={true}
         />
       )}
 

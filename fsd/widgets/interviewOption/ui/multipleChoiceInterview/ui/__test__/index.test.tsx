@@ -3,7 +3,8 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import MultipleChoiceInterview from '../index';
 import { MultipleChoiceQuestion } from '../../model/type';
-import * as useMultipleChoiceQuizModule from '../../model/hooks/useMultipleChoiceQuiz';
+import * as useNormalMCQSessionModule from '../../model/hooks/useNormalMCQSession';
+import * as useReviewMCQSessionModule from '../../model/hooks/useReviewMCQSession';
 import * as useAnswerFeedbackStateModule from '../../model/hooks/useAnswerFeedbackState';
 
 // Mock child components
@@ -76,15 +77,19 @@ describe('MultipleChoiceInterview Widget', () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
-    // Default mock implementations
-    vi.spyOn(useMultipleChoiceQuizModule, 'useMultipleChoiceQuiz').mockReturnValue({
+    // Default mock implementations for both session hooks
+    const defaultSessionReturn = {
       currentQuestion: mockQuestions[0],
       currentQuestionIndex: 0,
       score: 0,
       isQuizFinished: false,
       totalQuestions: 2,
       goNext: vi.fn(),
-    });
+      goFirst: vi.fn(),
+    };
+
+    vi.spyOn(useNormalMCQSessionModule, 'useNormalMCQSession').mockReturnValue(defaultSessionReturn);
+    vi.spyOn(useReviewMCQSessionModule, 'useReviewMCQSession').mockReturnValue(defaultSessionReturn);
 
     vi.spyOn(useAnswerFeedbackStateModule, 'useAnswerFeedbackState').mockReturnValue({
       answerState: 'idle' as any,
@@ -105,39 +110,40 @@ describe('MultipleChoiceInterview Widget', () => {
 
   describe('Initial Render', () => {
     it('should render progress header', () => {
-      render(<MultipleChoiceInterview questionAnswer={mockQuestions} />);
+      render(<MultipleChoiceInterview setOpenInterviewOptionsDialog={vi.fn()} />);
       expect(screen.getByTestId('progress-header')).toBeInTheDocument();
     });
 
     it('should render first question', () => {
-      render(<MultipleChoiceInterview questionAnswer={mockQuestions} />);
+      render(<MultipleChoiceInterview setOpenInterviewOptionsDialog={vi.fn()} />);
       expect(screen.getByTestId('question-card')).toBeInTheDocument();
       expect(screen.getByText('What is === ?')).toBeInTheDocument();
     });
 
     it('should display correct initial progress', () => {
-      render(<MultipleChoiceInterview questionAnswer={mockQuestions} />);
+      render(<MultipleChoiceInterview setOpenInterviewOptionsDialog={vi.fn()} />);
       expect(screen.getByText('Progress: 1/2 | Score: 0')).toBeInTheDocument();
     });
   });
 
   describe('Question Display', () => {
     it('should show current question from quiz state', () => {
-      render(<MultipleChoiceInterview questionAnswer={mockQuestions} />);
+      render(<MultipleChoiceInterview setOpenInterviewOptionsDialog={vi.fn()} />);
       expect(screen.getByText(mockQuestions[0].question)).toBeInTheDocument();
     });
 
     it('should not render question when currentQuestion is null', () => {
-      vi.spyOn(useMultipleChoiceQuizModule, 'useMultipleChoiceQuiz').mockReturnValue({
+      vi.spyOn(useNormalMCQSessionModule, 'useNormalMCQSession').mockReturnValue({
         currentQuestion: null as any,
         currentQuestionIndex: 0,
         score: 0,
         isQuizFinished: false,
         totalQuestions: 2,
         goNext: vi.fn(),
+        goFirst: vi.fn(),
       });
 
-      render(<MultipleChoiceInterview questionAnswer={mockQuestions} />);
+      render(<MultipleChoiceInterview setOpenInterviewOptionsDialog={vi.fn()} />);
       expect(screen.queryByTestId('question-card')).not.toBeInTheDocument();
     });
   });
@@ -161,7 +167,7 @@ describe('MultipleChoiceInterview Widget', () => {
         handleAddReview: vi.fn(),
       });
 
-      render(<MultipleChoiceInterview questionAnswer={mockQuestions} />);
+      render(<MultipleChoiceInterview setOpenInterviewOptionsDialog={vi.fn()} />);
       screen.getByText('Correct Answer').click();
 
       expect(markCorrect).toHaveBeenCalled();
@@ -185,7 +191,7 @@ describe('MultipleChoiceInterview Widget', () => {
         handleAddReview: vi.fn(),
       });
 
-      render(<MultipleChoiceInterview questionAnswer={mockQuestions} />);
+      render(<MultipleChoiceInterview setOpenInterviewOptionsDialog={vi.fn()} />);
       screen.getByText('Wrong Answer').click();
 
       expect(markIncorrect).toHaveBeenCalled();
@@ -210,7 +216,7 @@ describe('MultipleChoiceInterview Widget', () => {
         handleAddReview: vi.fn(),
       });
 
-      render(<MultipleChoiceInterview questionAnswer={mockQuestions} />);
+      render(<MultipleChoiceInterview setOpenInterviewOptionsDialog={vi.fn()} />);
       expect(screen.getByTestId('correct-card')).toBeInTheDocument();
       expect(screen.getByText('Correct!')).toBeInTheDocument();
     });
@@ -232,12 +238,12 @@ describe('MultipleChoiceInterview Widget', () => {
         handleAddReview: vi.fn(),
       });
 
-      render(<MultipleChoiceInterview questionAnswer={mockQuestions} />);
+      render(<MultipleChoiceInterview setOpenInterviewOptionsDialog={vi.fn()} />);
       expect(screen.getByTestId('interpret-card')).toBeInTheDocument();
     });
 
     it('should not show feedback cards in idle state', () => {
-      render(<MultipleChoiceInterview questionAnswer={mockQuestions} />);
+      render(<MultipleChoiceInterview setOpenInterviewOptionsDialog={vi.fn()} />);
       expect(screen.queryByTestId('correct-card')).not.toBeInTheDocument();
       expect(screen.queryByTestId('interpret-card')).not.toBeInTheDocument();
     });
@@ -248,13 +254,14 @@ describe('MultipleChoiceInterview Widget', () => {
       const resetAnswerState = vi.fn();
       const goNext = vi.fn();
 
-      vi.spyOn(useMultipleChoiceQuizModule, 'useMultipleChoiceQuiz').mockReturnValue({
+      vi.spyOn(useNormalMCQSessionModule, 'useNormalMCQSession').mockReturnValue({
         currentQuestion: mockQuestions[0],
         currentQuestionIndex: 0,
         score: 0,
         isQuizFinished: false,
         totalQuestions: 2,
         goNext,
+        goFirst: vi.fn(),
       });
 
       vi.spyOn(useAnswerFeedbackStateModule, 'useAnswerFeedbackState').mockReturnValue({
@@ -273,7 +280,7 @@ describe('MultipleChoiceInterview Widget', () => {
         handleAddReview: vi.fn(),
       });
 
-      render(<MultipleChoiceInterview questionAnswer={mockQuestions} />);
+      render(<MultipleChoiceInterview setOpenInterviewOptionsDialog={vi.fn()} />);
       screen.getByText('Next').click();
 
       expect(resetAnswerState).toHaveBeenCalled();
@@ -284,13 +291,14 @@ describe('MultipleChoiceInterview Widget', () => {
       const goNext = vi.fn();
       const resetAnswerState = vi.fn();
 
-      vi.spyOn(useMultipleChoiceQuizModule, 'useMultipleChoiceQuiz').mockReturnValue({
+      vi.spyOn(useNormalMCQSessionModule, 'useNormalMCQSession').mockReturnValue({
         currentQuestion: mockQuestions[0],
         currentQuestionIndex: 0,
         score: 0,
         isQuizFinished: false,
         totalQuestions: 2,
         goNext,
+        goFirst: vi.fn(),
       });
 
       vi.spyOn(useAnswerFeedbackStateModule, 'useAnswerFeedbackState').mockReturnValue({
@@ -309,7 +317,7 @@ describe('MultipleChoiceInterview Widget', () => {
         handleAddReview: vi.fn(),
       });
 
-      render(<MultipleChoiceInterview questionAnswer={mockQuestions} />);
+      render(<MultipleChoiceInterview setOpenInterviewOptionsDialog={vi.fn()} />);
       screen.getByText('Next').click();
 
       expect(goNext).toHaveBeenCalledWith(false);
@@ -318,31 +326,33 @@ describe('MultipleChoiceInterview Widget', () => {
 
   describe('Quiz Completion', () => {
     it('should show end screen when quiz is finished', () => {
-      vi.spyOn(useMultipleChoiceQuizModule, 'useMultipleChoiceQuiz').mockReturnValue({
+      vi.spyOn(useNormalMCQSessionModule, 'useNormalMCQSession').mockReturnValue({
         currentQuestion: null as any,
         currentQuestionIndex: 2,
         score: 2,
         isQuizFinished: true,
         totalQuestions: 2,
         goNext: vi.fn(),
+        goFirst: vi.fn(),
       });
 
-      render(<MultipleChoiceInterview questionAnswer={mockQuestions} />);
+      render(<MultipleChoiceInterview setOpenInterviewOptionsDialog={vi.fn()} />);
       expect(screen.getByTestId('end-question')).toBeInTheDocument();
       expect(screen.getByText('Score: 2/2')).toBeInTheDocument();
     });
 
     it('should not show question card when quiz is finished', () => {
-      vi.spyOn(useMultipleChoiceQuizModule, 'useMultipleChoiceQuiz').mockReturnValue({
+      vi.spyOn(useNormalMCQSessionModule, 'useNormalMCQSession').mockReturnValue({
         currentQuestion: null as any,
         currentQuestionIndex: 2,
         score: 1,
         isQuizFinished: true,
         totalQuestions: 2,
         goNext: vi.fn(),
+        goFirst: vi.fn(),
       });
 
-      render(<MultipleChoiceInterview questionAnswer={mockQuestions} />);
+      render(<MultipleChoiceInterview setOpenInterviewOptionsDialog={vi.fn()} />);
       expect(screen.queryByTestId('question-card')).not.toBeInTheDocument();
     });
   });
@@ -365,7 +375,7 @@ describe('MultipleChoiceInterview Widget', () => {
         handleAddReview: vi.fn(),
       });
 
-      render(<MultipleChoiceInterview questionAnswer={mockQuestions} />);
+      render(<MultipleChoiceInterview setOpenInterviewOptionsDialog={vi.fn()} />);
       expect(screen.getByText('Loading...')).toBeInTheDocument();
     });
   });
@@ -392,38 +402,40 @@ describe('MultipleChoiceInterview Widget', () => {
         handleAddReview,
       });
 
-      render(<MultipleChoiceInterview questionAnswer={mockQuestions} />);
+      render(<MultipleChoiceInterview setOpenInterviewOptionsDialog={vi.fn()} />);
       const questionCard = screen.getByTestId('question-card');
       expect(questionCard).toBeInTheDocument();
     });
 
     it('should pass score and total questions to ProgressHeader', () => {
-      vi.spyOn(useMultipleChoiceQuizModule, 'useMultipleChoiceQuiz').mockReturnValue({
+      vi.spyOn(useNormalMCQSessionModule, 'useNormalMCQSession').mockReturnValue({
         currentQuestion: mockQuestions[1],
         currentQuestionIndex: 1,
         score: 1,
         isQuizFinished: false,
         totalQuestions: 2,
         goNext: vi.fn(),
+        goFirst: vi.fn(),
       });
 
-      render(<MultipleChoiceInterview questionAnswer={mockQuestions} />);
+      render(<MultipleChoiceInterview setOpenInterviewOptionsDialog={vi.fn()} />);
       expect(screen.getByText('Progress: 2/2 | Score: 1')).toBeInTheDocument();
     });
   });
 
   describe('Edge Cases', () => {
     it('should handle empty questions array', () => {
-      vi.spyOn(useMultipleChoiceQuizModule, 'useMultipleChoiceQuiz').mockReturnValue({
+      vi.spyOn(useNormalMCQSessionModule, 'useNormalMCQSession').mockReturnValue({
         currentQuestion: null as any,
         currentQuestionIndex: 0,
         score: 0,
         isQuizFinished: true,
         totalQuestions: 0,
         goNext: vi.fn(),
+        goFirst: vi.fn(),
       });
 
-      render(<MultipleChoiceInterview questionAnswer={[]} />);
+      render(<MultipleChoiceInterview setOpenInterviewOptionsDialog={vi.fn()} />);
       expect(screen.getByTestId('end-question')).toBeInTheDocument();
     });
 
@@ -447,7 +459,7 @@ describe('MultipleChoiceInterview Widget', () => {
         handleAddReview: vi.fn(),
       });
 
-      render(<MultipleChoiceInterview questionAnswer={mockQuestions} />);
+      render(<MultipleChoiceInterview setOpenInterviewOptionsDialog={vi.fn()} />);
 
       screen.getByText('Correct Answer').click();
       screen.getByText('Wrong Answer').click();
@@ -462,13 +474,14 @@ describe('MultipleChoiceInterview Widget', () => {
       const goNext = vi.fn();
       const resetAnswerState = vi.fn();
 
-      vi.spyOn(useMultipleChoiceQuizModule, 'useMultipleChoiceQuiz').mockReturnValue({
+      vi.spyOn(useNormalMCQSessionModule, 'useNormalMCQSession').mockReturnValue({
         currentQuestion: mockQuestions[0],
         currentQuestionIndex: 0,
         score: 0,
         isQuizFinished: false,
         totalQuestions: 2,
         goNext,
+        goFirst: vi.fn(),
       });
 
       vi.spyOn(useAnswerFeedbackStateModule, 'useAnswerFeedbackState').mockReturnValue({
@@ -487,7 +500,7 @@ describe('MultipleChoiceInterview Widget', () => {
         handleAddReview: vi.fn(),
       });
 
-      render(<MultipleChoiceInterview questionAnswer={mockQuestions} />);
+      render(<MultipleChoiceInterview setOpenInterviewOptionsDialog={vi.fn()} />);
       screen.getByText('Next').click();
 
       expect(resetAnswerState).toHaveBeenCalled();
