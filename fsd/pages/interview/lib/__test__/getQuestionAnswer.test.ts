@@ -92,7 +92,7 @@ describe('getQuestionAnswer', () => {
       expect(Array.isArray(result)).toBe(true);
       if (result.length > 0) {
         expect(result[0]).toHaveProperty('options');
-        expect(Array.isArray((result[0] as any).options)).toBe(true);
+        expect(Array.isArray((result[0] as { options: unknown[] }).options)).toBe(true);
         expect(result[0]).toHaveProperty('question');
         expect(result[0]).toHaveProperty('answerString');
       }
@@ -101,7 +101,7 @@ describe('getQuestionAnswer', () => {
     it('should return multiple choice questions with valid option structure', () => {
       const result = getQuestionAnswer('React', 'Multiple Choice');
       if (result.length > 0) {
-        const firstQuestion = result[0] as any;
+        const firstQuestion = result[0] as { options: Array<{ id: number; label: string; answerBoolean: boolean }> };
         expect(firstQuestion.options.length).toBeGreaterThan(0);
         const firstOption = firstQuestion.options[0];
         expect(firstOption).toHaveProperty('id');

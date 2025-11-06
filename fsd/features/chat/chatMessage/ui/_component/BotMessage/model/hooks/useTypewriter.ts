@@ -10,11 +10,14 @@ export function useTypewriter(text: string) {
 
   // In test environment, render full text immediately to avoid timing issues
   const isTestEnv = typeof process !== "undefined" && (process.env.VITEST || process.env.NODE_ENV === "test");
-  if (isTestEnv) {
-    return { displayedText: text, isTyping: false };
-  }
 
   useEffect(() => {
+    if (isTestEnv) {
+      setDisplayedText(text);
+      setIsTyping(false);
+      return;
+    }
+
     if (!text) return;
 
     setIsTyping(true);
@@ -32,7 +35,7 @@ export function useTypewriter(text: string) {
     }, TYPING_SPEED);
 
     return () => clearInterval(timer);
-  }, [text]);
+  }, [text, isTestEnv]);
 
   return { displayedText, isTyping };
 }

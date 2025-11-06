@@ -5,7 +5,7 @@ import { FeedbackData, DeepDiveFeedbackData } from '@/fsd/shared/model/type';
 
 // Mock child components (declare before importing module under test)
 vi.mock('../_component/LoadingBotMessage', () => ({
-  default: ({ BotAvatar }: any) => (
+  default: ({ BotAvatar }: { BotAvatar: React.ReactNode }) => (
     <div data-testid="loading-bot-message">
       {BotAvatar}
       <span>Loading...</span>
@@ -14,7 +14,7 @@ vi.mock('../_component/LoadingBotMessage', () => ({
 }));
 
 vi.mock('../_component/FeedbackMessage/ui', () => ({
-  default: ({ BotAvatar, data }: any) => (
+  default: ({ BotAvatar, data }: { BotAvatar: React.ReactNode; data: FeedbackData }) => (
     <div data-testid="feedback-message">
       {BotAvatar}
       <div>Score: {data.evaluation.score}</div>
@@ -24,7 +24,7 @@ vi.mock('../_component/FeedbackMessage/ui', () => ({
 }));
 
 vi.mock('../_component/DeepDiveFeedbackMessage/ui', () => ({
-  default: ({ BotAvatar, data }: any) => (
+  default: ({ BotAvatar, data }: { BotAvatar: React.ReactNode; data: DeepDiveFeedbackData }) => (
     <div data-testid="deepdive-message">
       {BotAvatar}
       <div>Deep Dive: {data.deepDive.title}</div>
@@ -34,7 +34,7 @@ vi.mock('../_component/DeepDiveFeedbackMessage/ui', () => ({
 }));
 
 vi.mock('../_component/GeneralBotMessage', () => ({
-  default: ({ BotAvatar, content }: any) => (
+  default: ({ BotAvatar, content }: { BotAvatar: React.ReactNode; content: string }) => (
     <div data-testid="general-bot-message">
       {BotAvatar}
       <div>{content}</div>
