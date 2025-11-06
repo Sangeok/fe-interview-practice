@@ -14,10 +14,28 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `npm run lint` - Run ESLint
 - `npm test` - Run tests with Vitest (run mode)
 - `npm run test:watch` - Run tests in watch mode
+- `npm run test:ui` - Run tests with Vitest UI
+- `npm run test:coverage` - Run tests with coverage report
 
 ### Environment Setup
 
 Requires `NEXT_PUBLIC_GEMINI_API_KEY` environment variable for Gemini AI integration.
+
+### CI/CD Setup
+
+**GitHub Actions**:
+- Workflow: `.github/workflows/ci.yml`
+- Triggers: Push/PR to `main`, `develop` branches
+- Steps: Lint → Test → Build (with Gemini API key)
+- Node.js: 20.x on ubuntu-latest
+
+**Vercel Deployment**:
+- Config: `vercel.json`
+- Auto-deploy: `main` (production), `develop` (preview)
+- Framework: Next.js with Turbopack
+- Requires: `NEXT_PUBLIC_GEMINI_API_KEY` in Vercel environment variables
+
+**Setup Details**: See `docs/CI_CD_SETUP.md`
 
 ## Architecture Overview
 
@@ -215,7 +233,11 @@ This project follows FSD architecture with layers organized in `fsd/` directory:
 
 **Testing**:
 
-- Vitest 4.0.6
+- Vitest 4.0.6 with UI and Coverage plugins
+- @playwright/test 1.56.1 (E2E testing)
+- @testing-library/react 16.3.0
+- @testing-library/jest-dom 6.9.1
+- @testing-library/user-event 14.6.1
 - jsdom 27.1.0
 - fake-indexeddb 6.2.4
 - vite-tsconfig-paths 5.1.4
