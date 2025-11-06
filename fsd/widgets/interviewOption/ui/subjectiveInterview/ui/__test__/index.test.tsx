@@ -245,7 +245,7 @@ describe("SubjectiveInterview Widget", () => {
       });
 
       render(<SubjectiveInterview questionAnswer={mockQuestions} />);
-      const sendButton = screen.getByText("Send");
+      const sendButton = screen.getByRole("button", { name: /send message/i });
       expect(sendButton).toBeDisabled();
     });
 
@@ -440,7 +440,7 @@ describe("SubjectiveInterview Widget", () => {
 
     it("should pass questionAnswer to useSubjectiveInterview", () => {
       render(<SubjectiveInterview questionAnswer={mockQuestions} />);
-      expect(useSubjectiveInterviewModule.useSubjectiveInterview).toHaveBeenCalledWith(mockQuestions);
+      expect(useSubjectiveInterviewModule.useSubjectiveInterview).toHaveBeenCalledWith(mockQuestions, false);
     });
   });
 

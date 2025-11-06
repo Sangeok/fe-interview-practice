@@ -4,8 +4,8 @@ import Button from "@/fsd/shared/ui/atoms/button/ui/Button";
 import { MultipleChoiceInterpretType } from "@/fsd/shared/model/type";
 import { Option } from "../../../../model/type";
 import { useSelectTechStore } from "@/fsd/shared/model/useSelectTechStore";
-import { useAnswerValidation } from "../model/hooks/useAnswerValidation";
-import { useInterpretAPI } from "../model/hooks/useInterpretAPI";
+import { useAnswerValidation } from "@/fsd/widgets/interviewOption/ui/multipleChoiceInterview/ui/_component/QuestionCard/model/hooks/useAnswerValidation";
+import { useInterpretAPI } from "@/fsd/widgets/interviewOption/ui/multipleChoiceInterview/ui/_component/QuestionCard/model/hooks/useInterpretAPI";
 import { useUserStore } from "@/fsd/entities/user/useUserStore";
 
 interface QuestionCardProps {
