@@ -1,6 +1,7 @@
 "use client";
 
 import { useSelectTechStore } from "@/fsd/shared/model/useSelectTechStore";
+import type { TechType } from "@/fsd/shared/model/type";
 import { InterviewOptionsValue } from "@/fsd/pages/interview/model/type";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
@@ -30,7 +31,10 @@ export default function InterviewPage() {
   // 새로고침/직접 진입 시 라우트 파라미터로 tech를 복원
   useEffect(() => {
     if (routeTech && tech !== routeTech) {
-      setTech(routeTech as any);
+      const allowed: ReadonlyArray<TechType> = ["JavaScript", "NextJs", "React", "TypeScript", ""];
+      if (allowed.includes(routeTech)) {
+        setTech(routeTech as TechType);
+      }
     }
   }, [routeTech, tech, setTech]);
 

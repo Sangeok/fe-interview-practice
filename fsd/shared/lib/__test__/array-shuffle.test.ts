@@ -4,9 +4,9 @@ import type { MultipleChoiceQuestion } from "@/fsd/widgets/interviewOption/ui/mu
 
 describe("arrayShuffle", () => {
   it("returns [] for non-array input", () => {
-    expect((arrayShuffle as any)(null)).toEqual([]);
-    expect((arrayShuffle as any)(undefined)).toEqual([]);
-    expect((arrayShuffle as any)({})).toEqual([]);
+    expect(arrayShuffle(null as unknown as never[])).toEqual([]);
+    expect(arrayShuffle(undefined as unknown as never[])).toEqual([]);
+    expect(arrayShuffle({} as unknown as never[])).toEqual([]);
   });
 
   it("does not mutate original array and returns new array", () => {
@@ -30,7 +30,7 @@ describe("arrayShuffle", () => {
 
 describe("shuffleMultipleChoiceQuestions", () => {
   it("returns [] for non-array input", () => {
-    expect((shuffleMultipleChoiceQuestions as any)(null)).toEqual([]);
+    expect(shuffleMultipleChoiceQuestions(null as unknown as never[])).toEqual([]);
   });
 
   it("shuffles questions and options deterministically; original is not mutated", () => {

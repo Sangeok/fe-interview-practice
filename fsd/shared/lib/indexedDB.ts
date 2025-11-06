@@ -5,6 +5,11 @@ class IndexedDBService {
   private version = 1;
   private db: IDBDatabase | null = null;
 
+  // Test-only: clear cached DB instance. Not used in production flow.
+  __resetForTests(): void {
+    this.db = null;
+  }
+
   async openDB(): Promise<IDBDatabase> {
     if (this.db) return this.db;
 
