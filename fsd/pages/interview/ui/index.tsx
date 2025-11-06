@@ -32,7 +32,7 @@ export default function InterviewPage() {
   useEffect(() => {
     if (routeTech && tech !== routeTech) {
       const allowed: ReadonlyArray<TechType> = ["JavaScript", "NextJs", "React", "TypeScript", ""];
-      if (allowed.includes(routeTech)) {
+      if (allowed.includes(routeTech as TechType)) {
         setTech(routeTech as TechType);
       }
     }
