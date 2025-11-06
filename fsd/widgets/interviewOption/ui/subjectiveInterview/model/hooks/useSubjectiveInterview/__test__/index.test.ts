@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderHook, act } from "@testing-library/react";
 import { useSubjectiveInterview } from "../index";
+import { useSubjectiveSessionStore } from "../../../store/useSubjectiveSessionStore";
 
 // // Mock fetch for API calls
 // declare global {
@@ -18,6 +19,8 @@ describe("useSubjectiveInterview Integration", () => {
     vi.clearAllMocks();
     // @ts-ignore
     global.fetch = vi.fn();
+    // Reset Zustand store before each test
+    useSubjectiveSessionStore.getState().resetSession();
   });
 
   describe("Initial State", () => {

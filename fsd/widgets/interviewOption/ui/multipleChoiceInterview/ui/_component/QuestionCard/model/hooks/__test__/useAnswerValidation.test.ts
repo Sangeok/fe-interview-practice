@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { renderHook, act } from "@testing-library/react";
-import { useAnswerValidation } from "../../../ui/_component/QuestionCard/model/hooks/useAnswerValidation";
+import { useAnswerValidation } from "../useAnswerValidation";
 
 describe("useAnswerValidation", () => {
   describe("Initial State", () => {

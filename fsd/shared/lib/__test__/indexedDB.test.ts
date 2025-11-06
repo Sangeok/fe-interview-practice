@@ -8,8 +8,8 @@ async function clearStore() {
   tx.objectStore("user").clear();
   await new Promise<void>((resolve, reject) => {
     tx.oncomplete = () => resolve();
-    tx.onerror = () => reject(tx.error as any);
-    tx.onabort = () => reject(tx.error as any);
+    tx.onerror = () => reject(tx.error ?? new Error("Transaction error"));
+    tx.onabort = () => reject(tx.error ?? new Error("Transaction aborted"));
   });
 }
 
@@ -61,8 +61,8 @@ describe("indexedDBService", () => {
     tx.objectStore("user").put({ id: "user" });
     await new Promise<void>((resolve, reject) => {
       tx.oncomplete = () => resolve();
-      tx.onerror = () => reject(tx.error as any);
-      tx.onabort = () => reject(tx.error as any);
+      tx.onerror = () => reject(tx.error ?? new Error("Transaction error"));
+      tx.onabort = () => reject(tx.error ?? new Error("Transaction aborted"));
     });
 
     const loaded = await indexedDBService.loadUserData();
@@ -91,32 +91,33 @@ describe("indexedDBService", () => {
   });
 
   it("openDB rejects when window.indexedDB is not supported", async () => {
-    (indexedDBService as any).db = null; // reset internal cache
+    indexedDBService.__resetForTests(); // reset internal cache
 
-    const original = (window as any).indexedDB;
-    // @ts-ignore
-    (window as any).indexedDB = undefined;
+    const win = window as unknown as { indexedDB?: IDBFactory };
+    const original = win.indexedDB;
+    win.indexedDB = undefined;
 
     await expect(indexedDBService.openDB()).rejects.toThrow("IndexedDB is not supported");
 
-    (window as any).indexedDB = original;
+    win.indexedDB = original;
   });
 
   it("openDB propagates request.onerror", async () => {
-    (indexedDBService as any).db = null;
+    indexedDBService.__resetForTests();
 
-    const original = (window as any).indexedDB;
+    const win = window as unknown as { indexedDB?: IDBFactory };
+    const original = win.indexedDB;
     const openMock = vi.fn().mockImplementation(() => {
-      const req: any = {};
+      const req: Partial<IDBOpenDBRequest> = {};
       setTimeout(() => {
         if (typeof req.onerror === "function") req.onerror(new Event("error"));
       }, 0);
-      return req;
+      return req as IDBOpenDBRequest;
     });
-    (window as any).indexedDB = { open: openMock } as any;
+    win.indexedDB = { open: openMock as unknown as typeof indexedDB.open } as IDBFactory;
 
     await expect(indexedDBService.openDB()).rejects.toBeInstanceOf(Error);
 
-    (window as any).indexedDB = original;
+    win.indexedDB = original;
   });
 });

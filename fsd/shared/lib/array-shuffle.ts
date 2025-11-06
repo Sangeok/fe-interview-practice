@@ -18,7 +18,7 @@ export const arrayShuffle = <T>(array: T[]): T[] => {
  * @param questions options 속성을 가진 객체들의 배열
  * @returns 질문과 선택지가 모두 섞인 새로운 배열
  */
-export const shuffleMultipleChoiceQuestions = <T extends { options: any[] }>(questions: T[]): T[] => {
+export const shuffleMultipleChoiceQuestions = <T extends { options: unknown[] }>(questions: T[]): T[] => {
   if (!Array.isArray(questions)) {
     return [];
   }

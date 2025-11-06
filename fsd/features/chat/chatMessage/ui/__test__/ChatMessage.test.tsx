@@ -6,11 +6,11 @@ import { Message } from '../../model/type';
 
 // Mock child components
 vi.mock('../_component/UserMessage', () => ({
-  default: ({ content }: any) => <div data-testid="user-message">{content}</div>,
+  default: ({ content }: { content: string }) => <div data-testid="user-message">{content}</div>,
 }));
 
 vi.mock('../_component/ButtonMessage', () => ({
-  default: ({ onNext, onEnd, onAddReview, showNext }: any) => (
+  default: ({ onNext, onEnd, onAddReview, showNext }: { onNext?: () => void; onEnd?: () => void; onAddReview?: () => void; showNext?: boolean }) => (
     <div data-testid="button-message">
       {showNext && onNext && <button onClick={onNext}>Next</button>}
       {onEnd && <button onClick={onEnd}>End</button>}
@@ -20,7 +20,7 @@ vi.mock('../_component/ButtonMessage', () => ({
 }));
 
 vi.mock('../_component/BotMessage/ui', () => ({
-  default: ({ content, isLoading }: any) => (
+  default: ({ content, isLoading }: { content: string; isLoading?: boolean }) => (
     <div data-testid="bot-message">
       {isLoading ? 'Loading...' : content}
     </div>
