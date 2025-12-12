@@ -3,11 +3,11 @@
 import { useSelectTechStore } from "@/fsd/shared/model/useSelectTechStore";
 import { useAnswerEvaluation } from "./useSubjectiveInterview/internal/useAnswerEvaluation";
 import { useFeedbackAPI } from "./useSubjectiveInterview/internal/useFeedbackAPI";
-import { SubjectiveQuestion } from "../type";
+import { AnySubjectiveQuestion } from "../type";
 import { useUserStore } from "@/fsd/entities/user/useUserStore";
 
 interface UseSendMessageProps {
-  questionAnswer: SubjectiveQuestion[];
+  questionAnswer: AnySubjectiveQuestion[];
   questionIndex: number;
   addUserMessage: (content: string) => void;
   addLoadingMessage: () => void;

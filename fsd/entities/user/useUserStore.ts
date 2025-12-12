@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { UserData } from "./types";
+import { UserData, InCorrectCustomQuestion } from "./types";
 import { indexedDBService } from "@/fsd/shared/lib/indexedDB";
 import { SubjectiveQuestion } from "@/fsd/widgets/interviewOption/ui/subjectiveInterview/model/type";
 import { MultipleChoiceQuestion } from "@/fsd/widgets/interviewOption/ui/multipleChoiceInterview/model/type";
@@ -7,6 +7,7 @@ import { MultipleChoiceQuestion } from "@/fsd/widgets/interviewOption/ui/multipl
 export const initialUserData: UserData = {
   inCorrectSubQuestion: [],
   inCorrectMultipleChoiceQuestion: [],
+  inCorrectCustomQuestion: [],
 };
 
 interface UserStore {
@@ -17,10 +18,13 @@ interface UserStore {
   setInCorrectMultipleChoiceQuestion: (inCorrectMultipleChoiceQuestion: MultipleChoiceQuestion[]) => void;
 
   addInCorrectSubQuestion: (question: SubjectiveQuestion) => void;
-  removeInCorrectSubQuestion: (questionId: number) => void;
+  removeInCorrectSubQuestion: (questionId: string | number) => void;
 
   addInCorrectMultipleChoiceQuestion: (question: MultipleChoiceQuestion) => void;
   removeInCorrectMultipleChoiceQuestion: (questionId: number) => void;
+
+  addInCorrectCustomQuestion: (data: Omit<InCorrectCustomQuestion, 'attemptedAt'>) => void;
+  removeInCorrectCustomQuestion: (customQuestionId: string) => void;
 
   hydrateUserFromDB: () => Promise<void>;
   persistUserToDB: () => Promise<void>;
@@ -43,7 +47,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
         user: { ...state.user, inCorrectSubQuestion: [...state.user.inCorrectSubQuestion, question] },
       };
     }),
-  removeInCorrectSubQuestion: (questionId: number) =>
+  removeInCorrectSubQuestion: (questionId: string | number) =>
     set((state) => ({
       user: {
         ...state.user,
@@ -67,6 +71,31 @@ export const useUserStore = create<UserStore>((set, get) => ({
       user: {
         ...state.user,
         inCorrectMultipleChoiceQuestion: state.user.inCorrectMultipleChoiceQuestion.filter((q) => q.id !== questionId),
+      },
+    })),
+
+  addInCorrectCustomQuestion: (data: Omit<InCorrectCustomQuestion, 'attemptedAt'>) =>
+    set((state) => {
+      const exists = state.user.inCorrectCustomQuestion.some((item) => item.customQuestionId === data.customQuestionId);
+      if (exists) return state;
+      return {
+        user: {
+          ...state.user,
+          inCorrectCustomQuestion: [
+            ...state.user.inCorrectCustomQuestion,
+            { ...data, attemptedAt: Date.now() },
+          ],
+        },
+      };
+    }),
+
+  removeInCorrectCustomQuestion: (customQuestionId: string) =>
+    set((state) => ({
+      user: {
+        ...state.user,
+        inCorrectCustomQuestion: state.user.inCorrectCustomQuestion.filter(
+          (item) => item.customQuestionId !== customQuestionId
+        ),
       },
     })),
 

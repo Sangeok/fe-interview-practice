@@ -2,7 +2,7 @@ import { UserData } from "@/fsd/entities/user/types";
 
 class IndexedDBService {
   private dbName = "fe-interview-practice";
-  private version = 1;
+  private version = 2;
   private db: IDBDatabase | null = null;
 
   // Test-only: clear cached DB instance. Not used in production flow.
@@ -45,16 +45,34 @@ class IndexedDBService {
       request.onupgradeneeded = (event) => {
         try {
           const db = (event.target as IDBOpenDBRequest).result;
+          const oldVersion = event.oldVersion;
 
-          // Create projects store
-          if (!db.objectStoreNames.contains("user")) {
-            const userStore = db.createObjectStore("user", {
-              keyPath: "id",
-            });
-            userStore.createIndex("name", "name", { unique: false });
-            userStore.createIndex("updatedAt", "updatedAt", {
-              unique: false,
-            });
+          // Version 1: user store
+          if (oldVersion < 1) {
+            if (!db.objectStoreNames.contains("user")) {
+              const userStore = db.createObjectStore("user", {
+                keyPath: "id",
+              });
+              userStore.createIndex("name", "name", { unique: false });
+              userStore.createIndex("updatedAt", "updatedAt", {
+                unique: false,
+              });
+            }
+          }
+
+          // Version 2: customQuestions store
+          if (oldVersion < 2) {
+            if (!db.objectStoreNames.contains("customQuestions")) {
+              const customQStore = db.createObjectStore("customQuestions", {
+                keyPath: "id",
+              });
+              customQStore.createIndex("technology", "technology", {
+                unique: false,
+              });
+              customQStore.createIndex("createdAt", "createdAt", {
+                unique: false,
+              });
+            }
           }
         } catch (error) {
           console.error("Database upgrade error:", error);
@@ -100,9 +118,12 @@ class IndexedDBService {
       request.onsuccess = () => {
         const result = request.result;
         if (!result) return resolve(null);
-        const { inCorrectSubQuestion = [], inCorrectMultipleChoiceQuestion = [] } = result as Partial<UserData> &
-          Record<string, unknown>;
-        resolve({ inCorrectSubQuestion, inCorrectMultipleChoiceQuestion });
+        const {
+          inCorrectSubQuestion = [],
+          inCorrectMultipleChoiceQuestion = [],
+          inCorrectCustomQuestion = [],
+        } = result as Partial<UserData> & Record<string, unknown>;
+        resolve({ inCorrectSubQuestion, inCorrectMultipleChoiceQuestion, inCorrectCustomQuestion });
       };
     });
   }

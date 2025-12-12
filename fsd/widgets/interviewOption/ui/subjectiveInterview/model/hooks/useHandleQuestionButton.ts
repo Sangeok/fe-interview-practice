@@ -2,11 +2,11 @@
 
 import { useUserStore } from "@/fsd/entities/user/useUserStore";
 import { useSubjectiveSessionStore } from "../store/useSubjectiveSessionStore";
-import { SubjectiveQuestion } from "../type";
+import { AnySubjectiveQuestion } from "../type";
 
 interface UseHandleQuestionButtonProps {
   totalQuestions: number;
-  questionAnswer: SubjectiveQuestion[];
+  questionAnswer: AnySubjectiveQuestion[];
   addEndMessage: () => void;
   setIsFinished: (isFinished: boolean) => void;
   clearMessagesAndShowQuestion: (question: string) => void;

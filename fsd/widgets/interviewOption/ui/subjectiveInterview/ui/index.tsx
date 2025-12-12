@@ -3,13 +3,13 @@
 import { useRef } from "react";
 import ChatMessage from "../../../../../features/chat/chatMessage/ui/ChatMessage";
 import ChatInput from "../../../../../features/chat/chatInput/ui/ChatInput";
-import { SubjectiveQuestion } from "../model/type";
+import { AnySubjectiveQuestion } from "../model/type";
 import { useScrollToBottom } from "../model/hooks/useScrollToBottom";
 import { useSubjectiveInterview } from "../model/hooks/useSubjectiveInterview";
 import EndSubjectQuestion from "./_component/EndSubjectQuestion";
 
 interface SubjectiveInterviewProps {
-  questionAnswer: SubjectiveQuestion[];
+  questionAnswer: AnySubjectiveQuestion[];
   isReviewMode?: boolean;
 }
 

@@ -24,12 +24,14 @@ Requires `NEXT_PUBLIC_GEMINI_API_KEY` environment variable for Gemini AI integra
 ### CI/CD Setup
 
 **GitHub Actions**:
+
 - Workflow: `.github/workflows/ci.yml`
 - Triggers: Push/PR to `main`, `develop` branches
 - Steps: Lint → Test → Build (with Gemini API key)
 - Node.js: 20.x on ubuntu-latest
 
 **Vercel Deployment**:
+
 - Config: `vercel.json`
 - Auto-deploy: `main` (production), `develop` (preview)
 - Framework: Next.js with Turbopack
@@ -181,6 +183,15 @@ This project follows FSD architecture with layers organized in `fsd/` directory:
 - Deterministic shuffle testing with mocked `Math.random`
 
 ### Key Patterns
+
+**Coding Style & Naming Conventions**:
+
+- No Abbreviations in Iterators: strict adherence to descriptive variable names is required.
+- Do not use single-letter variables like `q`, `e`, `d`, or `i` in array methods (`map`, `filter`, etc.).
+- ALWAYS use the full context name.
+- Example:
+  ❌ BAD: `questions.map((q) => q.id)`
+  ✅ GOOD: `questions.map((question) => question.id)`
 
 **Hook Naming**: `use[Feature][Purpose]` (e.g., `useAnswerValidation`, `useInterpretAPI`, `useSubjectiveInterview`)
 
