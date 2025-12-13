@@ -103,15 +103,6 @@ export default function Hero() {
       >
         <TechStackSelector onClose={handleInterviewDialogClose} selectedRouteType={selectedRouteType} />
       </Dialog>
-
-      {/* <Dialog
-        open={customInterviewDialogOpen}
-        onClose={handleCustomInterviewDialogClose}
-        title="커스텀 면접 - 기술 선택"
-        data-testid="custom-interview-dialog"
-      >
-        <CustomInterviewTechSelector onClose={handleCustomInterviewDialogClose} />
-      </Dialog> */}
     </>
   );
 }

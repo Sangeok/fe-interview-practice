@@ -3,9 +3,8 @@ import { useCustomQuestionStore } from "@/fsd/entities/customQuestion/model/useC
 import { Technology } from "@/fsd/entities/customQuestion/model/type";
 
 export const useCreateQuestion = () => {
-  const [technology, setTechnology] = useState<Technology>("javascript");
+  const [technology, setTechnology] = useState<Technology>("JavaScript");
   const [question, setQuestion] = useState("");
-  const [modelAnswer, setModelAnswer] = useState("");
   const [errors, setErrors] = useState<string[]>([]);
 
   const addQuestion = useCustomQuestionStore((state) => state.addQuestion);
@@ -33,27 +32,23 @@ export const useCreateQuestion = () => {
     await addQuestion({
       technology,
       question: question.trim(),
-      modelAnswer: modelAnswer.trim() || undefined,
     });
 
     return true;
   };
 
   const reset = () => {
-    setTechnology("javascript");
+    setTechnology("JavaScript");
     setQuestion("");
-    setModelAnswer("");
     setErrors([]);
   };
 
   return {
     technology,
     question,
-    modelAnswer,
     errors,
     setTechnology,
     setQuestion,
-    setModelAnswer,
     handleSubmit,
     reset,
   };

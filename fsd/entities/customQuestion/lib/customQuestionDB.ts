@@ -1,15 +1,10 @@
 import { indexedDBService } from "@/fsd/shared/lib/indexedDB";
-import {
-  CustomSubjectiveQuestion,
-  Technology,
-} from "../model/type";
+import { CustomSubjectiveQuestion, Technology } from "../model/type";
 
 class CustomQuestionDB {
   private storeName = "customQuestions";
 
-  async saveQuestion(
-    question: CustomSubjectiveQuestion
-  ): Promise<void> {
+  async saveQuestion(question: CustomSubjectiveQuestion): Promise<void> {
     const db = await indexedDBService.openDB();
 
     return new Promise((resolve, reject) => {
@@ -23,9 +18,7 @@ class CustomQuestionDB {
     });
   }
 
-  async loadQuestions(filters?: {
-    technology?: Technology;
-  }): Promise<CustomSubjectiveQuestion[]> {
+  async loadQuestions(filters?: { technology?: Technology }): Promise<CustomSubjectiveQuestion[]> {
     const db = await indexedDBService.openDB();
 
     return new Promise((resolve, reject) => {
@@ -36,9 +29,7 @@ class CustomQuestionDB {
 
       if (filters?.technology) {
         const index = store.index("technology");
-        request = index.getAll(filters.technology) as IDBRequest<
-          CustomSubjectiveQuestion[]
-        >;
+        request = index.getAll(filters.technology) as IDBRequest<CustomSubjectiveQuestion[]>;
       } else {
         request = store.getAll() as IDBRequest<CustomSubjectiveQuestion[]>;
       }
@@ -48,10 +39,7 @@ class CustomQuestionDB {
     });
   }
 
-  async updateQuestion(
-    id: string,
-    updates: Partial<Pick<CustomSubjectiveQuestion, "question" | "modelAnswer">>
-  ): Promise<void> {
+  async updateQuestion(id: string, updates: Partial<Pick<CustomSubjectiveQuestion, "question">>): Promise<void> {
     const db = await indexedDBService.openDB();
 
     return new Promise((resolve, reject) => {

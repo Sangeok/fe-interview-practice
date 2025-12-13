@@ -3,7 +3,7 @@ import { Technology } from "@/fsd/entities/customQuestion/model/type";
 import { useCustomQuestionStore } from "@/fsd/entities/customQuestion/model/useCustomQuestionStore";
 
 export const useQuestionManager = () => {
-  const [selectedTechnology, setSelectedTechnology] = useState<Technology>("javascript");
+  const [selectedTechnology, setSelectedTechnology] = useState<Technology>("JavaScript");
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
 
   const hydrateFromDB = useCustomQuestionStore((state) => state.hydrateFromDB);

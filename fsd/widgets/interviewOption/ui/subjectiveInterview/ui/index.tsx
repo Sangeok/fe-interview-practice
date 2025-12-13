@@ -11,9 +11,14 @@ import EndSubjectQuestion from "./_component/EndSubjectQuestion";
 interface SubjectiveInterviewProps {
   questionAnswer: AnySubjectiveQuestion[];
   isReviewMode?: boolean;
+  isCustomInterview?: boolean;
 }
 
-export default function SubjectiveInterview({ questionAnswer, isReviewMode = false }: SubjectiveInterviewProps) {
+export default function SubjectiveInterview({
+  questionAnswer,
+  isCustomInterview = false,
+  isReviewMode = false,
+}: SubjectiveInterviewProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const {
@@ -27,7 +32,7 @@ export default function SubjectiveInterview({ questionAnswer, isReviewMode = fal
     score,
     totalQuestions,
     isFinished,
-  } = useSubjectiveInterview(questionAnswer, isReviewMode);
+  } = useSubjectiveInterview(questionAnswer, isCustomInterview, isReviewMode);
 
   useScrollToBottom(messages, messagesEndRef);
 

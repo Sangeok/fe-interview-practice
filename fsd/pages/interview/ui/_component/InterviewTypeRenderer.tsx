@@ -3,6 +3,7 @@ import SubjectiveInterview from "@/fsd/widgets/interviewOption/ui/subjectiveInte
 import MultipleChoiceInterview from "@/fsd/widgets/interviewOption/ui/multipleChoiceInterview/ui";
 import { SubjectiveQuestion } from "@/fsd/widgets/interviewOption/ui/subjectiveInterview/model/type";
 import { MultipleChoiceQuestion } from "@/fsd/widgets/interviewOption/ui/multipleChoiceInterview/model/type";
+import { CustomQuestionType } from "@/fsd/shared/model/type";
 
 interface InterviewTypeRendererProps {
   selectedOptions: InterviewOptionsValue;
@@ -15,12 +16,9 @@ export default function InterviewwTypeRenderer({
   shuffledQuestions,
   isReviewMode = false,
 }: InterviewTypeRendererProps) {
-  if (selectedOptions === "Subjective") {
+  if (selectedOptions === "Subjective" || selectedOptions === "Custom Questions") {
     return (
-      <SubjectiveInterview
-        questionAnswer={shuffledQuestions as SubjectiveQuestion[]}
-        isReviewMode={isReviewMode}
-      />
+      <SubjectiveInterview questionAnswer={shuffledQuestions as SubjectiveQuestion[]} isReviewMode={isReviewMode} />
     );
   }
 

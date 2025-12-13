@@ -16,9 +16,9 @@ export default function CustomQuestionManager() {
   } = useQuestionManager();
 
   const technologies: { value: Technology; label: string }[] = [
-    { value: "javascript", label: "JavaScript" },
-    { value: "react", label: "React" },
-    { value: "typescript", label: "TypeScript" },
+    { value: "JavaScript", label: "JavaScript" },
+    { value: "React", label: "React" },
+    { value: "TypeScript", label: "TypeScript" },
   ];
 
   return (

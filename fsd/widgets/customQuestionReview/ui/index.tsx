@@ -65,7 +65,6 @@ export default function CustomQuestionReview({ sessionQuestions }: CustomQuestio
         body: JSON.stringify({
           question: currentQuestion.question,
           userAnswer: userAnswer,
-          modelAnswer: currentQuestion.modelAnswer || undefined,
         }),
       });
 
