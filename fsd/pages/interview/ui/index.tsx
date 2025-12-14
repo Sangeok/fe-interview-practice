@@ -3,7 +3,7 @@
 import { useSelectTechStore } from "@/fsd/shared/model/useSelectTechStore";
 import type { TechType } from "@/fsd/shared/model/type";
 import { InterviewOptionsValue } from "@/fsd/pages/interview/model/type";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 import { useParams } from "next/navigation";
 import { MultipleChoiceQuestion } from "@/fsd/widgets/interviewOption/ui/multipleChoiceInterview/model/type";
 import { SubjectiveQuestion } from "@/fsd/widgets/interviewOption/ui/subjectiveInterview/model/type";
@@ -60,8 +60,9 @@ export default function InterviewPage() {
   const isDialogClosed = !openInterviewOptionsDialog;
   const canShowInterview = isInterviewSelected && isDialogClosed;
 
-  const question_answer =
-    canShowInterview && isValidInterviewOption(selectedOptions) ? getQuestionAnswer(tech, selectedOptions) : [];
+  const question_answer = useMemo(() => {
+    return canShowInterview && isValidInterviewOption(selectedOptions) ? getQuestionAnswer(tech, selectedOptions) : [];
+  }, [tech, selectedOptions, canShowInterview]);
 
   // 새로고침/직접 진입 시 라우트 파라미터로 tech를 복원
   useEffect(() => {

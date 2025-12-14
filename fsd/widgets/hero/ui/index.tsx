@@ -1,8 +1,7 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import TechStackSelector from "./_component/TechStackSelector";
-import CustomInterviewTechSelector from "./_component/CustomInterviewTechSelector";
 import Button from "fsd/shared/ui/atoms/button/ui/Button";
 import Dialog from "fsd/shared/ui/atoms/dialog/ui";
 import { useUserStore } from "@/fsd/entities/user/useUserStore";
@@ -13,7 +12,7 @@ import { useSelectTechStore } from "@/fsd/shared/model/useSelectTechStore";
 export default function Hero() {
   const router = useRouter();
   const [interviewDialogOpen, setInterviewDialogOpen] = useState(false);
-  const selectedInterview = useRef<"basic" | "custom">("basic");
+  const [interviewType, setInterviewType] = useState<"basic" | "custom">("basic");
 
   const { setTech } = useSelectTechStore();
 
@@ -37,38 +36,27 @@ export default function Hero() {
     router.push("/custom-questions");
   };
 
-  const handleRouteToInterview = (selectedTitle: TechType) => {
+  const validateTechSelection = (selectedTitle: TechType | ""): selectedTitle is TechType => {
     if (!selectedTitle) {
       alert("기술 스택을 선택하세요.");
-      return;
+      return false;
     }
+    return true;
+  };
+
+  const handleRouteToInterview = (selectedTitle: TechType | "") => {
+    if (!validateTechSelection(selectedTitle)) return;
+
     setTech(selectedTitle);
-    router.push(`/interviews/${selectedTitle}`);
+    const basePath = interviewType === "basic" ? "interviews" : "custom-interviews";
+    router.push(`/${basePath}/${selectedTitle}`);
     handleInterviewDialogClose();
   };
 
-  const handleRouteToCustomInterview = (selectedTitle: TechType) => {
-    if (!selectedTitle) {
-      alert("기술 스택을 선택하세요.");
-      return;
-    }
-    setTech(selectedTitle);
-    router.push(`/custom-interviews/${selectedTitle}`);
-    handleInterviewDialogClose();
-  };
-
-  const handleSelectInterview = () => {
-    selectedInterview.current = "basic";
+  const handleSelectInterview = (type: "basic" | "custom") => {
+    setInterviewType(type);
     handleInterviewDialogOpen();
   };
-
-  const handleSelectCustomInterview = () => {
-    selectedInterview.current = "custom";
-    handleInterviewDialogOpen();
-  };
-
-  const selectedRouteType =
-    selectedInterview.current === "basic" ? handleRouteToInterview : handleRouteToCustomInterview;
 
   return (
     <>
@@ -78,7 +66,7 @@ export default function Hero() {
       </div>
 
       <div className="flex gap-x-4 items-center animate-fade-up-2">
-        <Button variant="light" onClick={handleSelectInterview} data-testid="try-now-button">
+        <Button variant="light" onClick={() => handleSelectInterview("basic")} data-testid="try-now-button">
           Try now
         </Button>
 
@@ -86,7 +74,7 @@ export default function Hero() {
           Review
         </Button>
 
-        <Button variant="light" onClick={handleSelectCustomInterview} data-testid="custom-interview-button">
+        <Button variant="light" onClick={() => handleSelectInterview("custom")} data-testid="custom-interview-button">
           커스텀 면접
         </Button>
 
@@ -101,7 +89,7 @@ export default function Hero() {
         title="Select Tech Stack"
         data-testid="tech-selector-dialog"
       >
-        <TechStackSelector onClose={handleInterviewDialogClose} selectedRouteType={selectedRouteType} />
+        <TechStackSelector onClose={handleInterviewDialogClose} selectedRouteType={handleRouteToInterview} />
       </Dialog>
     </>
   );
