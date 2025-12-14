@@ -36,15 +36,7 @@ const CustomInterviewTechSelector = ({ onClose }: CustomInterviewTechSelectorPro
       return;
     }
 
-    // Map technology names
-    const techMap: Record<string, "javascript" | "react" | "typescript"> = {
-      JavaScript: "javascript",
-      React: "react",
-      TypeScript: "typescript",
-    };
-
-    const mappedTech = techMap[selectedTitle as keyof typeof techMap];
-    const hasQuestions = questions.some((question) => question.technology === mappedTech);
+    const hasQuestions = questions.some((question) => question.technology === selectedTitle);
 
     if (!hasQuestions) {
       setError(`${selectedTitle} 질문이 없습니다. 먼저 질문을 추가하세요.`);
