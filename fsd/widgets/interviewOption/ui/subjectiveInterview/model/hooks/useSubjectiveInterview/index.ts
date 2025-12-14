@@ -1,11 +1,7 @@
-import { useSelectTechStore } from "@/fsd/shared/model/useSelectTechStore";
-import { SubjectiveQuestion } from "../../type";
+import { AnySubjectiveQuestion } from "../../type";
 import { Message } from "@/fsd/features/chat/chatMessage/model/type";
-import { useFeedbackAPI } from "./internal/useFeedbackAPI";
 import { useMessageState } from "./internal/useMessageState";
-import { useAnswerEvaluation } from "./internal/useAnswerEvaluation";
 import { useEffect, useState } from "react";
-import { useUserStore } from "@/fsd/entities/user/useUserStore";
 import { useSubjectiveSessionStore } from "../../store/useSubjectiveSessionStore";
 import { useSendMessage } from "../useSendMessage";
 import { useHandleQuestionButton } from "../useHandleQuestionButton";
@@ -25,7 +21,8 @@ interface UseSubjectiveInterviewReturn {
 }
 
 export const useSubjectiveInterview = (
-  questionAnswer: SubjectiveQuestion[],
+  questionAnswer: AnySubjectiveQuestion[],
+  isCustomInterview = false,
   isReviewMode = false
 ): UseSubjectiveInterviewReturn => {
   // 모드별 세션 관리
@@ -68,6 +65,7 @@ export const useSubjectiveInterview = (
     removeLoadingMessage,
     addFeedback_ActionButtonMessage,
     addScore,
+    isCustomInterview,
   });
 
   const { handleNextQuestion, handleEndInterview, handleAddReview } = useHandleQuestionButton({
@@ -78,30 +76,9 @@ export const useSubjectiveInterview = (
     clearMessagesAndShowQuestion,
     advance,
     questionIndex,
+    isCustomInterview,
+    messages,
   });
-
-  // const handleNextQuestion = () => {
-  //   const nextIndex = questionIndex + 1;
-  //   if (nextIndex < totalQuestions) {
-  //     advance(false);
-  //     const nextQuestion = questionAnswer[nextIndex];
-  //     clearMessagesAndShowQuestion(nextQuestion.question);
-  //   } else {
-  //     addEndMessage();
-  //     setIsFinished(true);
-  //   }
-  // };
-
-  // const handleEndInterview = () => {
-  //   addEndMessage();
-  //   setIsFinished(true);
-  // };
-
-  // const handleAddReview = async () => {
-  //   addInCorrectSubQuestion(questionAnswer[questionIndex]);
-  //   await persistUserToDB();
-  //   handleNextQuestion();
-  // };
 
   return {
     messages,

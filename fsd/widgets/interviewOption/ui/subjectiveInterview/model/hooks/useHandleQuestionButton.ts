@@ -1,17 +1,20 @@
 "use client";
 
 import { useUserStore } from "@/fsd/entities/user/useUserStore";
-import { useSubjectiveSessionStore } from "../store/useSubjectiveSessionStore";
-import { SubjectiveQuestion } from "../type";
+import { AnySubjectiveQuestion } from "../type";
+import { Message } from "@/fsd/features/chat/chatMessage/model/type";
+import { FeedbackData, DeepDiveFeedbackData } from "@/fsd/shared/model/type";
 
 interface UseHandleQuestionButtonProps {
   totalQuestions: number;
-  questionAnswer: SubjectiveQuestion[];
+  questionAnswer: AnySubjectiveQuestion[];
   addEndMessage: () => void;
   setIsFinished: (isFinished: boolean) => void;
   clearMessagesAndShowQuestion: (question: string) => void;
   advance: (isCorrect: boolean) => void;
   questionIndex: number;
+  isCustomInterview?: boolean;
+  messages: Message[];
 }
 
 export const useHandleQuestionButton = ({
@@ -22,9 +25,11 @@ export const useHandleQuestionButton = ({
   clearMessagesAndShowQuestion,
   advance,
   questionIndex,
+  isCustomInterview = false,
 }: UseHandleQuestionButtonProps) => {
   const persistUserToDB = useUserStore((s) => s.persistUserToDB);
   const addInCorrectSubQuestion = useUserStore((s) => s.addInCorrectSubQuestion);
+  const addInCorrectCustomQuestion = useUserStore((s) => s.addInCorrectCustomQuestion);
 
   const handleNextQuestion = () => {
     const nextIndex = questionIndex + 1;
@@ -44,7 +49,11 @@ export const useHandleQuestionButton = ({
   };
 
   const handleAddReview = async () => {
-    addInCorrectSubQuestion(questionAnswer[questionIndex]);
+    if (isCustomInterview) {
+      addInCorrectCustomQuestion(questionAnswer[questionIndex]);
+    } else {
+      addInCorrectSubQuestion(questionAnswer[questionIndex]);
+    }
     await persistUserToDB();
     handleNextQuestion();
   };

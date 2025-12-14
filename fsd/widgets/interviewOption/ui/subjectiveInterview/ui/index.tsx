@@ -3,17 +3,22 @@
 import { useRef } from "react";
 import ChatMessage from "../../../../../features/chat/chatMessage/ui/ChatMessage";
 import ChatInput from "../../../../../features/chat/chatInput/ui/ChatInput";
-import { SubjectiveQuestion } from "../model/type";
+import { AnySubjectiveQuestion } from "../model/type";
 import { useScrollToBottom } from "../model/hooks/useScrollToBottom";
 import { useSubjectiveInterview } from "../model/hooks/useSubjectiveInterview";
 import EndSubjectQuestion from "./_component/EndSubjectQuestion";
 
 interface SubjectiveInterviewProps {
-  questionAnswer: SubjectiveQuestion[];
+  questionAnswer: AnySubjectiveQuestion[];
   isReviewMode?: boolean;
+  isCustomInterview?: boolean;
 }
 
-export default function SubjectiveInterview({ questionAnswer, isReviewMode = false }: SubjectiveInterviewProps) {
+export default function SubjectiveInterview({
+  questionAnswer,
+  isCustomInterview = false,
+  isReviewMode = false,
+}: SubjectiveInterviewProps) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const {
@@ -27,7 +32,7 @@ export default function SubjectiveInterview({ questionAnswer, isReviewMode = fal
     score,
     totalQuestions,
     isFinished,
-  } = useSubjectiveInterview(questionAnswer, isReviewMode);
+  } = useSubjectiveInterview(questionAnswer, isCustomInterview, isReviewMode);
 
   useScrollToBottom(messages, messagesEndRef);
 

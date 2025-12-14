@@ -3,17 +3,18 @@
 import { useSelectTechStore } from "@/fsd/shared/model/useSelectTechStore";
 import { useAnswerEvaluation } from "./useSubjectiveInterview/internal/useAnswerEvaluation";
 import { useFeedbackAPI } from "./useSubjectiveInterview/internal/useFeedbackAPI";
-import { SubjectiveQuestion } from "../type";
+import { AnySubjectiveQuestion } from "../type";
 import { useUserStore } from "@/fsd/entities/user/useUserStore";
 
 interface UseSendMessageProps {
-  questionAnswer: SubjectiveQuestion[];
+  questionAnswer: AnySubjectiveQuestion[];
   questionIndex: number;
   addUserMessage: (content: string) => void;
   addLoadingMessage: () => void;
   removeLoadingMessage: () => void;
   addFeedback_ActionButtonMessage: (feedback: string) => void;
   addScore: (delta: number) => void;
+  isCustomInterview?: boolean;
 }
 
 export const useSendMessage = ({
@@ -24,13 +25,16 @@ export const useSendMessage = ({
   removeLoadingMessage,
   addFeedback_ActionButtonMessage,
   addScore,
+  isCustomInterview = false,
 }: UseSendMessageProps) => {
   const { generateFeedback, isLoading } = useFeedbackAPI();
   const { evaluateAnswer } = useAnswerEvaluation();
 
-  const removeInCorrectSubQuestion = useUserStore((s) => s.removeInCorrectSubQuestion);
   const persistUserToDB = useUserStore((s) => s.persistUserToDB);
   const addInCorrectSubQuestion = useUserStore((s) => s.addInCorrectSubQuestion);
+  const addInCorrectCustomQuestion = useUserStore((s) => s.addInCorrectCustomQuestion);
+  const removeInCorrectCustomQuestion = useUserStore((s) => s.removeInCorrectCustomQuestion);
+  const removeInCorrectSubQuestion = useUserStore((s) => s.removeInCorrectSubQuestion);
 
   const tech = useSelectTechStore((state) => state.tech);
 
@@ -48,23 +52,34 @@ export const useSendMessage = ({
     // Evaluate answer using dedicated hook
     const evaluation = evaluateAnswer(feedbackResult);
 
-    // Handle incorrect answers
-    if (evaluation.shouldAddToIncorrect) {
-      addInCorrectSubQuestion(questionAnswer[questionIndex]);
-    }
+    if (isCustomInterview) {
+      // Handle custom interview questions
+      if (evaluation.shouldAddToIncorrect) {
+        addInCorrectCustomQuestion(questionAnswer[questionIndex]);
+      }
 
-    // Handle correct answers
-    if (evaluation.shouldRemoveFromIncorrect) {
-      addScore(1);
-      removeInCorrectSubQuestion(questionAnswer[questionIndex].id);
+      if (evaluation.shouldRemoveFromIncorrect) {
+        addScore(1);
+        removeInCorrectCustomQuestion(questionAnswer[questionIndex].id as string);
+      }
+    } else {
+      // Handle standard interview questions
+      if (evaluation.shouldAddToIncorrect) {
+        addInCorrectSubQuestion(questionAnswer[questionIndex]);
+      }
+
+      if (evaluation.shouldRemoveFromIncorrect) {
+        addScore(1);
+        removeInCorrectSubQuestion(questionAnswer[questionIndex].id);
+        removeInCorrectCustomQuestion(questionAnswer[questionIndex].id as string);
+      }
     }
 
     // Persist user state regardless of answer correctness
     await persistUserToDB();
     removeLoadingMessage();
 
-    // Note: feedbackResult.data can be either FeedbackResponse or string (error message)
-    // The type system doesn't capture this, but the runtime handles both cases correctly
+    // Convert feedback to JSON string if it's an object, otherwise use as is
     addFeedback_ActionButtonMessage(feedbackResult.data as string);
   };
 

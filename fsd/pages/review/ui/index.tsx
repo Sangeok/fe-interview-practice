@@ -14,13 +14,21 @@ export default function ReviewPage() {
 
   const inCorrectSubQuestion = useUserStore((s) => s.user.inCorrectSubQuestion);
   const inCorrectMultipleChoiceQuestion = useUserStore((s) => s.user.inCorrectMultipleChoiceQuestion);
+  const inCorrectCustomQuestion = useUserStore((s) => s.user.inCorrectCustomQuestion);
+  const mappedInCorrectCustomQuestion = inCorrectCustomQuestion.map((question) => ({
+    id: question.id,
+    question: question.question,
+  }));
 
   const sessionQuestions = useReviewSession(
     selectedOptions,
     openInterviewOptionsDialog,
     inCorrectMultipleChoiceQuestion,
-    inCorrectSubQuestion
+    inCorrectSubQuestion,
+    mappedInCorrectCustomQuestion
   );
+
+  console.log("sessionQuestions", sessionQuestions);
 
   const isInterviewSelected = selectedOptions !== "";
   const isDialogClosed = !openInterviewOptionsDialog;

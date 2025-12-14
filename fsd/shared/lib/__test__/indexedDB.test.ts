@@ -47,6 +47,7 @@ describe("indexedDBService", () => {
           ],
         },
       ],
+      inCorrectCustomQuestion: [],
     };
 
     await indexedDBService.saveUserData(sample);
@@ -69,6 +70,7 @@ describe("indexedDBService", () => {
     expect(loaded).toEqual({
       inCorrectSubQuestion: [],
       inCorrectMultipleChoiceQuestion: [],
+      inCorrectCustomQuestion: [],
     });
   });
 
@@ -76,17 +78,20 @@ describe("indexedDBService", () => {
     await indexedDBService.saveUserData({
       inCorrectSubQuestion: [{ id: 1, question: "S1" }],
       inCorrectMultipleChoiceQuestion: [],
+      inCorrectCustomQuestion: [],
     });
 
     await indexedDBService.saveUserData({
       inCorrectSubQuestion: [],
       inCorrectMultipleChoiceQuestion: [{ id: 2, question: "M2", answerString: "B", options: [] }],
+      inCorrectCustomQuestion: [],
     });
 
     const loaded = await indexedDBService.loadUserData();
     expect(loaded).toEqual({
       inCorrectSubQuestion: [],
       inCorrectMultipleChoiceQuestion: [{ id: 2, question: "M2", answerString: "B", options: [] }],
+      inCorrectCustomQuestion: [],
     });
   });
 

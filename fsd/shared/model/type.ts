@@ -66,6 +66,11 @@ export interface DeepDiveFeedbackData {
   };
 }
 
+export interface CustomQuestionType {
+  id: string | number;
+  question: string;
+}
+
 export type FeedbackResponse = FeedbackData | DeepDiveFeedbackData;
 
 export type TechType = "JavaScript" | "NextJs" | "React" | "TypeScript" | "";
