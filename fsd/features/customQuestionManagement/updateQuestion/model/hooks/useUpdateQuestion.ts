@@ -2,16 +2,16 @@ import { useState, useEffect } from "react";
 import { useCustomQuestionStore } from "@/fsd/entities/customQuestion/model/useCustomQuestionStore";
 import { CustomSubjectiveQuestion } from "@/fsd/entities/customQuestion/model/type";
 
+const QUESTION_MAX_LENGTH = 1000;
+
 export const useUpdateQuestion = (initialQuestion: CustomSubjectiveQuestion) => {
   const [question, setQuestion] = useState(initialQuestion.question);
-  const [modelAnswer, setModelAnswer] = useState(initialQuestion.modelAnswer || "");
   const [errors, setErrors] = useState<string[]>([]);
 
   const updateQuestion = useCustomQuestionStore((state) => state.updateQuestion);
 
   useEffect(() => {
     setQuestion(initialQuestion.question);
-    setModelAnswer(initialQuestion.modelAnswer || "");
   }, [initialQuestion]);
 
   const validate = (): boolean => {
@@ -21,8 +21,8 @@ export const useUpdateQuestion = (initialQuestion: CustomSubjectiveQuestion) => 
       validationErrors.push("질문을 입력하세요");
     }
 
-    if (question.length > 1000) {
-      validationErrors.push("질문은 1000자 이하여야 합니다");
+    if (question.length > QUESTION_MAX_LENGTH) {
+      validationErrors.push(`질문은 ${QUESTION_MAX_LENGTH}자 이하여야 합니다`);
     }
 
     setErrors(validationErrors);
@@ -36,7 +36,6 @@ export const useUpdateQuestion = (initialQuestion: CustomSubjectiveQuestion) => 
 
     await updateQuestion(initialQuestion.id, {
       question: question.trim(),
-      modelAnswer: modelAnswer.trim() || undefined,
     });
 
     return true;
@@ -44,16 +43,13 @@ export const useUpdateQuestion = (initialQuestion: CustomSubjectiveQuestion) => 
 
   const reset = () => {
     setQuestion(initialQuestion.question);
-    setModelAnswer(initialQuestion.modelAnswer || "");
     setErrors([]);
   };
 
   return {
     question,
-    modelAnswer,
     errors,
     setQuestion,
-    setModelAnswer,
     handleSubmit,
     reset,
   };
