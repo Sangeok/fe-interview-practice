@@ -38,10 +38,6 @@ export default function ReviewPage() {
     <div className="p-8 h-screen">
       <header className="text-2xl font-bold">Review</header>
 
-      {/* {canShowInterview && selectedOptions === "Custom Questions" && customSessionQuestions && (
-        <CustomQuestionReview sessionQuestions={customSessionQuestions} />
-      )} */}
-
       {canShowInterview && sessionQuestions && (
         <InterviewTypeRenderer
           selectedOptions={selectedOptions as InterviewOptionsValue}
