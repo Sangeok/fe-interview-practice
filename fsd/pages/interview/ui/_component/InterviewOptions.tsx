@@ -9,11 +9,7 @@ interface InterviewOptionsProps {
   onClose: () => void;
 }
 
-export default function InterviewOptions({
-  selectedOptions,
-  setSelectedOptions,
-  onClose,
-}: InterviewOptionsProps) {
+export default function InterviewOptions({ selectedOptions, setSelectedOptions, onClose }: InterviewOptionsProps) {
   const handleSelectInterviewOption = () => {
     if (selectedOptions === "") {
       alert("Please select an option");

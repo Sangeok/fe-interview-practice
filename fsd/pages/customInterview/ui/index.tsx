@@ -1,14 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useSelectTechStore } from "@/fsd/shared/model/useSelectTechStore";
 import { useCustomQuestionStore } from "@/fsd/entities/customQuestion/model/useCustomQuestionStore";
 import { useSubjectiveSessionStore } from "@/fsd/widgets/interviewOption/ui/subjectiveInterview/model/store/useSubjectiveSessionStore";
 import SubjectiveInterview from "@/fsd/widgets/interviewOption/ui/subjectiveInterview/ui";
-import { CustomSubjectiveQuestion } from "@/fsd/entities/customQuestion/model/type";
+import { CustomSubjectiveQuestion, Technology } from "@/fsd/entities/customQuestion/model/type";
+import { useParams } from "next/navigation";
 
 export default function CustomInterviewPage() {
-  const tech = useSelectTechStore((state) => state.tech);
+  const params = useParams();
+  const tech = (decodeURIComponent(params.title as string) as Technology) || "";
   const questions = useCustomQuestionStore((state) => state.questions);
   const hydrateFromDB = useCustomQuestionStore((state) => state.hydrateFromDB);
   const initSession = useSubjectiveSessionStore((state) => state.initSession);
@@ -26,16 +27,8 @@ export default function CustomInterviewPage() {
 
   useEffect(() => {
     if (!isLoading) {
-      // Map technology names
-      const techMap: Record<string, "javascript" | "react" | "typescript"> = {
-        JavaScript: "javascript",
-        React: "react",
-        TypeScript: "typescript",
-      };
-
-      const mappedTech = techMap[tech as keyof typeof techMap];
-      if (mappedTech) {
-        const filtered = questions.filter((question) => question.technology === mappedTech);
+      if (tech) {
+        const filtered = questions.filter((question) => question.technology === tech);
         setFilteredQuestions(filtered);
       } else {
         setFilteredQuestions([]);
@@ -70,7 +63,7 @@ export default function CustomInterviewPage() {
 
   return (
     <div className="h-screen">
-      <SubjectiveInterview questionAnswer={filteredQuestions} />
+      <SubjectiveInterview questionAnswer={filteredQuestions} isCustomInterview={true} />
     </div>
   );
 }

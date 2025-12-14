@@ -1,8 +1,9 @@
 import { create } from "zustand";
-import { UserData, InCorrectCustomQuestion } from "./types";
+import { UserData } from "./types";
 import { indexedDBService } from "@/fsd/shared/lib/indexedDB";
 import { SubjectiveQuestion } from "@/fsd/widgets/interviewOption/ui/subjectiveInterview/model/type";
 import { MultipleChoiceQuestion } from "@/fsd/widgets/interviewOption/ui/multipleChoiceInterview/model/type";
+import { CustomQuestionType } from "@/fsd/shared/model/type";
 
 export const initialUserData: UserData = {
   inCorrectSubQuestion: [],
@@ -23,7 +24,7 @@ interface UserStore {
   addInCorrectMultipleChoiceQuestion: (question: MultipleChoiceQuestion) => void;
   removeInCorrectMultipleChoiceQuestion: (questionId: number) => void;
 
-  addInCorrectCustomQuestion: (data: Omit<InCorrectCustomQuestion, 'attemptedAt'>) => void;
+  addInCorrectCustomQuestion: (data: CustomQuestionType) => void;
   removeInCorrectCustomQuestion: (customQuestionId: string) => void;
 
   hydrateUserFromDB: () => Promise<void>;
@@ -74,18 +75,12 @@ export const useUserStore = create<UserStore>((set, get) => ({
       },
     })),
 
-  addInCorrectCustomQuestion: (data: Omit<InCorrectCustomQuestion, 'attemptedAt'>) =>
+  addInCorrectCustomQuestion: (question: CustomQuestionType) =>
     set((state) => {
-      const exists = state.user.inCorrectCustomQuestion.some((item) => item.customQuestionId === data.customQuestionId);
+      const exists = state.user.inCorrectCustomQuestion.some((item) => item.id === question.id);
       if (exists) return state;
       return {
-        user: {
-          ...state.user,
-          inCorrectCustomQuestion: [
-            ...state.user.inCorrectCustomQuestion,
-            { ...data, attemptedAt: Date.now() },
-          ],
-        },
+        user: { ...state.user, inCorrectCustomQuestion: [...state.user.inCorrectCustomQuestion, question] },
       };
     }),
 
@@ -93,9 +88,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
     set((state) => ({
       user: {
         ...state.user,
-        inCorrectCustomQuestion: state.user.inCorrectCustomQuestion.filter(
-          (item) => item.customQuestionId !== customQuestionId
-        ),
+        inCorrectCustomQuestion: state.user.inCorrectCustomQuestion.filter((item) => item.id !== customQuestionId),
       },
     })),
 

@@ -1,10 +1,9 @@
-export type Technology = 'javascript' | 'react' | 'typescript';
+export type Technology = "JavaScript" | "React" | "TypeScript";
 
 export interface CustomSubjectiveQuestion {
   id: string; // UUID
   technology: Technology;
   question: string;
-  modelAnswer?: string; // optional 모범답안
   createdAt: number;
   updatedAt: number;
 }

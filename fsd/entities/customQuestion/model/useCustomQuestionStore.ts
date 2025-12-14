@@ -8,10 +8,7 @@ interface CustomQuestionStore {
   // CRUD
   addQuestion: (data: Omit<CustomSubjectiveQuestion, "id" | "createdAt" | "updatedAt">) => Promise<void>;
   removeQuestion: (id: string) => Promise<void>;
-  updateQuestion: (
-    id: string,
-    updates: Partial<Pick<CustomSubjectiveQuestion, "question" | "modelAnswer">>
-  ) => Promise<void>;
+  updateQuestion: (id: string, updates: Partial<Pick<CustomSubjectiveQuestion, "question">>) => Promise<void>;
 
   // Query
   getQuestionsByTech: (tech: Technology) => CustomSubjectiveQuestion[];

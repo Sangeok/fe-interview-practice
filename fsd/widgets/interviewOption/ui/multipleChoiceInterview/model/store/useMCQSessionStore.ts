@@ -29,15 +29,18 @@ export const useMCQSessionStore = create<MCQSessionState>()(
       score: 0,
 
       initSession: ({ sessionId, rawQuestions }) => {
-        const s = get();
-        if (s.sessionId === sessionId && s.shuffledQuestions.length > 0) return;
+        const sessionState = get();
+
+        // 세션이 이미 존재하고 질문이 있는 경우 Return
+        if (sessionState.sessionId === sessionId && sessionState.shuffledQuestions.length > 0) return;
+
         // 빈 입력일 경우에는 동일 상태로의 반복 set을 방지
         if (!Array.isArray(rawQuestions) || rawQuestions.length === 0) {
           if (
-            s.sessionId === sessionId &&
-            s.shuffledQuestions.length === 0 &&
-            s.currentIndex === 0 &&
-            s.score === 0
+            sessionState.sessionId === sessionId &&
+            sessionState.shuffledQuestions.length === 0 &&
+            sessionState.currentIndex === 0 &&
+            sessionState.score === 0
           ) {
             return;
           }
@@ -82,5 +85,3 @@ export const useMCQSessionStore = create<MCQSessionState>()(
     }
   )
 );
-
-

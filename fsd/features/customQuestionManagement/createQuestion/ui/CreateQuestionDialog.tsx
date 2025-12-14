@@ -11,18 +11,11 @@ interface CreateQuestionDialogProps {
   onClose: () => void;
 }
 
+const TECHNOLOGIES: readonly Technology[] = ["JavaScript", "React", "TypeScript"];
+const QUESTION_MAX_LENGTH = 1000;
+
 export default function CreateQuestionDialog({ open, onClose }: CreateQuestionDialogProps) {
-  const {
-    technology,
-    question,
-    modelAnswer,
-    errors,
-    setTechnology,
-    setQuestion,
-    setModelAnswer,
-    handleSubmit,
-    reset,
-  } = useCreateQuestion();
+  const { technology, question, errors, setTechnology, setQuestion, handleSubmit, reset } = useCreateQuestion();
 
   const handleCreate = async () => {
     const success = await handleSubmit();
@@ -44,27 +37,16 @@ export default function CreateQuestionDialog({ open, onClose }: CreateQuestionDi
         <div className="flex flex-col gap-2">
           <label className="text-white text-sm font-semibold">기술 스택</label>
           <div className="flex gap-4">
-            <RadioInput
-              name="technology"
-              value="javascript"
-              label="JavaScript"
-              checked={technology === "javascript"}
-              onChange={() => setTechnology("javascript" as Technology)}
-            />
-            <RadioInput
-              name="technology"
-              value="react"
-              label="React"
-              checked={technology === "react"}
-              onChange={() => setTechnology("react" as Technology)}
-            />
-            <RadioInput
-              name="technology"
-              value="typescript"
-              label="TypeScript"
-              checked={technology === "typescript"}
-              onChange={() => setTechnology("typescript" as Technology)}
-            />
+            {TECHNOLOGIES.map((tech) => (
+              <RadioInput
+                key={tech}
+                name="technology"
+                value={tech.toLowerCase()}
+                label={tech}
+                checked={technology === tech}
+                onChange={() => setTechnology(tech)}
+              />
+            ))}
           </div>
         </div>
 
@@ -79,32 +61,16 @@ export default function CreateQuestionDialog({ open, onClose }: CreateQuestionDi
             onChange={(e) => setQuestion(e.target.value)}
             placeholder="질문을 입력하세요"
             className="w-full min-h-32 p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
-            maxLength={1000}
+            maxLength={QUESTION_MAX_LENGTH}
           />
-          <div className="text-zinc-500 text-xs text-right">
-            {question.length} / 1000
-          </div>
-        </div>
-
-        {/* Model Answer Input (Optional) */}
-        <div className="flex flex-col gap-2">
-          <label htmlFor="modelAnswer" className="text-white text-sm font-semibold">
-            모범답안 (선택)
-          </label>
-          <textarea
-            id="modelAnswer"
-            value={modelAnswer}
-            onChange={(e) => setModelAnswer(e.target.value)}
-            placeholder="모범답안을 입력하세요 (선택사항)"
-            className="w-full min-h-24 p-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+          <div className="text-zinc-500 text-xs text-right">{question.length} / {QUESTION_MAX_LENGTH}</div>
         </div>
 
         {/* Validation Errors */}
         {errors.length > 0 && (
           <div className="flex flex-col gap-1">
             {errors.map((error, index) => (
-              <p key={index} className="text-red-500 text-sm">
+              <p key={`${error}-${index}`} className="text-red-500 text-sm">
                 {error}
               </p>
             ))}

@@ -36,18 +36,8 @@ export default function QuestionCard({ question }: QuestionCardProps) {
           <div className="flex-1">
             <p className="text-white text-sm font-medium line-clamp-3">{question.question}</p>
           </div>
-          <span className="px-2 py-1 bg-zinc-700 text-zinc-300 text-xs rounded shrink-0">
-            {question.technology}
-          </span>
+          <span className="px-2 py-1 bg-zinc-700 text-zinc-300 text-xs rounded shrink-0">{question.technology}</span>
         </div>
-
-        {/* Model Answer Preview */}
-        {question.modelAnswer && (
-          <div className="text-zinc-400 text-xs">
-            <span className="font-semibold">모범답안:</span>{" "}
-            <span className="line-clamp-2">{question.modelAnswer}</span>
-          </div>
-        )}
 
         {/* Footer */}
         <div className="flex justify-between items-center pt-2 border-t border-zinc-700">
@@ -63,11 +53,7 @@ export default function QuestionCard({ question }: QuestionCardProps) {
         </div>
       </div>
 
-      <UpdateQuestionDialog
-        open={updateDialogOpen}
-        onClose={() => setUpdateDialogOpen(false)}
-        question={question}
-      />
+      <UpdateQuestionDialog open={updateDialogOpen} onClose={() => setUpdateDialogOpen(false)} question={question} />
     </>
   );
 }

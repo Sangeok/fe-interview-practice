@@ -3,7 +3,7 @@
 import { useSelectTechStore } from "@/fsd/shared/model/useSelectTechStore";
 import type { TechType } from "@/fsd/shared/model/type";
 import { InterviewOptionsValue } from "@/fsd/pages/interview/model/type";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 import { useParams } from "next/navigation";
 import { MultipleChoiceQuestion } from "@/fsd/widgets/interviewOption/ui/multipleChoiceInterview/model/type";
 import { SubjectiveQuestion } from "@/fsd/widgets/interviewOption/ui/subjectiveInterview/model/type";
@@ -11,10 +11,44 @@ import Dialog from "@/fsd/shared/ui/atoms/dialog/ui";
 import InterviewOptions from "./_component/InterviewOptions";
 import InterviewTypeRenderer from "./_component/InterviewTypeRenderer";
 import { getQuestionAnswer } from "../lib/getQuestionAnswer";
+import { isValidInterviewOption } from "../lib/isValidInterviewOption";
 import { useHeaderButton } from "../model/hooks/useHeaderButton";
 import { useMCQSession } from "../model/hooks/useMCQSession";
 import { useSubjectiveSession } from "../model/hooks/useSubjectiveSession";
 import HeaderButton from "./_component/HeaderButton";
+import { isTechType } from "../lib/isTechType";
+import { isMultipleChoiceQuestions, isSubjectiveQuestions } from "../lib/isQuestionType";
+
+interface InterviewContentProps {
+  tech: TechType;
+  selectedOptions: InterviewOptionsValue;
+  currentQuestions: MultipleChoiceQuestion[] | SubjectiveQuestion[];
+  setOpenInterviewOptionsDialog: Dispatch<SetStateAction<boolean>>;
+}
+
+function InterviewContent({
+  tech,
+  selectedOptions,
+  currentQuestions,
+  setOpenInterviewOptionsDialog,
+}: InterviewContentProps) {
+  const { handleGoFirst, handleAddToReview } = useHeaderButton({
+    selectedOptions,
+    setOpenInterviewOptionsDialog,
+    questions: currentQuestions,
+  });
+
+  return (
+    <>
+      <header className="text-2xl font-bold flex justify-between">
+        <div>{tech} Interview</div>
+        <HeaderButton handleGoFirst={handleGoFirst} handleAddToReview={handleAddToReview} />
+      </header>
+
+      <InterviewTypeRenderer selectedOptions={selectedOptions} shuffledQuestions={currentQuestions} />
+    </>
+  );
+}
 
 export default function InterviewPage() {
   const [selectedOptions, setSelectedOptions] = useState<InterviewOptionsValue | "">("");
@@ -26,15 +60,14 @@ export default function InterviewPage() {
   const isDialogClosed = !openInterviewOptionsDialog;
   const canShowInterview = isInterviewSelected && isDialogClosed;
 
-  const question_answer = getQuestionAnswer(tech, selectedOptions as InterviewOptionsValue);
+  const question_answer = useMemo(() => {
+    return canShowInterview && isValidInterviewOption(selectedOptions) ? getQuestionAnswer(tech, selectedOptions) : [];
+  }, [tech, selectedOptions, canShowInterview]);
 
   // 새로고침/직접 진입 시 라우트 파라미터로 tech를 복원
   useEffect(() => {
-    if (routeTech && tech !== routeTech) {
-      const allowed: ReadonlyArray<TechType> = ["JavaScript", "NextJs", "React", "TypeScript", ""];
-      if (allowed.includes(routeTech as TechType)) {
-        setTech(routeTech as TechType);
-      }
+    if (routeTech && tech !== routeTech && isTechType(routeTech)) {
+      setTech(routeTech);
     }
   }, [routeTech, tech, setTech]);
 
@@ -43,7 +76,8 @@ export default function InterviewPage() {
     tech,
     selectedOptions,
     canShowInterview,
-    rawQuestions: selectedOptions === "Multiple Choice" ? (question_answer as MultipleChoiceQuestion[]) : [],
+    rawQuestions:
+      canShowInterview && isMultipleChoiceQuestions(question_answer, selectedOptions) ? question_answer : [],
   });
 
   // Subjective 세션 관리
@@ -51,28 +85,19 @@ export default function InterviewPage() {
     tech,
     selectedOptions,
     canShowInterview,
-    rawQuestions: selectedOptions === "Subjective" ? (question_answer as SubjectiveQuestion[]) : [],
+    rawQuestions: canShowInterview && isSubjectiveQuestions(question_answer, selectedOptions) ? question_answer : [],
   });
 
   const currentQuestions = selectedOptions === "Multiple Choice" ? mcqQuestions : subjQuestions;
 
-  const { handleGoFirst, handleAddToReview } = useHeaderButton({
-    selectedOptions: selectedOptions as InterviewOptionsValue,
-    setOpenInterviewOptionsDialog,
-    questions: currentQuestions,
-  });
-
   return (
     <div className="p-8 h-screen">
-      <header className="text-2xl font-bold flex justify-between">
-        <div>{tech} Interview</div>
-        {canShowInterview && <HeaderButton handleGoFirst={handleGoFirst} handleAddToReview={handleAddToReview} />}
-      </header>
-
-      {canShowInterview && (
-        <InterviewTypeRenderer
-          selectedOptions={selectedOptions as InterviewOptionsValue}
-          shuffledQuestions={currentQuestions}
+      {canShowInterview && isValidInterviewOption(selectedOptions) && (
+        <InterviewContent
+          tech={tech}
+          selectedOptions={selectedOptions}
+          currentQuestions={currentQuestions}
+          setOpenInterviewOptionsDialog={setOpenInterviewOptionsDialog}
         />
       )}
 

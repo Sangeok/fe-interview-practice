@@ -440,7 +440,7 @@ describe("SubjectiveInterview Widget", () => {
 
     it("should pass questionAnswer to useSubjectiveInterview", () => {
       render(<SubjectiveInterview questionAnswer={mockQuestions} />);
-      expect(useSubjectiveInterviewModule.useSubjectiveInterview).toHaveBeenCalledWith(mockQuestions, false);
+      expect(useSubjectiveInterviewModule.useSubjectiveInterview).toHaveBeenCalledWith(mockQuestions, false, false);
     });
   });
 

@@ -35,10 +35,8 @@ export function useHeaderButton({ selectedOptions, setOpenInterviewOptionsDialog
 
   const handleAddToReview = async () => {
     if (selectedOptions === "Subjective") {
-      console.log("questions[currentMcqQuestionIndex]", questions[currentMcqQuestionIndex]);
       addInCorrectSubQuestion(questions[currentSubjQuestionIndex] as SubjectiveQuestion);
     } else if (selectedOptions === "Multiple Choice") {
-      console.log("questions[currentMcqQuestionIndex]", questions[currentMcqQuestionIndex]);
       addInCorrectMultipleChoiceQuestion(questions[currentMcqQuestionIndex] as MultipleChoiceQuestion);
     }
 
