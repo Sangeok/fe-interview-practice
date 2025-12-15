@@ -17,55 +17,62 @@ export default function InterpretCard({ loading, interpret, onNext }: InterpretC
   // 로딩 상태 UI
   if (loading) {
     return (
-      <div className="p-6 bg-zinc-800 rounded-lg shadow-md animate-pulse space-y-6">
-        {/* 로딩 헤더 */}
-        <div className="border-b border-zinc-700 pb-4">
-          <div className="flex items-center mb-2">
-            <span className="text-xl mr-2">💡</span>
-            <div className="h-6 bg-zinc-700 rounded w-32 animate-pulse"></div>
-          </div>
-          <div className="h-4 bg-zinc-700 rounded w-3/4 animate-pulse"></div>
-        </div>
+      <div className="animate-fade-in delay-300">
+        <div className="relative border border-yellow-500/40 rounded-lg overflow-hidden bg-zinc-900/90 backdrop-blur-sm shadow-2xl">
+          <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/10 to-transparent pointer-events-none"></div>
 
-        {/* 로딩 컨텐츠 */}
-        <div className="bg-zinc-900 p-4 rounded-lg border-l-4 border-blue-500">
-          <div className="flex items-center mb-3">
-            <span className="mr-2">📝</span>
-            <div className="h-5 bg-zinc-700 rounded w-24 animate-pulse"></div>
-          </div>
-          <div className="space-y-2">
-            <div className="h-4 bg-zinc-700 rounded w-full animate-pulse"></div>
-            <div className="h-4 bg-zinc-700 rounded w-5/6 animate-pulse"></div>
-            <div className="h-4 bg-zinc-700 rounded w-4/5 animate-pulse"></div>
-          </div>
-        </div>
-
-        {/* 로딩 섹션들 */}
-        <div className="bg-zinc-900 p-4 rounded-lg">
-          <div className="flex items-center justify-between p-2">
-            <div className="flex items-center">
-              <span className="mr-2">🎯</span>
-              <div className="h-5 bg-zinc-700 rounded w-36 animate-pulse"></div>
+          {/* Window Title Bar */}
+          <div className="relative flex items-center justify-between px-4 py-3 border-b border-yellow-500/20 bg-zinc-950/50">
+            <div className="flex items-center gap-2">
+              <div className="flex gap-1.5">
+                <div className="w-2.5 h-2.5 rounded-full bg-red-500/80"></div>
+                <div className="w-2.5 h-2.5 rounded-full bg-yellow-500 animate-pulse"></div>
+                <div className="w-2.5 h-2.5 rounded-full bg-lime-500/80"></div>
+              </div>
+              <span className="text-xs font-mono text-yellow-400 ml-2">ai.interpret</span>
             </div>
-            <div className="h-4 w-4 bg-zinc-700 rounded animate-pulse"></div>
-          </div>
-        </div>
-
-        <div className="bg-zinc-900 p-4 rounded-lg">
-          <div className="flex items-center justify-between p-2">
-            <div className="flex items-center">
-              <span className="mr-2">🌟</span>
-              <div className="h-5 bg-zinc-700 rounded w-32 animate-pulse"></div>
+            <div className="flex items-center gap-2">
+              <div className="w-1.5 h-1.5 rounded-full bg-yellow-400 animate-pulse"></div>
+              <span className="text-xs font-mono text-yellow-400">PROCESSING</span>
             </div>
-            <div className="h-4 w-4 bg-zinc-700 rounded animate-pulse"></div>
           </div>
-        </div>
 
-        {/* 로딩 중임을 나타내는 중앙 표시 */}
-        <div className="flex items-center justify-center py-8">
-          <div className="flex items-center space-x-3 text-blue-400">
-            <div className="w-6 h-6 border-2 border-blue-400 border-t-transparent rounded-full animate-spin"></div>
-            <span className="text-lg font-medium">AI가 문제를 해설하는 중입니다...</span>
+          {/* Loading Content */}
+          <div className="relative p-8">
+            <div className="flex flex-col items-center justify-center py-12">
+              <div className="relative mb-6">
+                <div className="absolute inset-0 bg-cyan-500/20 blur-2xl rounded-full"></div>
+                <div className="relative w-16 h-16 border-4 border-cyan-500/30 border-t-cyan-400 rounded-full animate-spin"></div>
+              </div>
+              <div className="text-center space-y-2">
+                <p className="text-cyan-400 font-mono text-lg font-semibold">AI 분석 중...</p>
+                <p className="text-zinc-400 text-sm">문제를 해석하고 있습니다</p>
+              </div>
+
+              {/* Terminal Output Simulation */}
+              <div className="mt-8 w-full bg-zinc-950/80 rounded-lg border border-cyan-500/20 p-4 font-mono text-xs">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-cyan-400">$</span>
+                    <span className="text-zinc-400">analyze question</span>
+                  </div>
+                  <div className="pl-4 space-y-1 text-zinc-500">
+                    <div className="flex items-center gap-2">
+                      <div className="w-1 h-1 bg-cyan-400 rounded-full animate-pulse"></div>
+                      <span>Loading AI model...</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-1 h-1 bg-cyan-400 rounded-full animate-pulse delay-100"></div>
+                      <span>Processing question context...</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-1 h-1 bg-cyan-400 rounded-full animate-pulse delay-200"></div>
+                      <span>Generating explanation...</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -77,108 +84,133 @@ export default function InterpretCard({ loading, interpret, onNext }: InterpretC
 
   // 실제 데이터 표시
   return (
-    <div className="p-6 bg-zinc-800 rounded-lg shadow-md animate-fade-up-1 space-y-6">
-      {/* 헤더 */}
-      <div className="border-b border-zinc-700 pb-4">
-        <h3 className="text-xl font-semibold mb-2 text-zinc-100">💡 문제 해석</h3>
-        <p className="text-sm text-zinc-400">{interpret.Question}</p>
-      </div>
+    <div className="animate-fade-in delay-300">
+      <div className="relative border border-yellow-500/40 rounded-lg overflow-hidden bg-zinc-900/90 backdrop-blur-sm shadow-2xl">
+        <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/10 to-transparent pointer-events-none"></div>
 
-      {/* 요약 섹션 */}
-      <div className="bg-zinc-900 p-4 rounded-lg border-l-4 border-blue-500">
-        <h4 className="text-lg font-medium mb-3 text-blue-400 flex items-center">
-          <span className="mr-2">📝</span>
-          핵심 요약
-        </h4>
-        <p className="text-zinc-300 leading-relaxed">{interpret.summary}</p>
-      </div>
+        {/* Window Title Bar */}
+        <div className="relative flex items-center justify-between px-4 py-3 border-b border-yellow-500/20 bg-zinc-950/50">
+          <div className="flex items-center gap-2">
+            <div className="flex gap-1.5">
+              <div className="w-2.5 h-2.5 rounded-full bg-red-500/80"></div>
+              <div className="w-2.5 h-2.5 rounded-full bg-yellow-500"></div>
+              <div className="w-2.5 h-2.5 rounded-full bg-lime-500/80"></div>
+            </div>
+            <span className="text-xs font-mono text-yellow-400 ml-2">explanation.md</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-mono text-yellow-400">⚠ REVIEW</span>
+          </div>
+        </div>
 
-      {/* 이론 섹션 */}
-      <div className="bg-zinc-900 p-4 rounded-lg">
-        <button
-          onClick={() => setExpandedTheory(!expandedTheory)}
-          className="w-full flex items-center justify-between text-left hover:bg-zinc-800 p-2 rounded transition-colors"
-        >
-          <h4 className="text-lg font-medium text-green-400 flex items-center">
-            <span className="mr-2">🎯</span>
-            {interpret.details.theory.title}
-          </h4>
-          <span
-            className="text-zinc-400 transform transition-transform duration-200"
-            style={{
-              transform: expandedTheory ? "rotate(180deg)" : "rotate(0deg)",
-            }}
-          >
-            ▼
-          </span>
-        </button>
+        {/* Content */}
+        <div className="relative p-6 space-y-6">
+          {/* Question Header */}
+          <div className="bg-zinc-950/80 rounded-lg border border-yellow-500/20 p-4">
+            <div className="flex items-start gap-2 mb-2">
+              <span className="text-yellow-400 font-mono text-sm flex-shrink-0 mt-0.5">{">"}</span>
+              <p className="text-zinc-300 text-sm font-mono">{interpret.Question}</p>
+            </div>
+          </div>
 
-        {expandedTheory && (
-          <div className="mt-4 space-y-4 animate-fade-in">
-            <p className="text-zinc-300 leading-relaxed pl-4 border-l-2 border-green-500">
-              {interpret.details.theory.description}
-            </p>
+          {/* Summary Section */}
+          <div className="bg-zinc-950/80 rounded-lg border border-cyan-500/30 p-5">
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-1.5 h-1.5 rounded-full bg-cyan-400"></div>
+              <h4 className="text-base font-mono font-semibold text-cyan-400">핵심 요약</h4>
+            </div>
+            <p className="text-zinc-300 leading-relaxed pl-5">{interpret.summary}</p>
+          </div>
 
-            {interpret.details.theory.rules.length > 0 && (
-              <div className="space-y-3">
-                <h5 className="text-md font-medium text-zinc-200">주요 규칙들</h5>
-                <div className="space-y-2">
-                  {interpret.details.theory.rules.map((rule, index) => (
-                    <div key={index} className="bg-zinc-800 p-3 rounded border-l-2 border-green-500">
-                      <h6 className="font-medium text-green-300 mb-1">{rule.title}</h6>
-                      <p className="text-zinc-400 text-sm">{rule.explanation}</p>
+          {/* Theory Section */}
+          <div className="bg-zinc-950/80 rounded-lg border border-lime-500/30 overflow-hidden">
+            <button
+              onClick={() => setExpandedTheory(!expandedTheory)}
+              className="w-full flex items-center justify-between p-4 hover:bg-zinc-900/50 transition-colors"
+            >
+              <div className="flex items-center gap-2">
+                <div className="w-1.5 h-1.5 rounded-full bg-lime-400"></div>
+                <h4 className="text-base font-mono font-semibold text-lime-400">{interpret.details.theory.title}</h4>
+              </div>
+              <span
+                className={`text-lime-400 transform transition-transform duration-300 ${
+                  expandedTheory ? "rotate-180" : "rotate-0"
+                }`}
+              >
+                ▼
+              </span>
+            </button>
+
+            {expandedTheory && (
+              <div className="border-t border-lime-500/20 p-5 space-y-4 animate-fade-in">
+                <p className="text-zinc-300 leading-relaxed">{interpret.details.theory.description}</p>
+
+                {interpret.details.theory.rules.length > 0 && (
+                  <div className="space-y-3">
+                    <h5 className="text-sm font-mono font-semibold text-zinc-400">주요 규칙들</h5>
+                    <div className="space-y-2">
+                      {interpret.details.theory.rules.map((rule, index) => (
+                        <div key={index} className="bg-zinc-900/80 p-4 rounded-lg border border-lime-500/20">
+                          <h6 className="font-semibold text-lime-300 mb-2 font-mono text-sm">{rule.title}</h6>
+                          <p className="text-zinc-400 text-sm leading-relaxed">{rule.explanation}</p>
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
+                  </div>
+                )}
               </div>
             )}
           </div>
-        )}
-      </div>
 
-      {/* 실제 사례 섹션 */}
-      <div className="bg-zinc-900 p-4 rounded-lg">
-        <button
-          onClick={() => setExpandedAnalogy(!expandedAnalogy)}
-          className="w-full flex items-center justify-between text-left hover:bg-zinc-800 p-2 rounded transition-colors"
-        >
-          <h4 className="text-lg font-medium text-purple-400 flex items-center">
-            <span className="mr-2">🌟</span>
-            {interpret.details.analogy.title}
-          </h4>
-          <span
-            className="text-zinc-400 transform transition-transform duration-200"
-            style={{
-              transform: expandedAnalogy ? "rotate(180deg)" : "rotate(0deg)",
-            }}
-          >
-            ▼
-          </span>
-        </button>
-
-        {expandedAnalogy && (
-          <div className="mt-4 space-y-4 animate-fade-in">
-            {interpret.details.analogy.scenarios.map((scenario, index) => (
-              <div key={index} className="bg-zinc-800 p-4 rounded-lg border-l-4 border-purple-500">
-                <div className="flex items-center mb-2">
-                  <span className="px-2 py-1 bg-purple-600 text-white text-xs rounded-full mr-3">{scenario.type}</span>
-                  <h6 className="font-medium text-purple-300">{scenario.title}</h6>
-                </div>
-                <p className="text-zinc-300 leading-relaxed">{scenario.story}</p>
+          {/* Analogy Section */}
+          <div className="bg-zinc-950/80 rounded-lg border border-purple-500/30 overflow-hidden">
+            <button
+              onClick={() => setExpandedAnalogy(!expandedAnalogy)}
+              className="w-full flex items-center justify-between p-4 hover:bg-zinc-900/50 transition-colors"
+            >
+              <div className="flex items-center gap-2">
+                <div className="w-1.5 h-1.5 rounded-full bg-purple-400"></div>
+                <h4 className="text-base font-mono font-semibold text-purple-400">
+                  {interpret.details.analogy.title}
+                </h4>
               </div>
-            ))}
-          </div>
-        )}
-      </div>
+              <span
+                className={`text-purple-400 transform transition-transform duration-300 ${
+                  expandedAnalogy ? "rotate-180" : "rotate-0"
+                }`}
+              >
+                ▼
+              </span>
+            </button>
 
-      <div className="text-center">
-        <Button
-          onClick={onNext}
-          size="md"
-          className="w-full bg-black hover:bg-zinc-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-105"
-        >
-          다음 문제로 계속하기 🚀
-        </Button>
+            {expandedAnalogy && (
+              <div className="border-t border-purple-500/20 p-5 space-y-3 animate-fade-in">
+                {interpret.details.analogy.scenarios.map((scenario, index) => (
+                  <div key={index} className="bg-zinc-900/80 p-4 rounded-lg border border-purple-500/20">
+                    <div className="flex items-center gap-2 mb-3">
+                      <span className="px-2 py-1 bg-purple-600/80 text-purple-100 text-xs rounded font-mono">
+                        {scenario.type}
+                      </span>
+                      <h6 className="font-semibold text-purple-300 font-mono text-sm">{scenario.title}</h6>
+                    </div>
+                    <p className="text-zinc-300 leading-relaxed text-sm">{scenario.story}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Continue Button */}
+          <button
+            onClick={onNext}
+            className="w-full relative px-6 py-4 rounded-lg font-mono font-semibold text-sm bg-cyan-500/20 border border-cyan-500/50 text-cyan-400 hover:bg-cyan-500/30 hover:shadow-[0_0_30px_rgba(6,182,212,0.3)] transition-all duration-300 active:scale-95 group"
+          >
+            <span className="relative z-10 flex items-center justify-center gap-2">
+              다음 문제로 계속하기
+              <span className="group-hover:translate-x-1 transition-transform duration-300">→</span>
+            </span>
+          </button>
+        </div>
       </div>
     </div>
   );
