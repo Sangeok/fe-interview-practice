@@ -8,8 +8,8 @@ import { Bot } from "lucide-react";
 
 function BotAvatar() {
   return (
-    <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg">
-      <Bot size={24} className="text-white" />
+    <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-gradient-to-br from-lime-500 to-lime-600 flex items-center justify-center shadow-lg border border-lime-400/30 animate-pulse-glow-subtle">
+      <Bot size={18} className="text-zinc-900" />
     </div>
   );
 }

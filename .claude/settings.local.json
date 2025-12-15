@@ -9,7 +9,8 @@
       "Bash(npx next build:*)",
       "Bash(tree:*)",
       "Bash(npm test)",
-      "Bash(npm run lint)"
+      "Bash(npm run lint)",
+      "Bash(npm run test:*)"
     ],
     "deny": [],
     "ask": []

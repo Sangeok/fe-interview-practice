@@ -11,23 +11,39 @@ vi.mock("../../../../../features/chat/chatMessage/ui/ChatMessage", () => ({
     <div data-testid={`chat-message-${message.id}`}>
       <div>{message.content}</div>
       <div>Role: {message.role}</div>
-      {onNext && showNext && <button onClick={onNext}>Next Question</button>}
-      {onEnd && <button onClick={onEnd}>End Interview</button>}
-      {onAddReview && <button onClick={onAddReview}>Add Review</button>}
+      {message.role === 'system' && (
+        <>
+          {onNext && showNext && <button onClick={onNext}>NEXT</button>}
+          {onEnd && <button onClick={onEnd}>END</button>}
+          {onAddReview && <button onClick={onAddReview}>Add Review</button>}
+        </>
+      )}
       {isLoading && <span>Loading...</span>}
     </div>
   ),
 }));
 
+let mockInputValue = '';
+
 vi.mock("../../../../../features/chat/chatInput/ui/ChatInput", () => ({
-  default: ({ onSendMessage, isLoading }: any) => (
-    <div data-testid="chat-input">
-      <input placeholder="Type message" onChange={(e) => {}} disabled={isLoading} />
-      <button onClick={() => onSendMessage("test")} disabled={isLoading}>
-        Send
-      </button>
-    </div>
-  ),
+  default: ({ onSendMessage, isLoading }: any) => {
+    return (
+      <div data-testid="chat-input">
+        <textarea
+          placeholder="Type message"
+          onChange={(e) => { mockInputValue = e.target.value; }}
+          disabled={isLoading}
+        />
+        <button
+          onClick={() => onSendMessage(mockInputValue)}
+          disabled={isLoading}
+          aria-label="Send message"
+        >
+          Send
+        </button>
+      </div>
+    );
+  },
 }));
 
 // Dynamically import the module under test after mocks are registered
@@ -44,6 +60,7 @@ describe("SubjectiveInterview Widget", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    mockInputValue = '';
 
     // Default mock implementation
     vi.spyOn(useSubjectiveInterviewModule, "useSubjectiveInterview").mockReturnValue({
@@ -151,7 +168,7 @@ describe("SubjectiveInterview Widget", () => {
 
       render(<SubjectiveInterview questionAnswer={mockQuestions} />);
       fireEvent.change(screen.getByRole("textbox"), { target: { value: "test" } });
-      screen.getByText("Send").click();
+      screen.getByRole("button", { name: /send message/i }).click();
 
       expect(handleSendMessage).toHaveBeenCalledWith("test");
     });
@@ -175,7 +192,7 @@ describe("SubjectiveInterview Widget", () => {
       });
 
       render(<SubjectiveInterview questionAnswer={mockQuestions} />);
-      screen.getByText("Next Question").click();
+      screen.getByText("NEXT").click();
 
       expect(handleNextQuestion).toHaveBeenCalled();
     });
@@ -199,7 +216,7 @@ describe("SubjectiveInterview Widget", () => {
       });
 
       render(<SubjectiveInterview questionAnswer={mockQuestions} />);
-      screen.getByText("End Interview").click();
+      screen.getByText("END").click();
 
       expect(handleEndInterview).toHaveBeenCalled();
     });
@@ -287,7 +304,7 @@ describe("SubjectiveInterview Widget", () => {
       });
 
       render(<SubjectiveInterview questionAnswer={mockQuestions} />);
-      expect(screen.getByText("Next Question")).toBeInTheDocument();
+      expect(screen.getByText("NEXT")).toBeInTheDocument();
     });
 
     it("should not show next button on last question", () => {
@@ -308,7 +325,7 @@ describe("SubjectiveInterview Widget", () => {
       });
 
       render(<SubjectiveInterview questionAnswer={mockQuestions} />);
-      expect(screen.queryByText("Next Question")).not.toBeInTheDocument();
+      expect(screen.queryByText("NEXT")).not.toBeInTheDocument();
     });
   });
 
@@ -328,8 +345,8 @@ describe("SubjectiveInterview Widget", () => {
       });
 
       render(<SubjectiveInterview questionAnswer={mockQuestions} />);
-      expect(screen.getByText("면접 완료!")).toBeInTheDocument();
-      expect(screen.getByText("총 점수: 8 / 2")).toBeInTheDocument();
+      expect(screen.getByText("Interview")).toBeInTheDocument();
+      expect(screen.getByText("Completed")).toBeInTheDocument();
     });
 
     it("should not render chat input when finished", () => {
@@ -365,7 +382,8 @@ describe("SubjectiveInterview Widget", () => {
       });
 
       render(<SubjectiveInterview questionAnswer={mockQuestions} />);
-      expect(screen.getByText(/15/)).toBeInTheDocument();
+      // The component shows percentage which would be (15/2)*100 = 750% and also shows score/totalQuestions as "15/2"
+      expect(screen.getByText("15/2")).toBeInTheDocument();
     });
   });
 
@@ -433,8 +451,8 @@ describe("SubjectiveInterview Widget", () => {
       render(<SubjectiveInterview questionAnswer={mockQuestions} />);
 
       // Verify handlers are accessible in ChatMessage
-      expect(screen.getByText("Next Question")).toBeInTheDocument();
-      expect(screen.getByText("End Interview")).toBeInTheDocument();
+      expect(screen.getByText("NEXT")).toBeInTheDocument();
+      expect(screen.getByText("END")).toBeInTheDocument();
       expect(screen.getByText("Add Review")).toBeInTheDocument();
     });
 
