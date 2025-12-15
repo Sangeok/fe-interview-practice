@@ -18,7 +18,7 @@ describe('UserMessage Component', () => {
 
     it('should render user avatar', () => {
       const { container } = render(<UserMessage content="Test" />);
-      const avatar = container.querySelector('.w-8.h-8.rounded-full');
+      const avatar = container.querySelector('.w-8.h-8.rounded-lg');
       expect(avatar).toBeInTheDocument();
     });
   });
@@ -52,7 +52,7 @@ describe('UserMessage Component', () => {
   describe('Styling', () => {
     it('should apply correct background color', () => {
       const { container } = render(<UserMessage content="Test" />);
-      const messageBox = container.querySelector('.bg-fuchsia-800');
+      const messageBox = container.querySelector('.bg-gradient-to-br.from-cyan-500.to-cyan-600');
       expect(messageBox).toBeInTheDocument();
     });
 
@@ -64,7 +64,7 @@ describe('UserMessage Component', () => {
 
     it('should have rounded corners', () => {
       const { container } = render(<UserMessage content="Test" />);
-      const messageBox = container.querySelector('.rounded-2xl');
+      const messageBox = container.querySelector('.rounded-lg');
       expect(messageBox).toBeInTheDocument();
     });
 
@@ -110,7 +110,7 @@ describe('UserMessage Component', () => {
 
     it('should render avatar as circle', () => {
       const { container } = render(<UserMessage content="Test" />);
-      const avatar = container.querySelector('.rounded-full');
+      const avatar = container.querySelector('.rounded-lg');
       expect(avatar).toBeInTheDocument();
     });
 
@@ -122,7 +122,7 @@ describe('UserMessage Component', () => {
 
     it('should have correct avatar background', () => {
       const { container } = render(<UserMessage content="Test" />);
-      const avatar = container.querySelector('.bg-gray-200');
+      const avatar = container.querySelector('.bg-gradient-to-br.from-cyan-500.to-cyan-600');
       expect(avatar).toBeInTheDocument();
     });
   });
@@ -202,7 +202,7 @@ describe('UserMessage Component', () => {
 
     it('should have readable text contrast', () => {
       const { container } = render(<UserMessage content="Test" />);
-      const messageBox = container.querySelector('.text-white.bg-fuchsia-800');
+      const messageBox = container.querySelector('.text-white.bg-gradient-to-br');
       expect(messageBox).toBeInTheDocument();
     });
   });
